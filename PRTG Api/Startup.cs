@@ -30,10 +30,12 @@ namespace PRTG_Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TodoContext>(opt =>
-            {
-                opt.UseInMemoryDatabase("TodoList");
-            });
+            services.AddDatabaseContext(Configuration.GetConnectionString("PRTGApi"));
+
+            //services.AddDbContext<DataBaseContext>(opt =>
+            //{
+            //    opt.UseInMemoryDatabase("TodoList");
+            //});
             services.AddControllers();
             services.AddHttpClient("prtg", c =>
             {
@@ -43,7 +45,7 @@ namespace PRTG_Api
             {
                 ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
             });
-            services.AddTransient<IPRTGService, PRTGService>();
+            services.AddTransient<ISensorService, SensorService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +55,7 @@ namespace PRTG_Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors((builder) => builder.WithOrigins("https://localhost:44323").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 
             app.UseHttpsRedirection();
 

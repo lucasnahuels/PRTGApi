@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PRTG_Api.Services
 {
-    public interface IPRTGService
+    public interface ISensorService
     {
         Task<Sensor> GetAllSensors();
     }

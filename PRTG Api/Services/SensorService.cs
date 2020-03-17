@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace PRTG_Api.Services
 {
-    public class PRTGService : IPRTGService
+    public class SensorService : ISensorService
     {
         private readonly IHttpClientFactory _clientFactory;
 
-        public PRTGService(IHttpClientFactory clientFactory)
+        public SensorService(IHttpClientFactory clientFactory)
         {
             _clientFactory = clientFactory;
         }

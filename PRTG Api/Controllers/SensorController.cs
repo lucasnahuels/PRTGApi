@@ -15,10 +15,10 @@ namespace PRTG_Api.Controllers
     [ApiController]
     public class SensorController : ControllerBase
     {
-        private readonly TodoContext _context;
-        private readonly IPRTGService _prtgService;
+        private readonly DataBaseContext _context;
+        private readonly ISensorService _prtgService;
 
-        public SensorController(TodoContext context, IPRTGService prtgService)
+        public SensorController(DataBaseContext context, ISensorService prtgService)
         {
             _context = context;
             _prtgService = prtgService;
