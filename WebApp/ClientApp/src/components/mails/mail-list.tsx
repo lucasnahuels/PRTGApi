@@ -60,7 +60,7 @@ const MailList = ({show}: MailListProps) => {
 
     useEffect(() => { GetMails() }, []);
    
-    const ShowContractForm = (isEdit: boolean, emailId?: Number | undefined) => {
+    const ShowEmailForm = (isEdit: boolean, emailId?: Number | undefined) => {
         setShowModal(true);
         if (!isEdit) {
             // <EmailFormModal show={showModal} hideModal={HideForm} getAllEmails={GetMails} isEdit={false}/>
@@ -76,7 +76,7 @@ const MailList = ({show}: MailListProps) => {
 
     return (
         <div className={classes.margins}>
-            <Button className={classes.buttonAdd} onClick={() => ShowContractForm(false)}>
+            <Button className={classes.buttonAdd} onClick={() => ShowEmailForm(false)}>
                 Add new E-Mail
             </Button>
             <TableContainer component={Paper}>
@@ -93,7 +93,7 @@ const MailList = ({show}: MailListProps) => {
                             <TableRow key={`${mail.emailId}`}>
                                 <TableCell>{mail.emailAdress}</TableCell>
                                 <TableCell>
-                                    <Button variant='contained' color='default'> <EditIcon /> </Button>
+                                    <Button variant='contained' color='default' onClick={() => ShowEmailForm(true, mail.emailId)}> <EditIcon /> </Button>
                                 </TableCell>
                                 <TableCell>
                                     <Button variant='contained' color='secondary'><DeleteIcon /></Button>
