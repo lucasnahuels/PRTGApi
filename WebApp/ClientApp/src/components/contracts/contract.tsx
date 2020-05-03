@@ -1,5 +1,5 @@
 export interface Contract {
-        contractId :Number,
+        contractId? :Number,
         nameOfCompany :string,
         printer :string,
         blackAndWhiteSheets:number,

@@ -13,6 +13,6 @@ namespace PRTG_Api.Models
             : base(options)
         {
         }
-        public DbSet<PRTG_Api.Models.Contract> Contract { get; set; }
+        public DbSet<PRTG_Api.Models.Contract> Contract { get; set; } //migrations
     }
 }

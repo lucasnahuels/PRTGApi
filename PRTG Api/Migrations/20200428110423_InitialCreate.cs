@@ -12,7 +12,7 @@ namespace PRTG_Api.Migrations
                 {
                     ContractId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NameOfCompañy = table.Column<string>(nullable: true),
+                    NameOfCompany = table.Column<string>(nullable: true),
                     Printer = table.Column<string>(nullable: true),
                     BlackAndWhiteSheets = table.Column<int>(nullable: false),
                     ColorSheets = table.Column<int>(nullable: false),

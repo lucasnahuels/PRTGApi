@@ -8,7 +8,7 @@ namespace PRTG_Api.Models
     public class Contract
     {
         public int ContractId { get; set; }
-        public string NameOfCompañy { get; set; }
+        public string NameOfCompany { get; set; }
         public string Printer { get; set; }
         public int BlackAndWhiteSheets { get; set; }
         public int ColorSheets { get; set; }

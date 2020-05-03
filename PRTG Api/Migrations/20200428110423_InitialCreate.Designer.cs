@@ -9,7 +9,7 @@ using PRTG_Api.Models;
 namespace PRTG_Api.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20200304213225_InitialCreate")]
+    [Migration("20200428110423_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,7 +45,7 @@ namespace PRTG_Api.Migrations
                     b.Property<int>("Month")
                         .HasColumnType("int");
 
-                    b.Property<string>("NameOfCompañy")
+                    b.Property<string>("NameOfCompany")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Printer")

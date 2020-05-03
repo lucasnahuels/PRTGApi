@@ -8,6 +8,9 @@ import { createBrowserHistory } from 'history';
 import configureStore from './store/configureStore';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
+import MailList from './components/mails/mail-list';
+import ContractList from './components/contracts/contract-list';
+import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
 
 // Create browser history to use in the Redux store
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href') as string;
@@ -19,7 +22,11 @@ const store = configureStore(history);
 ReactDOM.render(
     <Provider store={store}>
         <ConnectedRouter history={history}>
-            <App />
+            <div>
+            <Route path="/" component={App} />
+            <Route path="/contracts" component={ContractList} />
+            <Route path="/mails" component={MailList} />
+            </div>        
         </ConnectedRouter>
     </Provider>,
     document.getElementById('root'));

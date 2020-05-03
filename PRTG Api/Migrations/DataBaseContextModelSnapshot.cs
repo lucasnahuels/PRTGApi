@@ -43,7 +43,7 @@ namespace PRTG_Api.Migrations
                     b.Property<int>("Month")
                         .HasColumnType("int");
 
-                    b.Property<string>("NameOfCompañy")
+                    b.Property<string>("NameOfCompany")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Printer")
