@@ -65,7 +65,7 @@ const ContractList = ({show} : ContractListProps) => {
         setShowModal(true);
     }
 
-    const ShowContractForm = (isEdit: boolean, productId?: Number | undefined) => {
+    const ShowContractForm = (isEdit: boolean, contractId?: Number | undefined) => {
         setShowModal(true);
         if (!isEdit) {
             // <ContractFormModal show={showModal} hideModal={HideForm} getAllContracts={GetContracts} isEdit={false}/>
@@ -121,7 +121,8 @@ const ContractList = ({show} : ContractListProps) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-
+           
+            {/* <ContractFormModal show={showModal} hideModal={HideForm} getAllContracts={GetContracts} isEdit={false} /> */}
         </div>
     )
 }

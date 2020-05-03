@@ -1,4 +1,4 @@
 export interface Mail {
-    mailId: number
-    adress : string
+    emailId?: number
+    emailAdress : string
 }

@@ -1,19 +1,18 @@
 import React, { ChangeEvent, useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import { Button, Container, List, ListItemText, ListItem, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import { Contract } from './contract';
-import { stat } from 'fs';
 
 export interface ContractFormModalProps {
     show: boolean,
     hideModal: Function,
     getAllContracts: Function,
     isEdit: boolean,
-    productId?: number | undefined
+    contractId?: number | undefined
 }
 
 
@@ -53,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, productId }: ContractFormModalProps) => {
+const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractId }: ContractFormModalProps) => {
 
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
@@ -107,10 +106,13 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, productId
                                     magentaToner: state.magentaToner,
                                     yellowToner: state.yellowToner
                                  };
-        let productToUpdate: Contract;
-        const response = await axios.get('https://localhost:44370/api/contracts/' + id.toString());
-
-        await axios.put('https://localhost:44370/api/contracts/' + id.toString(), contractData);
+        await axios.put('https://localhost:44370/api/contracts/' + id.toString(), contractData).then(() => {
+            handleClose();
+            ToastsStore.success('The contract was saved');
+            getAllContracts();
+        }).catch(() => {
+            ToastsStore.error('The contract was not saved');
+        });
     }
 
     const handleInputNameOfCompanyChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -156,7 +158,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, productId
                 onClose={handleClose}
             >
                 <div style={modalStyle} className={classes.paper}>
-                    <h2 id='contractform-modal-title'>Add product</h2>
+                    <h2 id='contractform-modal-title'>Add contract</h2>
                     <div id='contractform-modal-description'>
                         <TextField label='Name' id='inputName' name='inputName' placeholder='input the name of the company' value={state.nameOfCompany} onChange={handleInputNameOfCompanyChange} />
                         <br /><br />
@@ -182,7 +184,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, productId
                         {!isEdit ? (
                             <Button variant='contained' color='default' onClick={() => AddContract()} >Save</Button>
                         ) : (
-                                <Button variant='contained' color='default' onClick={() => UpdateContract(productId!)} >Save</Button>
+                                <Button variant='contained' color='default' onClick={() => UpdateContract(contractId!)} >Save</Button>
                             )
                         }
                     </div>

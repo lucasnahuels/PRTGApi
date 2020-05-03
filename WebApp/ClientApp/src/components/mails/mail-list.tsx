@@ -13,6 +13,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import EmailFormModal from './mailsFormModal';
 
 export interface IMailList {
     listOfMail: Mail[]
@@ -50,18 +51,32 @@ const MailList = ({show}: MailListProps) => {
     const classes = useStyles();
 
     const [stateMail, setMail] = React.useState<IMailList>();
+    const [showModal, setShowModal] = React.useState(false)
 
     const GetMails = async () => {
-        // const response = await axios.get(`https://localhost:44370/api/Mails`);
-        // setMail({ ...stateMail, listOfMail: response.data });
-        setMail(stateMail, )
+        const response = await axios.get(`https://localhost:44370/api/emails`);
+        setMail({ ...stateMail, listOfMail: response.data });
     };
 
     useEffect(() => { GetMails() }, []);
    
+    const ShowContractForm = (isEdit: boolean, emailId?: Number | undefined) => {
+        setShowModal(true);
+        if (!isEdit) {
+            // <EmailFormModal show={showModal} hideModal={HideForm} getAllEmails={GetMails} isEdit={false}/>
+        }
+        else {
+            // <EmailFormModal show={showModal} hideModal={HideForm} getAllEmails={GetMails} isEdit={true} />
+        }
+    }
+
+    const HideForm = () => {
+        setShowModal(false);
+    }
+
     return (
         <div className={classes.margins}>
-            <Button className={classes.buttonAdd}>
+            <Button className={classes.buttonAdd} onClick={() => ShowContractForm(false)}>
                 Add new E-Mail
             </Button>
             <TableContainer component={Paper}>
@@ -75,9 +90,8 @@ const MailList = ({show}: MailListProps) => {
                     </TableHead>
                     <TableBody>
                         {stateMail !== undefined && stateMail.listOfMail !== undefined ? stateMail.listOfMail.map(mail => (
-                            <TableRow key={`${mail.mailId}`}>
-                                <TableCell>{mail.adress}</TableCell>
-                                <TableCell></TableCell>
+                            <TableRow key={`${mail.emailId}`}>
+                                <TableCell>{mail.emailAdress}</TableCell>
                                 <TableCell>
                                     <Button variant='contained' color='default'> <EditIcon /> </Button>
                                 </TableCell>
@@ -89,6 +103,8 @@ const MailList = ({show}: MailListProps) => {
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            {/* <EmailFormModal show={showModal} hideModal={HideForm} getAllEmails={GetMails} isEdit={false}/> */}
         </div>
     )
 }

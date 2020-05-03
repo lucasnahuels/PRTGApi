@@ -14,5 +14,6 @@ namespace PRTG_Api.Models
         {
         }
         public DbSet<PRTG_Api.Models.Contract> Contract { get; set; } //migrations
+        public DbSet<Email> Email { get; set; } //migrations
     }
 }

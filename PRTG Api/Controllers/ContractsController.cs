@@ -22,7 +22,7 @@ namespace PRTG.Api.Controllers
 
         // GET: api/Contracts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Contract>>> GetContract()
+        public async Task<ActionResult<IEnumerable<Contract>>> GetContracts()
         {
             return await _context.Contract.ToListAsync();
         }
@@ -43,7 +43,7 @@ namespace PRTG.Api.Controllers
 
         // PUT: api/Contracts/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutContract(int id, Contract contract)
+        public async Task<ActionResult<Contract>> PutContract(int id, Contract contract)
         {
             if (id != contract.ContractId)
             {
@@ -68,7 +68,7 @@ namespace PRTG.Api.Controllers
                 }
             }
 
-            return NoContent();
+            return contract;
         }
 
         // POST: api/Contracts
