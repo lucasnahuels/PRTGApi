@@ -24,14 +24,14 @@ namespace PRTG.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contract>>> GetContracts()
         {
-            return await _context.Contract.ToListAsync();
+            return await _context.Contract.OrderBy(x => x.NameOfCompany).ToListAsync().ConfigureAwait(false);
         }
 
         // GET: api/Contracts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Contract>> GetContract(int id)
         {
-            var contract = await _context.Contract.FindAsync(id);
+            var contract = await _context.Contract.FindAsync(id).ConfigureAwait(false);
 
             if (contract == null)
             {
@@ -54,7 +54,7 @@ namespace PRTG.Api.Controllers
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -64,7 +64,7 @@ namespace PRTG.Api.Controllers
                 }
                 else
                 {
-                    throw;
+                    return Problem(title: "Ocurrio un error");
                 }
             }
 

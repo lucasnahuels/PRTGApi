@@ -12,7 +12,8 @@ export interface ContractFormModalProps {
     hideModal: Function,
     getAllContracts: Function,
     isEdit: boolean,
-    contractId?: number | undefined
+    contractId?: Number | undefined
+    contractToEdit? : Contract 
 }
 
 
@@ -23,7 +24,7 @@ function getModalStyle() {
     return {
         top: `${top}%`,
         left: `${left}%`,
-        transform: `translate(-${top}%, -${left}%)`
+        transform: `translate(-${top}%, -${left}%)`,
     };
 }
 
@@ -32,32 +33,28 @@ const useStyles = makeStyles((theme: Theme) =>
         paper: {
             position: 'absolute',
             margin: 100,
-            width: 400,
+            width: 600,
             backgroundColor: theme.palette.background.paper,
             border: '1px solid #000',
             boxShadow: theme.shadows[5],
             padding: theme.spacing(2, 4, 3)
         },
-        root: {
-            display: 'flex',
-            flexWrap: 'wrap'
-        },
-        formControl: {
+        formRoot: {
             margin: theme.spacing(1),
-            minWidth: 120
+            width: '25ch',
         },
-        selectEmpty: {
-            marginTop: theme.spacing(2)
-        }
+        container: {
+            display: 'flex',
+            flexWrap: 'wrap',
+        },
     })
 );
 
-const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractId }: ContractFormModalProps) => {
+const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractId, contractToEdit }: ContractFormModalProps) => {
 
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = React.useState(getModalStyle);
-
     const [state, setState] = React.useState({
         nameOfCompany: '',
         printer: '',
@@ -68,10 +65,25 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractI
         yellowToner: 0,
         magentaToner: 0,
         month: 0,
-    });
+    })
+    
+    useEffect(() => { fillList(); }, []); 
 
-    // tslint:disable-next-line: no-floating-promises
-    useEffect(() => { }, []); 
+    const fillList = () => {
+        if (isEdit) {
+            setState({
+                nameOfCompany: contractToEdit!.nameOfCompany,
+                printer: contractToEdit!.printer,
+                blackAndWhiteSheets: contractToEdit!.blackAndWhiteSheets,
+                colorSheets: contractToEdit!.colorSheets,
+                blackToner: contractToEdit!.blackToner,
+                cyanToner: contractToEdit!.cyanToner,
+                yellowToner: contractToEdit!.yellowToner,
+                magentaToner: contractToEdit!.magentaToner,
+                month: contractToEdit!.month
+            });
+        }
+    }
 
     const AddContract = () => {
     let contractData: Contract = { nameOfCompany: state.nameOfCompany,
@@ -93,9 +105,9 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractI
         })
     }
 
-    const UpdateContract = async (id: number) => {
+    const UpdateContract = async () => {
         let contractData: Contract = {
-                                    contractId: id,
+                                    contractId: contractId,
                                     nameOfCompany: state.nameOfCompany,
                                     printer: state.printer,
                                     month: state.month,
@@ -106,7 +118,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractI
                                     magentaToner: state.magentaToner,
                                     yellowToner: state.yellowToner
                                  };
-        await axios.put('https://localhost:44370/api/contracts/' + id.toString(), contractData).then(() => {
+        await axios.put('https://localhost:44370/api/contracts/' + contractId!.toString(), contractData).then(() => {
             handleClose();
             ToastsStore.success('The contract was saved');
             getAllContracts();
@@ -158,36 +170,32 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractI
                 onClose={handleClose}
             >
                 <div style={modalStyle} className={classes.paper}>
+                <div style={{ textAlign: 'center' }}>
                     <h2 id='contractform-modal-title'>Add contract</h2>
                     <div id='contractform-modal-description'>
-                        <TextField label='Name' id='inputName' name='inputName' placeholder='input the name of the company' value={state.nameOfCompany} onChange={handleInputNameOfCompanyChange} />
+                        <TextField className={classes.formRoot} required label='company name' id='inputName' name='inputName' placeholder='input the name of the company' value={state.nameOfCompany} onChange={handleInputNameOfCompanyChange} />
+                        <TextField className={classes.formRoot} required label='printer name' id='inputPrinter' name='inputPrinter' placeholder='input the name of the printer' value={state.printer} onChange={handleInputNameOfPrinterChange} />
                         <br /><br />
-                        <TextField label='Name' id='inputPrinter' name='inputPrinter' placeholder='input the name of the printer' value={state.printer} onChange={handleInputNameOfPrinterChange} />
+                        <TextField className={classes.formRoot} required label='month' id='inputMonth' name='inputMonth' placeholder='input the month' value={state.month} onChange={handleInputMonthChange} />
                         <br /><br />
-                        <TextField label='Month' id='inputMonth' name='inputMonth' placeholder='input the month' value={state.month} onChange={handleInputMonthChange} />
+                        <TextField className={classes.formRoot} required label='black and white sheets' id='inputQuantityBWSheets' name='inputQuantityBWSheets' placeholder='input the quantity of the black and white sheets' value={state.blackAndWhiteSheets} onChange={handleInputBWSheetsChange} />
+                        <TextField className={classes.formRoot} required label='color sheets' id='inputColorSheets' name='inputColorSheets' placeholder='input the quantity of color sheets' value={state.colorSheets} onChange={handleInputColorSheetsChange} />
                         <br /><br />
-                        <TextField label='BWSheets' id='inputQuantityBWSheets' name='inputQuantityBWSheets' placeholder='input the quantity of the black and white sheets' value={state.blackAndWhiteSheets} onChange={handleInputBWSheetsChange} />
+                        <TextField className={classes.formRoot} required label='black tonner' id='inputBlackTonner' name='inputBlackTonner' placeholder='input the the quantity of black tonner remaining' value={state.blackToner} onChange={handleInputBlackTonnerChange} />
+                        <TextField className={classes.formRoot} required label='cyan tonner' id='inputCyanTonner' name='inputCyanTonner' placeholder='input the the quantity of cyan tonner remaining' value={state.cyanToner} onChange={handleInputCyanTonnerChange} />
+                        <TextField className={classes.formRoot} required label='magenta tonner' id='inputMagentaTonner' name='inputMagentaTonner' placeholder='input the the quantity of magenta tonner remaining' value={state.magentaToner} onChange={handleInputMagentaTonnerChange} />
+                        <TextField className={classes.formRoot} required label='yellow tonner' id='inputYellowTonner' name='inputYellowTonner' placeholder='input the the quantity of yellow tonner remaining' value={state.yellowToner} onChange={handleInputYellowTonnerChange} />
                         <br /><br />
-                        <TextField label='ColorSheets' id='inputColorSheets' name='inputColorSheets' placeholder='input the quantity of color sheets' value={state.colorSheets} onChange={handleInputColorSheetsChange} />
-                        <br /><br />
-                        <TextField label='BlackTonner' id='inputBlackTonner' name='inputBlackTonner' placeholder='input the the quantity of black tonner remaining' value={state.blackToner} onChange={handleInputBlackTonnerChange} />
-                        <br /><br />
-                        <TextField label='CyanTonner' id='inputCyanTonner' name='inputCyanTonner' placeholder='input the the quantity of cyan tonner remaining' value={state.cyanToner} onChange={handleInputCyanTonnerChange} />
-                        <br /><br />
-                        <TextField label='MagentaTonner' id='inputMagentaTonner' name='inputMagentaTonner' placeholder='input the the quantity of magenta tonner remaining' value={state.magentaToner} onChange={handleInputMagentaTonnerChange} />
-                        <br /><br />
-                        <TextField label='YellowTonner' id='inputYellowTonner' name='inputYellowTonner' placeholder='input the the quantity of yellow tonner remaining' value={state.yellowToner} onChange={handleInputYellowTonnerChange} />
-                        <br /><br />
-                        <br /><br />
-                        <Button variant='contained' color='default' onClick={handleClose} >Cancel</Button> {/*en el momento del click y manda el elemento como parametro por defecto.. Si fuera handleClose(), el onClick estaria esperando lo que le retorna esa funcion (x ej. una llamada a aotra funcion)*/}
 
                         {!isEdit ? (
-                            <Button variant='contained' color='default' onClick={() => AddContract()} >Save</Button>
+                            <Button variant='contained' color='default' onClick={() => AddContract()}>Save new</Button>
                         ) : (
-                                <Button variant='contained' color='default' onClick={() => UpdateContract(contractId!)} >Save</Button>
+                                <Button variant='contained' color='default' onClick={() => UpdateContract()} >Save update</Button>
                             )
                         }
+                        <Button variant='contained' color='default' onClick={handleClose} >Cancel</Button> {/*en el momento del click y manda el elemento como parametro por defecto.. Si fuera handleClose(), el onClick estaria esperando lo que le retorna esa funcion (x ej. una llamada a aotra funcion)*/}
                     </div>
+                </div>    
                 </div>
             </Modal>
         </div>

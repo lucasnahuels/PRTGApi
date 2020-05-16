@@ -15,6 +15,7 @@ using PRTG_Api.Models;
 using PRTG_Api.Services;
 using System.Net.Http;
 using System.Net;
+using AutoMapper;
 
 namespace PRTG_Api
 {
@@ -30,6 +31,8 @@ namespace PRTG_Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(MapperProfiles));
+
             services.AddDatabaseContext(Configuration.GetConnectionString("PRTGApi"));
 
             //services.AddDbContext<DataBaseContext>(opt =>

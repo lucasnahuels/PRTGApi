@@ -17,6 +17,7 @@
     "popper.js": "^1.14.7",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
+    "react-fast-compare": "^3.1.1",
     "react-redux": "6.0.0",
     "react-redux-toastr": "^7.6.4",
     "react-router": "^4.3.1",

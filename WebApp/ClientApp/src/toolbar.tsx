@@ -68,34 +68,25 @@ export default function SearchAppBar() {
     const classes = useStyles();
     const [anchorElMenu, setAnchorElMenu] = React.useState<null | HTMLElement>(null); 
 
-    const handleClickOpenMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        setAnchorElMenu(event.currentTarget);
-    }
+
 
     return (
         <div className={classes.root}>
             <AppBar position='static'>
                 <Toolbar>
-                    <Grid container xs={5} spacing={3} item>
-                        <Grid item xs={4}>
-                            <IconButton
-                                edge='start'
-                                className={classes.menuButton}
-                                color='inherit'
-                                aria-label='open drawer'
-                                onClick={handleClickOpenMenu}
-                            >
-                                <MenuIcon />
-                            </IconButton>
-                        </Grid>
-                        <Grid item xs={8}>
+                    <Grid container xs={4} spacing={3} item>
+                        <Grid item xs={12}>
                             <Typography className={classes.title} variant='h5' noWrap>
                                 PRTG customized App
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Grid container xs={7} spacing={1} item>
-                        <Grid item xs={4}></Grid>
+                    <Grid container xs={8} spacing={1} item>
+                        <Grid item xs={4}>
+                                <Button className={classes.colorButton}>
+                                    Open sensor views
+                                </Button>
+                        </Grid>
                         <Grid item xs={4}>
                             <Link to="/contracts" >
                                 <Button className={classes.colorButton}>

@@ -14,16 +14,13 @@ import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import EmailFormModal from './mailsFormModal';
+import EmailDeleteConfirmModal from './mail-delete-confirm-modal';
 
 export interface IMailList {
     listOfMail: Mail[]
 }
 
-export interface MailListProps{
-    show: boolean
-}
-
-const MailList = ({show}: MailListProps) => {
+const MailList = () => {
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
             titlesRow: {
@@ -51,27 +48,42 @@ const MailList = ({show}: MailListProps) => {
     const classes = useStyles();
 
     const [stateMail, setMail] = React.useState<IMailList>();
-    const [showModal, setShowModal] = React.useState(false)
+    const [showModal, setShowModal] = React.useState(false);
+    const [showDeleteConfirmModal, setShowDeleteConfirmModal] = React.useState(false);
+    const [formIsEdit, setFormIsEdit] = React.useState(false);
+    const [mailIdToEdit, setMailIdToEdit] = React.useState(0);
+    const [mailAdressToEdit, setMailAdressToEdit] = React.useState('');
+    const [mailIdToDelete, setMailIdToDelete] = React.useState(0);
+    const [mailAdressToDelete, setMailAdressToDelete] = React.useState('');
+    
+    useEffect(() => { GetMails() }, []);
 
     const GetMails = async () => {
         const response = await axios.get(`https://localhost:44370/api/emails`);
         setMail({ ...stateMail, listOfMail: response.data });
     };
-
-    useEffect(() => { GetMails() }, []);
    
-    const ShowEmailForm = (isEdit: boolean, emailId?: Number | undefined) => {
+    const ShowEmailForm = (isEdit: boolean, mailToEdit? : Mail) => {
         setShowModal(true);
         if (!isEdit) {
-            // <EmailFormModal show={showModal} hideModal={HideForm} getAllEmails={GetMails} isEdit={false}/>
+            setFormIsEdit(false);
         }
         else {
-            // <EmailFormModal show={showModal} hideModal={HideForm} getAllEmails={GetMails} isEdit={true} />
+            setFormIsEdit(true);
+            setMailIdToEdit(mailToEdit!.emailId!);
+            setMailAdressToEdit(mailToEdit!.emailAdress);
         }
+    }
+
+    const ShowDeleteConfirm = async (mailToDelete : Mail) => {
+        setShowDeleteConfirmModal(true);
+        setMailIdToDelete(mailToDelete.emailId!);
+        setMailAdressToDelete(mailToDelete.emailAdress);
     }
 
     const HideForm = () => {
         setShowModal(false);
+        setShowDeleteConfirmModal(false);
     }
 
     return (
@@ -93,18 +105,37 @@ const MailList = ({show}: MailListProps) => {
                             <TableRow key={`${mail.emailId}`}>
                                 <TableCell>{mail.emailAdress}</TableCell>
                                 <TableCell>
-                                    <Button variant='contained' color='default' onClick={() => ShowEmailForm(true, mail.emailId)}> <EditIcon /> </Button>
+                                    <Button variant='contained' color='default' onClick={() => ShowEmailForm(true, mail)}> <EditIcon /> </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <Button variant='contained' color='secondary'><DeleteIcon /></Button>
+                                    <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(mail)}><DeleteIcon /></Button>
                                 </TableCell>
+
                             </TableRow>
                         )) : null}
                     </TableBody>
                 </Table>
             </TableContainer>
-
-            {/* <EmailFormModal show={showModal} hideModal={HideForm} getAllEmails={GetMails} isEdit={false}/> */}
+            {showModal ?
+                <EmailFormModal
+                    show={showModal}
+                    hideModal={HideForm}
+                    getAllEmails={GetMails}
+                    isEdit={formIsEdit}
+                    listOfEmails={stateMail!.listOfMail}
+                    emailId={mailIdToEdit}
+                    adress={mailAdressToEdit} />
+                : null
+            }
+            {showDeleteConfirmModal ?
+                <EmailDeleteConfirmModal 
+                    show={showDeleteConfirmModal} 
+                    hideModal={HideForm} 
+                    getAllEmails={GetMails} 
+                    emailId={mailIdToDelete} 
+                    emailAdress={mailAdressToDelete} />
+                : null
+            }
         </div>
     )
 }

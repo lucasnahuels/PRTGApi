@@ -12,7 +12,9 @@ export interface EmailFormModalProps {
     hideModal: Function,
     getAllEmails: Function,
     isEdit: boolean,
+    listOfEmails?: Mail[] 
     emailId?: number | undefined
+    adress?: string,
 }
 
 
@@ -52,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId }: EmailFormModalProps) => {
+const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress, listOfEmails}: EmailFormModalProps) => {
 
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
@@ -62,12 +64,37 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId }: Emai
         emailAdress: ''
     });
 
-    // tslint:disable-next-line: no-floating-promises
-    useEffect(() => { }, []);
+    useEffect(() => { fillList(); }, []);
+    //when format is "useEffect(() => {}, []);" only render the first time instead of every time there´re changes
+
+    const fillList = () =>{
+        if(isEdit){
+            setState({
+            emailAdress : adress!
+        }) 
+        }
+    }
+    
+    const CheckEmailExistence = (): boolean =>{
+        // let notInTheList : boolean = true;
+        // listOfEmails!.forEach(email => {
+        //     if(email.emailAdress == state.emailAdress!) 
+        //         notInTheList = false;
+        // });
+        // return notInTheList;
+
+        const email = listOfEmails!.find(x => x.emailAdress == state.emailAdress);
+        return (email) ? true : false;
+    }
 
     const AddEmail = () => {
+        if(CheckEmailExistence()){
+            ToastsStore.error('The email adress already exists');
+            return;
+        }
+
         let emailData: Mail = {
-            emailAdress: state.emailAdress
+            emailAdress: state.emailAdress!
         };
         axios.post('https://localhost:44370/api/emails', emailData).then(() => {
             handleClose();
@@ -78,12 +105,17 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId }: Emai
         })
     }
 
-    const UpdateEmail = async (id: number) => {
+    const UpdateEmail = async () => {
+        if (CheckEmailExistence()) {
+            ToastsStore.error('The email adress already exists');
+            return;
+        }
+
         let emailData: Mail = {
-            emailId : id,
-            emailAdress: state.emailAdress
+            emailId : emailId,
+            emailAdress: state.emailAdress!
         };
-        await axios.put('https://localhost:44370/api/emails/' + id.toString(), emailData).then(() => {
+        await axios.put('https://localhost:44370/api/emails/' + emailId!.toString(), emailData).then(() => {
             handleClose();
             ToastsStore.success('The email was saved');
             getAllEmails();
@@ -112,17 +144,18 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId }: Emai
                 <div style={modalStyle} className={classes.paper}>
                     <h2 id='emailform-modal-title'>Add email</h2>
                     <div id='emailform-modal-description'>
-                        <TextField label='EmailAdress' id='inputEmailAdress' name='inputEmailAdress' placeholder='input the email adress' value={state.emailAdress} onChange={handleInputEmailAdressChange} />
+                        <TextField label='email adress' id='inputEmailAdress' name='inputEmailAdress' placeholder='input the email adress' value={state.emailAdress} onChange={handleInputEmailAdressChange} />
                         <br /><br />
                         <br /><br />
-                        <Button variant='contained' color='default' onClick={handleClose} >Cancel</Button> {/*en el momento del click y manda el elemento como parametro por defecto.. Si fuera handleClose(), el onClick estaria esperando lo que le retorna esa funcion (x ej. una llamada a aotra funcion)*/}
 
                         {!isEdit ? (
-                            <Button variant='contained' color='default' onClick={() => AddEmail()} >Save</Button>
+                            <Button variant='contained' color='default' onClick={() => AddEmail()} >Save new</Button>
                         ) : (
-                                <Button variant='contained' color='default' onClick={() => UpdateEmail(emailId!)} >Save</Button>
+                                <Button variant='contained' color='default' onClick={() => UpdateEmail()} >Save update</Button>
                             )
                         }
+                        <Button variant='contained' color='default' onClick={handleClose} >Cancel</Button> 
+                        {/*en el momento del click y manda el elemento como parametro por defecto.. Si fuera handleClose(), el onClick estaria esperando lo que le retorna esa funcion (x ej. una llamada a aotra funcion)*/}
                     </div>
                 </div>
             </Modal>
