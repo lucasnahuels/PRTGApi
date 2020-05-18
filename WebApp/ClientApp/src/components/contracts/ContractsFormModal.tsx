@@ -6,23 +6,23 @@ import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import { Contract } from './contract';
+import { myConfig } from '../../configurations';
 
 export interface ContractFormModalProps {
     show: boolean,
     hideModal: Function,
     getAllContracts: Function,
     isEdit: boolean,
-    contractId?: Number | undefined
     contractToEdit? : Contract 
 }
 
 
 function getModalStyle() {
     const top = 28;
-    const left = 35;
+    const left = 31;
 
     return {
-        top: `${top}%`,
+        top: `${15}%`,
         left: `${left}%`,
         transform: `translate(-${top}%, -${left}%)`,
     };
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractId, contractToEdit }: ContractFormModalProps) => {
+const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractToEdit }: ContractFormModalProps) => {
 
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
@@ -96,7 +96,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractI
                                     magentaToner: state.magentaToner,
                                     yellowToner: state.yellowToner 
                                 };
-        axios.post('https://localhost:44370/api/contracts', contractData).then(() => {
+        axios.post(myConfig.backUrl + 'contracts', contractData).then(() => {
             handleClose();
             ToastsStore.success('The contract was saved');
             getAllContracts();
@@ -107,7 +107,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractI
 
     const UpdateContract = async () => {
         let contractData: Contract = {
-                                    contractId: contractId,
+                                    contractId: contractToEdit!.contractId!,
                                     nameOfCompany: state.nameOfCompany,
                                     printer: state.printer,
                                     month: state.month,
@@ -118,7 +118,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractI
                                     magentaToner: state.magentaToner,
                                     yellowToner: state.yellowToner
                                  };
-        await axios.put('https://localhost:44370/api/contracts/' + contractId!.toString(), contractData).then(() => {
+        await axios.put(myConfig.backUrl + 'contracts/' + contractToEdit!.contractId!.toString(), contractData).then(() => {
             handleClose();
             ToastsStore.success('The contract was saved');
             getAllContracts();

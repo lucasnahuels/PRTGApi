@@ -42,7 +42,7 @@ namespace PRTG_Api
             services.AddControllers();
             services.AddHttpClient("prtg", c =>
             {
-                c.BaseAddress = new Uri("https://losteros.fortiddns.com:44443/");
+                c.BaseAddress = new Uri(Configuration["LosTerosUrl"]);
 
             }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
             {
@@ -58,6 +58,11 @@ namespace PRTG_Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                //app.UseExceptionHandler("/error");
+            }
+
             app.UseCors((builder) => builder.WithOrigins("https://localhost:44323").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 
             app.UseHttpsRedirection();

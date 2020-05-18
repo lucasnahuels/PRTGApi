@@ -64,7 +64,7 @@ namespace PRTG.Api.Controllers
                 }
                 else
                 {
-                    return Problem(title: "Ocurrio un error");
+                    return Problem(title: "There has been an error");
                 }
             }
 

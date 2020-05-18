@@ -3,7 +3,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import { Contract } from './contract';
-import { Button, Paper } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import {Chart, BarSeries, Title, ArgumentAxis, ValueAxis} from '@devexpress/dx-react-chart-material-ui';
 import { Animation } from '@devexpress/dx-react-chart';
 
@@ -11,10 +11,7 @@ import { Animation } from '@devexpress/dx-react-chart';
 export interface TonnersModalProps {
     show: boolean,
     hideModal: Function,
-    blackToner?: number,
-    cyanToner?: number,
-    yellowToner?: number,
-    magentaToner?: number, 
+    contractInfo? : Contract
 }
 
 export interface ICategoryList {
@@ -26,7 +23,7 @@ function getModalStyle() {
     const left = 35;
 
     return {
-        top: `${top}%`,
+        top: `${18}%`,
         left: `${left}%`,
         transform: `translate(-${top}%, -${left}%)`
     };
@@ -46,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const TonnersModal = ({ show, hideModal, blackToner, cyanToner, yellowToner, magentaToner}: TonnersModalProps) => {
+const TonnersModal = ({ show, hideModal, contractInfo}: TonnersModalProps) => {
     const [modalStyle] = React.useState(getModalStyle);
 
     const classes = useStyles();
@@ -56,11 +53,10 @@ const TonnersModal = ({ show, hideModal, blackToner, cyanToner, yellowToner, mag
     };
 
     const data = [
-        { color: 'Black', black: blackToner },
-        { color: 'Cyan', cyan: cyanToner },
-        { color: 'Yellow', yellow: yellowToner },
-        { color: 'Magenta', magenta: magentaToner },
-        { color: 'Magenta', magenta: magentaToner },
+        { color: 'Black', black: contractInfo!.blackToner },
+        { color: 'Cyan', cyan: contractInfo!.cyanToner },
+        { color: 'Yellow', yellow: contractInfo!.yellowToner },
+        { color: 'Magenta', magenta: contractInfo!.magentaToner },
         { color: '', total :100 },
     ];
 

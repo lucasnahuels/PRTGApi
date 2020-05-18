@@ -17,6 +17,7 @@ import TonnersModal from './tonners-modal';
 import ContractFormModal from './ContractsFormModal';
 import ContractDeleteConfirmModal from './contract-delete-confirm-modal';
 import { Grid } from '@material-ui/core';
+import { myConfig } from '../../configurations.js';
 
 export interface IContractList {
     listOfContract: Contract[]
@@ -29,10 +30,8 @@ const ContractList = () => {
                 fontWeight : 'bold'
             },
             margins:{
-                marginTop: '60px',
-                marginLeft: '60px',
-                marginRight: '60px',
-                marginBottom: '60px',
+                paddingTop: '60px',
+                paddingBottom: '60px',
             },
             buttonAdd:{
                 float: 'right',
@@ -54,31 +53,31 @@ const ContractList = () => {
     const [showFormModal, setShowFormModal] = React.useState(false);
     const [showDeleteConfirmModal, setShowDeleteConfirmModal] = React.useState(false);
     const [formIsEdit, setFormIsEdit] = React.useState(false);
-    const [contractIdToEdit, setContractIdToEdit] = React.useState<Number>(0);
     const [contractHookToEdit, setContractHookToEdit] = React.useState<Contract>();
     const [contractIdToDelete, setContractIdToDelete] = React.useState<Number>(0);
     const [contractPrinterToDelete, setContractPrinterToDelete] = React.useState('');
+    const [contractInfoForTonners, setContractInfoForTonners] = React.useState<Contract>();
 
     useEffect(() => { GetContracts(); }, []);
 
     const GetContracts = async () => {
-        await axios.get(`https://localhost:44370/api/Contracts`).then( (response) => {
+        await axios.get(myConfig.backUrl + `Contracts`).then( (response) => {
             setContract({ ...stateContract, listOfContract: response.data });
         });
     };
 
-    const OpenTonnersModal = () =>{
+    const OpenTonnersModal = (contractInfo: Contract) =>{
         setShowTonnerModal(true);
+        setContractInfoForTonners(contractInfo)
     }
 
-    const ShowContractForm = (isEdit: boolean, contractIdToEdit?: Number, contractToEdit?: Contract) => {
+    const ShowContractForm = (isEdit: boolean, contractToEdit?: Contract) => {
         setShowFormModal(true);
         if (!isEdit) {
             setFormIsEdit(false);
         }
         else{
             setFormIsEdit(true);
-            setContractIdToEdit(contractIdToEdit!);
             setContractHookToEdit(contractToEdit!);
         }
     }
@@ -96,8 +95,8 @@ const ContractList = () => {
     }
     
     return (
-        <div>
-        <Grid container xs={12} item>
+        <div className={classes.margins}>
+        <Grid container xs={12}>
             <Grid item xs={1}></Grid>
             <Grid item xs={10}>
                 <Button className={classes.buttonAdd} onClick={() => ShowContractForm(false)}>
@@ -126,10 +125,10 @@ const ContractList = () => {
                                     <TableCell>{contract.blackAndWhiteSheets}</TableCell>
                                     <TableCell>{contract.colorSheets}</TableCell>
                                     <TableCell>
-                                        <Button variant='contained' color='primary' size='small' onClick={OpenTonnersModal}>Tonners info</Button>
+                                        <Button variant='contained' color='primary' size='small' onClick={()=> OpenTonnersModal(contract)}>Tonners info</Button>
                                     </TableCell>
                                     <TableCell>
-                                        <Button variant='contained' color='default' onClick={() => ShowContractForm(true, contract.contractId, contract)}> <EditIcon /> </Button>
+                                        <Button variant='contained' color='default' onClick={() => ShowContractForm(true, contract)}> <EditIcon /> </Button>
                                     </TableCell>
                                     <TableCell>
                                         <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(contract.contractId!, contract.printer)}><DeleteIcon /></Button>
@@ -139,20 +138,19 @@ const ContractList = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                {/* <TonnersModal 
-                    show={showTonnerModal} 
-                    hideModal={HideForm} 
-                    blackToner={contract.blackToner} 
-                    cyanToner={contract.cyanToner} 
-                    yellowToner={contract.yellowToner} 
-                    magentaToner={contract.magentaToner} /> */}
+                {showTonnerModal ?
+                    <TonnersModal 
+                        show={showTonnerModal} 
+                        hideModal={HideForm} 
+                        contractInfo={contractInfoForTonners}/>
+                    : null
+                }
                 {showFormModal ?
                     <ContractFormModal 
                         show={showFormModal} 
                         hideModal={HideForm} 
                         getAllContracts={GetContracts} 
                         isEdit={formIsEdit} 
-                        contractId={contractIdToEdit} 
                         contractToEdit={contractHookToEdit} />
                     : null
                 }

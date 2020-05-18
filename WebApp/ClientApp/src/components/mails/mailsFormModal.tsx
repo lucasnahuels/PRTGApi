@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import { Mail } from './mail';
+import { myConfig } from '../../configurations';
 
 export interface EmailFormModalProps {
     show: boolean,
@@ -96,7 +97,7 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
         let emailData: Mail = {
             emailAdress: state.emailAdress!
         };
-        axios.post('https://localhost:44370/api/emails', emailData).then(() => {
+        axios.post(myConfig.backUrl + 'emails', emailData).then(() => {
             handleClose();
             ToastsStore.success('The email was saved');
             getAllEmails();
@@ -115,7 +116,7 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
             emailId : emailId,
             emailAdress: state.emailAdress!
         };
-        await axios.put('https://localhost:44370/api/emails/' + emailId!.toString(), emailData).then(() => {
+        await axios.put(myConfig.backUrl + 'emails/' + emailId!.toString(), emailData).then(() => {
             handleClose();
             ToastsStore.success('The email was saved');
             getAllEmails();

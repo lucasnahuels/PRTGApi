@@ -5,6 +5,7 @@ import { Button } from '@material-ui/core';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import { Mail } from './mail';
+import { myConfig } from '../../configurations';
 
 export interface EmailDeleteConfirmModalProps {
     show: boolean,
@@ -49,7 +50,7 @@ const EmailDeleteConfirmModal = ({ show, hideModal, getAllEmails, emailId, email
     useEffect(() => { }, []);
 
     const DeleteEmail = async () => {
-        await axios.delete('https://localhost:44370/api/emails/' + emailId!.toString()).then( () => {
+        await axios.delete(myConfig.backUrl + 'emails/' + emailId!.toString()).then( () => {
             handleClose();
             ToastsStore.success('The E-Mail was deleted');
             getAllEmails();

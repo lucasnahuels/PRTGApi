@@ -15,6 +15,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import EmailFormModal from './mailsFormModal';
 import EmailDeleteConfirmModal from './mail-delete-confirm-modal';
+import { Grid } from '@material-ui/core';
+import { myConfig } from '../../configurations';
 
 export interface IMailList {
     listOfMail: Mail[]
@@ -27,10 +29,8 @@ const MailList = () => {
                 fontWeight: 'bold'
             },
             margins: {
-                marginTop: '120px',
-                marginLeft: '400px',
-                marginRight: '400px',
-                marginBottom: '120px',
+                paddingTop: '120px',
+                paddingBottom: '120px',
             },
             buttonAdd: {
                 float: 'right',
@@ -59,7 +59,7 @@ const MailList = () => {
     useEffect(() => { GetMails() }, []);
 
     const GetMails = async () => {
-        const response = await axios.get(`https://localhost:44370/api/emails`);
+        const response = await axios.get(myConfig.backUrl + `emails`);
         setMail({ ...stateMail, listOfMail: response.data });
     };
    
@@ -88,54 +88,60 @@ const MailList = () => {
 
     return (
         <div className={classes.margins}>
-            <Button className={classes.buttonAdd} onClick={() => ShowEmailForm(false)}>
-                Add new E-Mail
-            </Button>
-            <TableContainer component={Paper}>
-                <Table size='medium'>
-                    <TableHead aria-label="simple table">
-                        <TableRow>
-                            <TableCell className={classes.titlesRow} size='medium'>E-mail adress</TableCell>
-                            <TableCell className={classes.titlesRow} size='medium'></TableCell>
-                            <TableCell className={classes.titlesRow} size='medium'></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {stateMail !== undefined && stateMail.listOfMail !== undefined ? stateMail.listOfMail.map(mail => (
-                            <TableRow key={`${mail.emailId}`}>
-                                <TableCell>{mail.emailAdress}</TableCell>
-                                <TableCell>
-                                    <Button variant='contained' color='default' onClick={() => ShowEmailForm(true, mail)}> <EditIcon /> </Button>
-                                </TableCell>
-                                <TableCell>
-                                    <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(mail)}><DeleteIcon /></Button>
-                                </TableCell>
-
+        <Grid container xs={12}>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={6}>
+                <Button className={classes.buttonAdd} onClick={() => ShowEmailForm(false)}>
+                    Add new E-Mail
+                </Button>
+                <TableContainer component={Paper}>
+                    <Table size='medium'>
+                        <TableHead aria-label="simple table">
+                            <TableRow>
+                                <TableCell className={classes.titlesRow} size='medium'>E-mail adress</TableCell>
+                                <TableCell className={classes.titlesRow} size='medium'></TableCell>
+                                <TableCell className={classes.titlesRow} size='medium'></TableCell>
                             </TableRow>
-                        )) : null}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            {showModal ?
-                <EmailFormModal
-                    show={showModal}
-                    hideModal={HideForm}
-                    getAllEmails={GetMails}
-                    isEdit={formIsEdit}
-                    listOfEmails={stateMail!.listOfMail}
-                    emailId={mailIdToEdit}
-                    adress={mailAdressToEdit} />
-                : null
-            }
-            {showDeleteConfirmModal ?
-                <EmailDeleteConfirmModal 
-                    show={showDeleteConfirmModal} 
-                    hideModal={HideForm} 
-                    getAllEmails={GetMails} 
-                    emailId={mailIdToDelete} 
-                    emailAdress={mailAdressToDelete} />
-                : null
-            }
+                        </TableHead>
+                        <TableBody>
+                            {stateMail !== undefined && stateMail.listOfMail !== undefined ? stateMail.listOfMail.map(mail => (
+                                <TableRow key={`${mail.emailId}`}>
+                                    <TableCell>{mail.emailAdress}</TableCell>
+                                    <TableCell>
+                                        <Button variant='contained' color='default' onClick={() => ShowEmailForm(true, mail)}> <EditIcon /> </Button>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(mail)}><DeleteIcon /></Button>
+                                    </TableCell>
+
+                                </TableRow>
+                            )) : null}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                {showModal ?
+                    <EmailFormModal
+                        show={showModal}
+                        hideModal={HideForm}
+                        getAllEmails={GetMails}
+                        isEdit={formIsEdit}
+                        listOfEmails={stateMail!.listOfMail}
+                        emailId={mailIdToEdit}
+                        adress={mailAdressToEdit} />
+                    : null
+                }
+                {showDeleteConfirmModal ?
+                    <EmailDeleteConfirmModal 
+                        show={showDeleteConfirmModal} 
+                        hideModal={HideForm} 
+                        getAllEmails={GetMails} 
+                        emailId={mailIdToDelete} 
+                        emailAdress={mailAdressToDelete} />
+                    : null
+                }
+            </Grid>
+            <Grid item xs={3}></Grid>
+        </Grid>
         </div>
     )
 }

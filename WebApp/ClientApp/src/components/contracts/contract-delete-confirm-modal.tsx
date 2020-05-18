@@ -5,6 +5,7 @@ import { Button } from '@material-ui/core';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import { Contract } from './contract';
+import { myConfig } from '../../configurations';
 
 export interface ContractDeleteConfirmModalProps {
     show: boolean,
@@ -49,7 +50,7 @@ const ContractDeleteConfirmModal = ({ show, hideModal, getAllContracts, contract
     useEffect(() => { }, []);
 
     const DeleteContract = async () => {
-        await axios.delete('https://localhost:44370/api/contracts/' + contractId!.toString()).then(() => {
+        await axios.delete(myConfig.backUrl + 'contracts/' + contractId!.toString()).then(() => {
             handleClose();
             ToastsStore.success('The contract was deleted');
             getAllContracts();
