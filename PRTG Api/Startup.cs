@@ -60,10 +60,10 @@ namespace PRTG_Api
             }
             else
             {
-                //app.UseExceptionHandler("/error");
+                app.UseExceptionHandler("/error");
             }
 
-            app.UseCors((builder) => builder.WithOrigins("https://localhost:44323").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            app.UseCors((builder) => builder.WithOrigins(Configuration["ClientAppUrl"]).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 
             app.UseHttpsRedirection();
 

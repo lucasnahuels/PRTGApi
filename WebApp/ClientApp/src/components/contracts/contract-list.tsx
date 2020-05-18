@@ -96,7 +96,7 @@ const ContractList = () => {
     
     return (
         <div className={classes.margins}>
-        <Grid container xs={12}>
+        <Grid container xs={12} item>
             <Grid item xs={1}></Grid>
             <Grid item xs={10}>
                 <Button className={classes.buttonAdd} onClick={() => ShowContractForm(false)}>
