@@ -10,6 +10,7 @@ import registerServiceWorker from './registerServiceWorker';
 import MailList from './components/mails/mail-list';
 import ContractList from './components/contracts/contract-list';
 import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
+import SensorList from './components/sensors/sensor-list';
 
 // Create browser history to use in the Redux store
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href') as string;
@@ -25,6 +26,7 @@ ReactDOM.render(
             <Route path="/" component={App} />
             <Route path="/contracts" component={ContractList} />
             <Route path="/mails" component={MailList} />
+            <Route path="/sensors" component={SensorList} />
             </div>        
         </ConnectedRouter>
     </Provider>,

@@ -15,8 +15,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import EmailFormModal from './mailsFormModal';
 import EmailDeleteConfirmModal from './mail-delete-confirm-modal';
-import { Grid } from '@material-ui/core';
+import { Grid, TablePagination, TableFooter} from '@material-ui/core';
 import { myConfig } from '../../configurations';
+import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 
 export interface IMailList {
     listOfMail: Mail[]
@@ -29,7 +30,7 @@ const MailList = () => {
                 fontWeight: 'bold'
             },
             margins: {
-                paddingTop: '120px',
+                paddingTop: '70px',
                 paddingBottom: '120px',
             },
             buttonAdd: {
@@ -42,7 +43,7 @@ const MailList = () => {
                 '&:hover': {
                     backgroundColor: 'red',
                 }
-            },
+            }
         })
     );
     const classes = useStyles();
@@ -55,6 +56,8 @@ const MailList = () => {
     const [mailAdressToEdit, setMailAdressToEdit] = React.useState('');
     const [mailIdToDelete, setMailIdToDelete] = React.useState(0);
     const [mailAdressToDelete, setMailAdressToDelete] = React.useState('');
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(3);
     
     useEffect(() => { GetMails() }, []);
 
@@ -86,9 +89,20 @@ const MailList = () => {
         setShowDeleteConfirmModal(false);
     }
 
+    const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
     return (
         <div className={classes.margins}>
-        <Grid container xs={12}>
+        <Grid container xs={12} item>
             <Grid item xs={3}></Grid>
             <Grid item xs={6}>
                 <Button className={classes.buttonAdd} onClick={() => ShowEmailForm(false)}>
@@ -104,21 +118,45 @@ const MailList = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {stateMail !== undefined && stateMail.listOfMail !== undefined ? stateMail.listOfMail.map(mail => (
-                                <TableRow key={`${mail.emailId}`}>
-                                    <TableCell>{mail.emailAdress}</TableCell>
-                                    <TableCell>
-                                        <Button variant='contained' color='default' onClick={() => ShowEmailForm(true, mail)}> <EditIcon /> </Button>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(mail)}><DeleteIcon /></Button>
-                                    </TableCell>
+                            {stateMail !== undefined && stateMail.listOfMail !== undefined ? 
+                                (rowsPerPage > 0
+                                    ? stateMail.listOfMail.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    : stateMail.listOfMail
+                                )
+                                .map(mail => (
+                                    <TableRow key={`${mail.emailId}`}>
+                                        <TableCell>{mail.emailAdress}</TableCell>
+                                        <TableCell>
+                                            <Button variant='contained' color='default' onClick={() => ShowEmailForm(true, mail)}> <EditIcon /> </Button>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(mail)}><DeleteIcon /></Button>
+                                        </TableCell>
 
-                                </TableRow>
+                                    </TableRow>
                             )) : null}
                         </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    rowsPerPageOptions={[3, 6, 9, { label: 'All', value: -1 }]}
+                                    colSpan={3}
+                                    count={stateMail !== undefined && stateMail.listOfMail !== undefined ? stateMail.listOfMail.length : 0}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    SelectProps={{
+                                        inputProps: { 'aria-label': 'rows per page' },
+                                        native: true,
+                                    }}
+                                    onChangePage={handleChangePage}
+                                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                                    ActionsComponent={TablePaginationActions}
+                                />
+                            </TableRow>
+                        </TableFooter>
                     </Table>
                 </TableContainer>
+                
                 {showModal ?
                     <EmailFormModal
                         show={showModal}

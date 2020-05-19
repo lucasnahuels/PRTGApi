@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { Contract } from './contract';
@@ -16,8 +16,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import TonnersModal from './tonners-modal';
 import ContractFormModal from './ContractsFormModal';
 import ContractDeleteConfirmModal from './contract-delete-confirm-modal';
-import { Grid } from '@material-ui/core';
+import { Grid, TablePagination, TableFooter, TextField } from '@material-ui/core';
 import { myConfig } from '../../configurations.js';
+import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 export interface IContractList {
     listOfContract: Contract[]
@@ -44,6 +46,11 @@ const ContractList = () => {
                     backgroundColor: 'red',
                 }
             },
+            searchField:{
+                float: 'left',
+                display: 'inline',
+                width:'220px'
+            }
         })
     );
     const classes = useStyles();
@@ -57,6 +64,8 @@ const ContractList = () => {
     const [contractIdToDelete, setContractIdToDelete] = React.useState<Number>(0);
     const [contractPrinterToDelete, setContractPrinterToDelete] = React.useState('');
     const [contractInfoForTonners, setContractInfoForTonners] = React.useState<Contract>();
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(3);
 
     useEffect(() => { GetContracts(); }, []);
 
@@ -93,12 +102,55 @@ const ContractList = () => {
         setShowTonnerModal(false);
         setShowDeleteConfirmModal(false);
     }
+
+    const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const FilterByPrinterName = (e: ChangeEvent<HTMLInputElement>) =>{
+        
+        if (e.target.value == ""){
+            GetContracts();
+            return;
+        }
+
+        GetContracts();
+        let listOfContractsFiltered : Contract[]= [];
+        stateContract!.listOfContract.forEach(contract => {
+            if (contract.printer == e.target.value){
+                listOfContractsFiltered.push(contract);
+            }
+        });
+
+        setContract({ ...stateContract, listOfContract: listOfContractsFiltered });
+    }
     
     return (
         <div className={classes.margins}>
         <Grid container xs={12} item>
             <Grid item xs={1}></Grid>
             <Grid item xs={10}>
+                <Autocomplete
+                    id="free-solo"
+                    freeSolo
+                    className={classes.searchField}
+                    options={(stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract : []).map((contract) => contract.printer)}
+                    renderInput={(params) => (
+                        <TextField {...params} 
+                            label="Filter by printer name" 
+                            margin="normal" 
+                            variant="outlined"
+                            onChange={FilterByPrinterName}
+                        />
+                    )}
+                />
                 <Button className={classes.buttonAdd} onClick={() => ShowContractForm(false)}>
                     Add new contract
                 </Button>
@@ -117,7 +169,12 @@ const ContractList = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract.map(contract => (
+                            {stateContract !== undefined && stateContract.listOfContract !== undefined ?
+                                (rowsPerPage > 0
+                                    ? stateContract.listOfContract.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    : stateContract.listOfContract
+                                )
+                                .map(contract => (
                                 <TableRow key={`${contract.contractId}`}>
                                     <TableCell>{contract.nameOfCompany}</TableCell>
                                     <TableCell>{contract.printer}</TableCell>
@@ -136,8 +193,27 @@ const ContractList = () => {
                                 </TableRow>
                             )) : null}
                         </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    rowsPerPageOptions={[3, 6, 9, { label: 'All', value: -1 }]}
+                                    colSpan={3}
+                                    count={stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract.length : 0}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    SelectProps={{
+                                        inputProps: { 'aria-label': 'rows per page' },
+                                        native: true,
+                                    }}
+                                    onChangePage={handleChangePage}
+                                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                                    ActionsComponent={TablePaginationActions}
+                                />
+                            </TableRow>
+                        </TableFooter>
                     </Table>
                 </TableContainer>
+
                 {showTonnerModal ?
                     <TonnersModal 
                         show={showTonnerModal} 
