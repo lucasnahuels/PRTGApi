@@ -56,6 +56,7 @@ const ContractList = () => {
     const classes = useStyles();
 
     const [stateContract, setContract] = React.useState<IContractList>();
+    const [stateContractConst, setContractConst] = React.useState<IContractList>();
     const [showTonnerModal, setShowTonnerModal] = React.useState(false);
     const [showFormModal, setShowFormModal] = React.useState(false);
     const [showDeleteConfirmModal, setShowDeleteConfirmModal] = React.useState(false);
@@ -66,12 +67,19 @@ const ContractList = () => {
     const [contractInfoForTonners, setContractInfoForTonners] = React.useState<Contract>();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
+    const [searchTerm, setSearchTerm] = React.useState("");
+    const [searchResults, setSearchResults] = React.useState([]);
 
-    useEffect(() => { GetContracts(); }, []);
 
     const GetContracts = async () => {
         await axios.get(myConfig.backUrl + `Contracts`).then( (response) => {
             setContract({ ...stateContract, listOfContract: response.data });
+        });
+    };
+
+    const GetContractsConst = async () => {
+        await axios.get(myConfig.backUrl + `Contracts`).then((response) => {
+            setContractConst({ ...stateContractConst, listOfContract: response.data });
         });
     };
 
@@ -114,23 +122,26 @@ const ContractList = () => {
         setPage(0);
     };
 
-    const FilterByPrinterName = (e: ChangeEvent<HTMLInputElement>) =>{
-        
-        if (e.target.value == ""){
-            GetContracts();
-            return;
+    const FilterByPrinterName = (event:any) => {
+        if (event.key == 'Enter') {
+            alert('test');
+            setSearchTerm(event.target.textContent);
         }
+        setSearchTerm(event.target.textContent);
+    };
 
-        GetContracts();
-        let listOfContractsFiltered : Contract[]= [];
-        stateContract!.listOfContract.forEach(contract => {
-            if (contract.printer == e.target.value){
-                listOfContractsFiltered.push(contract);
-            }
-        });
+    React.useEffect(() => { GetContractsConst(); }, []);
+    React.useEffect(() => { GetContracts(); }, []);
 
-        setContract({ ...stateContract, listOfContract: listOfContractsFiltered });
-    }
+    React.useEffect( () => {
+        let results : any = [];
+        if( stateContractConst !== undefined && stateContractConst.listOfContract !== undefined) {
+            results = stateContractConst!.listOfContract!.filter(contract =>
+                contract.printer.toLowerCase().includes(searchTerm)
+            );
+        }
+        setContract({ ...stateContract, listOfContract: results });
+    }, [searchTerm]);
     
     return (
         <div className={classes.margins}>
@@ -138,16 +149,18 @@ const ContractList = () => {
             <Grid item xs={1}></Grid>
             <Grid item xs={10}>
                 <Autocomplete
-                    id="free-solo"
-                    freeSolo
                     className={classes.searchField}
+                    onInputChange={FilterByPrinterName}
                     options={(stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract : []).map((contract) => contract.printer)}
                     renderInput={(params) => (
                         <TextField {...params} 
                             label="Filter by printer name" 
                             margin="normal" 
                             variant="outlined"
-                            onChange={FilterByPrinterName}
+                            onChange={event => {
+                                const { value } = event.target;
+                                setSearchTerm(value);
+                            }}
                         />
                     )}
                 />
