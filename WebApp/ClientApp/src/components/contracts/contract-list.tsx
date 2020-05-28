@@ -122,7 +122,7 @@ const ContractList = () => {
         setPage(0);
     };
 
-    React.useState( GetContractsConst() );
+    React.useEffect(() => { GetContractsConst(); }, []);
     React.useEffect(() => { GetContracts(); }, []);
 
     React.useEffect( () => {
@@ -145,11 +145,13 @@ const ContractList = () => {
                     value={value}
                     onChange={(event: React.ChangeEvent<{}>, newValue: string|null) => {            
                         setValue(newValue);
+                        event.preventDefault();
                     }}
                     inputValue={inputValue}
                     onInputChange={(event, newInputValue) => {
                         setSearchTerm(newInputValue);
                         setInputValue(newInputValue);
+                        event.preventDefault();
                     }}
                     options={(stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract : []).map((contract) => contract.printer)}
                     renderInput={(params) => (
@@ -157,10 +159,6 @@ const ContractList = () => {
                             label="Filter by printer name" 
                             margin="normal" 
                             variant="outlined"
-                            // onChange={event => {
-                            //     const { value } = event.target;
-                            //     setSearchTerm(value);
-                            // }}
                         />
                     )}
                 />
