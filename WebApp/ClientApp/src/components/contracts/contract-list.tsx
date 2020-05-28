@@ -68,8 +68,8 @@ const ContractList = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
     const [searchTerm, setSearchTerm] = React.useState("");
-    const [searchResults, setSearchResults] = React.useState([]);
-
+    const [value, setValue] = React.useState<string | null>("");
+    const [inputValue, setInputValue] = React.useState('');
 
     const GetContracts = async () => {
         await axios.get(myConfig.backUrl + `Contracts`).then( (response) => {
@@ -122,14 +122,6 @@ const ContractList = () => {
         setPage(0);
     };
 
-    const FilterByPrinterName = (event:any) => {
-        if (event.key == 'Enter') {
-            alert('test');
-            setSearchTerm(event.target.textContent);
-        }
-        setSearchTerm(event.target.textContent);
-    };
-
     React.useEffect(() => { GetContractsConst(); }, []);
     React.useEffect(() => { GetContracts(); }, []);
 
@@ -150,17 +142,25 @@ const ContractList = () => {
             <Grid item xs={10}>
                 <Autocomplete
                     className={classes.searchField}
-                    onInputChange={FilterByPrinterName}
+                    value={value}
+                    onChange={(event: React.ChangeEvent<{}>, newValue: string|null) => {            
+                        setValue(newValue);
+                    }}
+                    inputValue={inputValue}
+                    onInputChange={(event, newInputValue) => {
+                        setSearchTerm(newInputValue);
+                        setInputValue(newInputValue);
+                    }}
                     options={(stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract : []).map((contract) => contract.printer)}
                     renderInput={(params) => (
                         <TextField {...params} 
                             label="Filter by printer name" 
                             margin="normal" 
                             variant="outlined"
-                            onChange={event => {
-                                const { value } = event.target;
-                                setSearchTerm(value);
-                            }}
+                            // onChange={event => {
+                            //     const { value } = event.target;
+                            //     setSearchTerm(value);
+                            // }}
                         />
                     )}
                 />
