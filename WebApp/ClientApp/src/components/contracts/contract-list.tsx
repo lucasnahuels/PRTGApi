@@ -122,7 +122,7 @@ const ContractList = () => {
         setPage(0);
     };
 
-    React.useEffect(() => { GetContractsConst(); }, []);
+    React.useState( GetContractsConst() );
     React.useEffect(() => { GetContracts(); }, []);
 
     React.useEffect( () => {
