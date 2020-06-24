@@ -1,20 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using PRTG_Api.Models;
 using PRTG_Api.Services;
 using System.Net.Http;
-using System.Net;
 using AutoMapper;
 
 namespace PRTG_Api
@@ -35,10 +26,6 @@ namespace PRTG_Api
 
             services.AddDatabaseContext(Configuration.GetConnectionString("PRTGApi"));
 
-            //services.AddDbContext<DataBaseContext>(opt =>
-            //{
-            //    opt.UseInMemoryDatabase("TodoList");
-            //});
             services.AddControllers();
             services.AddHttpClient("prtg", c =>
             {

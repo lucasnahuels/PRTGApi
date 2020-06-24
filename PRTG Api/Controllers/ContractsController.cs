@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PRTG_Api.Models;
@@ -20,28 +18,20 @@ namespace PRTG.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Contracts
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contract>>> GetContracts()
         {
             return await _context.Contract.OrderBy(x => x.NameOfCompany).ToListAsync().ConfigureAwait(false);
         }
 
-        // GET: api/Contracts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Contract>> GetContract(int id)
         {
             var contract = await _context.Contract.FindAsync(id).ConfigureAwait(false);
 
-            if (contract == null)
-            {
-                return NotFound();
-            }
-
-            return contract;
+            return contract == null ? NotFound() : (ActionResult<Contract>)contract;
         }
 
-        // PUT: api/Contracts/5
         [HttpPut("{id}")]
         public async Task<ActionResult<Contract>> PutContract(int id, Contract contract)
         {
@@ -58,20 +48,12 @@ namespace PRTG.Api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ContractExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return Problem(title: "There has been an error");
-                }
+                return !ContractExists(id) ? NotFound() : (ActionResult<Contract>)Problem(title: "There has been an error");
             }
 
             return contract;
         }
 
-        // POST: api/Contracts
         [HttpPost]
         public async Task<ActionResult<Contract>> PostContract(Contract contract)
         {
@@ -81,7 +63,6 @@ namespace PRTG.Api.Controllers
             return CreatedAtAction("GetContract", new { id = contract.ContractId }, contract);
         }
 
-        // DELETE: api/Contracts/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Contract>> DeleteContract(int id)
         {

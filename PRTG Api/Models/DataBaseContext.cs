@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using PRTG_Api.Models;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace PRTG_Api.Models
 {
     public class DataBaseContext : DbContext
     {
-        public DataBaseContext(DbContextOptions<DataBaseContext> options)
-            : base(options)
-        {
-        }
-        public DbSet<PRTG_Api.Models.Contract> Contract { get; set; } //migrations
-        public DbSet<Email> Email { get; set; } //migrations
+        public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options) { }
+        public DbSet<Contract> Contract { get; set; }
+        public DbSet<Email> Email { get; set; }
     }
 }
