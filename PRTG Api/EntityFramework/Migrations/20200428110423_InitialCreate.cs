@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace PRTG_Api.Migrations
+namespace PRTG_Api.EntityFramework.Migrations
 {
     public partial class InitialCreate : Migration
     {

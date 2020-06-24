@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PRTG_Api.Models;
+using PRTG_Api.EntityFramework;
 
 namespace PRTG_Api
 {

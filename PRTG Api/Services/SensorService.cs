@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using PRTG_Api.Models;
+using PRTG_Api.Services.Interfaces;
 using System.Net.Http;
 using System.Threading.Tasks;
 
