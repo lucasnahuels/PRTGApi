@@ -4,10 +4,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PRTG_Api.Services;
 using System.Net.Http;
 using AutoMapper;
-using PRTG_Api.Services.Interfaces;
+using PRTG_Api.Services.Extensions;
 
 namespace PRTG_Api
 {
@@ -37,9 +36,7 @@ namespace PRTG_Api
                 ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
             });
 
-            services.AddTransient<ISensorService, SensorService>();
-            services.AddTransient<IContractService, ContractService>();
-            services.AddTransient<IEmailService, EmailService>();
+            services.AddPRTGServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
