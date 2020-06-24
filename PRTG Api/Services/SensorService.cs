@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using PRTG_Api.Models;
 using PRTG_Api.Services.Interfaces;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -23,6 +24,20 @@ namespace PRTG_Api.Services
             var jsonResponse = await response.Content.ReadAsStringAsync();
             
             return JsonConvert.DeserializeObject<Sensor>(jsonResponse);
+        }
+
+        public async Task<List<Printer>> GetAllPrinters()
+        {
+            var client = _clientFactory.CreateClient("prtg");
+            var response = await client.GetAsync("api/table.json?noraw=0&content=devices&columns=group,device&filter_group=IMPRESORAS&username=prtgadmin&password=Si5t3m4s");
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+
+            var devicesSensor = JsonConvert.DeserializeObject<DevicesSensor>(jsonResponse);
+            
+            var printerList= new List<Printer>();
+            devicesSensor.Devices.ForEach(device => printerList.Add(device));
+
+            return printerList;
         }
     }
 }

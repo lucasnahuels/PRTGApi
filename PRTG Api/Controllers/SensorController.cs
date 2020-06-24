@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PRTG_Api.Models;
 using PRTG_Api.Services.Interfaces;
@@ -17,9 +18,18 @@ namespace PRTG_Api.Controllers
         }
 
         [HttpGet]
-        public async Task<Sensor> GetAllSensors()       
+        [Route("GetAllSensors")]
+        public async Task<Sensor> GetAllSensors()
         {
             return await _prtgService.GetAllSensors();
+        }
+
+
+        [HttpGet]
+        [Route("GetAllPrinters")]
+        public async Task<List<Printer>> GetAllPrinters()
+        {
+            return await _prtgService.GetAllPrinters();
         }
     }
 }
