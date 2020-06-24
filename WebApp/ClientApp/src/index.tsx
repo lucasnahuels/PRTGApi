@@ -9,7 +9,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import MailList from './components/mails/mail-list';
 import ContractList from './components/contracts/contract-list';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import SensorList from './components/sensors/sensor-list';
 
 // Create browser history to use in the Redux store

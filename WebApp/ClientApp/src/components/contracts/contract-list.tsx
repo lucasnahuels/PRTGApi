@@ -1,8 +1,7 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import axios from 'axios';
-import { useEffect } from 'react';
 import { Contract } from './contract';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -26,7 +25,7 @@ export interface IContractList {
 }
 
 const ContractList = () => {
-    const useStyles = makeStyles((theme: Theme) =>
+    const useStyles = makeStyles(() =>
         createStyles({
             titlesRow :{
                 fontWeight : 'bold'

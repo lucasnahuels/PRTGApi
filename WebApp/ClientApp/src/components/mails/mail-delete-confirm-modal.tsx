@@ -1,10 +1,9 @@
-import React, { ChangeEvent, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Button } from '@material-ui/core';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
-import { Mail } from './mail';
 import { myConfig } from '../../configurations';
 
 export interface EmailDeleteConfirmModalProps {

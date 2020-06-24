@@ -1,10 +1,8 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
 import { Button } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { purple } from '@material-ui/core/colors';
@@ -66,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function SearchAppBar() {
     const classes = useStyles();
-    const [anchorElMenu, setAnchorElMenu] = React.useState<null | HTMLElement>(null); 
+    const [] = React.useState<null | HTMLElement>(null); 
 
 
 

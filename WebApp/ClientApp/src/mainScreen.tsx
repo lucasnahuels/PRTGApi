@@ -1,6 +1,4 @@
-import React, { ChangeEvent } from 'react';
-import ContractList from './components/contracts/contract-list';
-import MailList from './components/mails/mail-list';
+import React from 'react';
 import SearchAppBar from './toolbar';
 
 const MainScreen = () => {
