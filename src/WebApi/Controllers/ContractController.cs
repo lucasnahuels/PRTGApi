@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PRTG_Api.Models;
-using PRTG_Api.Services.Interfaces;
+using WebApi.Models;
+using WebApi.Services.Interfaces;
 
 namespace PRTG.Api.Controllers
 {
@@ -21,7 +20,6 @@ namespace PRTG.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contract>>> GetContracts()
         {
-            //Order by NameOfCompany should be done on frontend side
             var result = await _contractService.GetAsync();
 
             return Ok(result);
@@ -36,23 +34,13 @@ namespace PRTG.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Contract>> PutContract(int id, Contract contract)
+        public async Task<ActionResult<Contract>> PutContract(long id, Contract contract)
         {
-            if (id != contract.ContractId)
+            if (id != contract.Id)
             {
                 return BadRequest();
             }
-
-            try
-            {
-                await _contractService.UpdateAsync(contract);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return !await _contractService.Exists(id) ?
-                    NotFound() :
-                    (ActionResult<Contract>)Problem(title: "There has been an error");
-            }
+            await _contractService.UpdateAsync(contract);
 
             return contract;
         }
@@ -62,7 +50,7 @@ namespace PRTG.Api.Controllers
         {
             await _contractService.CreateAsync(contract);
 
-            return CreatedAtAction("GetContract", new { id = contract.ContractId }, contract);
+            return CreatedAtAction("GetContract", new { id = contract.Id }, contract);
         }
 
         [HttpDelete("{id}")]

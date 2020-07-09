@@ -1,4 +1,4 @@
-﻿namespace PRTG_Api.Models
+﻿namespace WebApi.Models
 {
     public class ChannelData
     {

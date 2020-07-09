@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using PRTG_Api.Models;
-using PRTG_Api.Services.Interfaces;
+using WebApi.Models;
+using WebApi.Services.Interfaces;
 
-namespace PRTG_Api.Controllers
+namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

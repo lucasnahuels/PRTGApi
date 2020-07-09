@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
-using PRTG_Api.Models;
-using PRTG_Api.Services.Interfaces;
+using WebApi.Models;
+using WebApi.Services.Interfaces;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace PRTG_Api.Services
+namespace WebApi.Services
 {
     public class SensorService : ISensorService
     {

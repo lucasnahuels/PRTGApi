@@ -1,8 +1,8 @@
-﻿using PRTG_Api.Models;
+﻿using WebApi.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PRTG_Api.Services.Interfaces
+namespace WebApi.Services.Interfaces
 {
     public interface ISensorService
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PRTG_Api.Models
+namespace WebApi.Models
 {
     public class Sensor
     {

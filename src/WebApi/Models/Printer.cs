@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PRTG_Api.Models
+namespace WebApi.Models
 {
     public class Printer
     {

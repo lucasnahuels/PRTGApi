@@ -1,54 +1,54 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PRTG_Api.Models;
-using PRTG_Api.Services.Interfaces;
+﻿using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
+using WebApi.Models;
+using WebApi.Services.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using PRTG_Api.EntityFramework;
+using WebApi.Amazon.DynamoDb.Interfaces;
 
-namespace PRTG_Api.Services
+namespace WebApi.Services
 {
     public class EmailService : IEmailService
     {
-        private readonly DataBaseContext _context;
+        private readonly IDynamoDbContext<Email> _context;
 
-        public EmailService(DataBaseContext context)
+        public EmailService(IDynamoDbContext<Email> context)
         {
             _context = context;
         }
 
         public async Task<Email> CreateAsync(Email email)
         {
-            await _context.Emails.AddAsync(email);
-            await _context.SaveChangesAsync();
+            await _context.SaveAsync(email);
 
             return email;
         }
 
         public async Task<Email> DeleteAsync(Email email)
         {
-            _context.Emails.Remove(email);
-            await _context.SaveChangesAsync();
+            await _context.DeleteAsync(email);
 
             return email;
         }
 
         public async Task<IEnumerable<Email>> GetAsync()
         {
-            return await _context.Emails.ToListAsync();
+            return await _context.Get();
         }
 
         public async Task<Email> GetAsync(int id)
         {
-            return await _context.Emails.FirstOrDefaultAsync(email => email.EmailId == id);
+            var emails = await _context.Get(new List<ScanCondition>() {
+                new ScanCondition("Id", ScanOperator.Equal, id)
+            });
+
+            return emails.FirstOrDefault(email => email.EmailId == id);
         }
 
         public async Task<Email> UpdateAsync(Email email)
         {
-            _context.Entry(email).State = EntityState.Modified;
-
-            await _context.SaveChangesAsync();
-
-            return email;
+            return await UpdateAsync(email);
         }
     }
 }
