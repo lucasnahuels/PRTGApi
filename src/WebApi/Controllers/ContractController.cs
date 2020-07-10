@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Amazon;
+using Amazon.CognitoIdentityProvider;
+using Amazon.CognitoIdentityProvider.Model;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
 using WebApi.Services.Interfaces;
@@ -20,6 +23,13 @@ namespace PRTG.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contract>>> GetContracts()
         {
+            //var cognito = new AmazonCognitoIdentityProviderClient(RegionEndpoint.USEast1);
+            //var variable = await cognito.ListUsersAsync(new ListUsersRequest()
+            //{
+            //    UserPoolId = ""
+            //});
+
+            //variable.Users
             var result = await _contractService.GetAsync();
 
             return Ok(result);

@@ -6,11 +6,27 @@
     <Configurations>Debug;Release;Prod</Configurations>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.106.30" />
+    <Compile Remove="Amazon\**" />
+    <Compile Remove="Helpers\**" />
+    <Content Remove="Amazon\**" />
+    <Content Remove="Helpers\**" />
+    <EmbeddedResource Remove="Amazon\**" />
+    <EmbeddedResource Remove="Helpers\**" />
+    <None Remove="Amazon\**" />
+    <None Remove="Helpers\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.3.111.4" />
     <PackageReference Include="AWSSDK.S3" Version="3.3.110.58" />
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.100.1" />
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />

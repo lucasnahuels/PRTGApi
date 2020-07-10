@@ -1,18 +1,25 @@
-﻿using Amazon.DynamoDBv2.DataModel;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using WebApi.EntityFramework;
 using WebApi.Services.Interfaces;
-using WebApi.Amazon.DynamoDb.Context;
-using WebApi.Models;
 
 namespace WebApi.Services.Extensions
 {
     public static class ServiceExtensions
     {
-        public static void AddDatabaseContext(this IServiceCollection services)
+        public static void AddDatabaseContext(this IServiceCollection services, string connectionString)
         {
-            services.AddTransient<IDynamoDBContext, DynamoDbContext<Employee>>();
-            services.AddTransient<IDynamoDBContext, DynamoDbContext<Email>>();
-            services.AddTransient<IDynamoDBContext, DynamoDbContext<Contract>>();
+            services.AddDbContext<PrtgDbContext>(options => options.UseNpgsql(connectionString));
+        }
+
+        public static void UpdateDatabase(this IApplicationBuilder app)
+        {
+            using var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope();
+            using var context = serviceScope.ServiceProvider.GetService<PrtgDbContext>();
+            context.Database.Migrate();
         }
 
         public static void AddPRTGServices(this IServiceCollection services)

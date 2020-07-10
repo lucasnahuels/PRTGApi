@@ -1,63 +1,59 @@
-﻿using Amazon.DynamoDBv2.DataModel;
-using Amazon.DynamoDBv2.DocumentModel;
+﻿using Microsoft.EntityFrameworkCore;
+using WebApi.EntityFramework;
 using WebApi.Models;
 using WebApi.Services.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using WebApi.Amazon.DynamoDb.Interfaces;
 
 namespace WebApi.Services
 {
     public class ContractService : IContractService
     {
-        private readonly IDynamoDbContext<Contract> _context;
+        private readonly PrtgDbContext _context;
 
-        public ContractService(IDynamoDbContext<Contract> context)
+        public ContractService(PrtgDbContext context)
         {
             _context = context;
         }
 
         public async Task<Contract> CreateAsync(Contract contract)
         {
-            await _context.SaveAsync(contract);
+            await _context.Contracts.AddAsync(contract);
+            await _context.SaveChangesAsync();
 
             return contract;
         }
 
         public async Task<Contract> DeleteAsync(Contract contract)
         {
-            await _context.DeleteAsync(contract);
+            _context.Contracts.Remove(contract);
+            await _context.SaveChangesAsync();
 
             return contract;
         }
 
         public async Task<bool> Exists(int id)
         {
-            var contracts = await _context.Get(new List<ScanCondition>() {
-                new ScanCondition("Id", ScanOperator.Equal, id)
-            });
-
-            return contracts.Any();
+            return await _context.Contracts.AnyAsync(contract => contract.Id == id);
         }
 
         public async Task<IEnumerable<Contract>> GetAsync()
         {
-            return await _context.Get();
+            return await _context.Contracts.ToListAsync();
         }
 
         public async Task<Contract> GetAsync(int id)
         {
-            var contracts = await _context.Get(new List<ScanCondition>() {
-                new ScanCondition("Id", ScanOperator.Equal, id)
-            });
-
-            return contracts.FirstOrDefault(contract => contract.Id == id);
+            return await _context.Contracts.FirstOrDefaultAsync(contract => contract.Id == id);
         }
 
         public async Task<Contract> UpdateAsync(Contract contract)
         {
-            return await UpdateAsync(contract);
+            _context.Entry(contract).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            return contract;
         }
     }
 }

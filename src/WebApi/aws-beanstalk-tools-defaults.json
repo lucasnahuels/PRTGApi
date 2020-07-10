@@ -1,0 +1,20 @@
+
+{
+    "region" : "us-east-1",
+    "configuration" : "Dev",
+    "framework"     : "netcoreapp3.1",
+    "self-contained" : false,
+    "application"    : "WebApi-PRTG",
+    "environment"    : "WebApi-PRTG-dev",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "",
+    "solution-stack"       : "64bit Amazon Linux 2 v1.0.0 running .NET Core",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "webapi-prtg-dev",
+    "instance-type"        : "t1.micro",
+    "key-pair"             : "",
+    "instance-profile"     : "aws-elasticbeanstalk-ec2-role",
+    "service-role"         : "aws-elasticbeanstalk-service-role",
+    "proxy-server"         : "nginx"
+}
