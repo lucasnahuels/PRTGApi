@@ -19,63 +19,6 @@ namespace WebApi.EntityFramework.Migrations
                 .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("text");
-
-                    b.Property<long?>("ContractId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContractId");
-
-                    b.ToTable("IdentityUser");
-                });
-
             modelBuilder.Entity("WebApi.Models.Company", b =>
                 {
                     b.Property<long>("Id")
@@ -132,21 +75,6 @@ namespace WebApi.EntityFramework.Migrations
                     b.ToTable("Contracts");
                 });
 
-            modelBuilder.Entity("WebApi.Models.Email", b =>
-                {
-                    b.Property<int>("EmailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("EmailAdress")
-                        .HasColumnType("text");
-
-                    b.HasKey("EmailId");
-
-                    b.ToTable("Emails");
-                });
-
             modelBuilder.Entity("WebApi.Models.Employee", b =>
                 {
                     b.Property<long>("Id")
@@ -175,11 +103,31 @@ namespace WebApi.EntityFramework.Migrations
                     b.ToTable("Employee");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+            modelBuilder.Entity("WebApi.Models.Reports.WeeklyPrinter", b =>
                 {
-                    b.HasOne("WebApi.Models.Contract", null)
-                        .WithMany("Users")
-                        .HasForeignKey("ContractId");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("BlackAndWhiteCopies")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ColorCopies")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("PrinterId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Week")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WeeklyPrinters");
                 });
 
             modelBuilder.Entity("WebApi.Models.Contract", b =>

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WebApi.EntityFramework;
 using WebApi.Services.Interfaces;
+using WebApi.Services.Interfaces.Reports;
 
 namespace WebApi.Services.Extensions
 {
@@ -26,7 +27,8 @@ namespace WebApi.Services.Extensions
         {
             services.AddTransient<ISensorService, SensorService>();
             services.AddTransient<IContractService, ContractService>();
-            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IWeeklyPrinterService, WeeklyPrinterService>();
         }
     }
 }

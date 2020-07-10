@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace WebApi.EntityFramework.Migrations
@@ -22,16 +21,20 @@ namespace WebApi.EntityFramework.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Emails",
+                name: "WeeklyPrinters",
                 columns: table => new
                 {
-                    EmailId = table.Column<int>(nullable: false)
+                    Id = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    EmailAdress = table.Column<string>(nullable: true)
+                    PrinterId = table.Column<long>(nullable: false),
+                    Week = table.Column<int>(nullable: false),
+                    Year = table.Column<int>(nullable: false),
+                    BlackAndWhiteCopies = table.Column<int>(nullable: false),
+                    ColorCopies = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Emails", x => x.EmailId);
+                    table.PrimaryKey("PK_WeeklyPrinters", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -89,38 +92,6 @@ namespace WebApi.EntityFramework.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "IdentityUser",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    UserName = table.Column<string>(nullable: true),
-                    NormalizedUserName = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    NormalizedEmail = table.Column<string>(nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    ContractId = table.Column<long>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IdentityUser", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_IdentityUser_Contracts_ContractId",
-                        column: x => x.ContractId,
-                        principalTable: "Contracts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Contracts_CompanyId",
                 table: "Contracts",
@@ -135,23 +106,15 @@ namespace WebApi.EntityFramework.Migrations
                 name: "IX_Employee_ContractId",
                 table: "Employee",
                 column: "ContractId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_IdentityUser_ContractId",
-                table: "IdentityUser",
-                column: "ContractId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Emails");
-
-            migrationBuilder.DropTable(
                 name: "Employee");
 
             migrationBuilder.DropTable(
-                name: "IdentityUser");
+                name: "WeeklyPrinters");
 
             migrationBuilder.DropTable(
                 name: "Contracts");
