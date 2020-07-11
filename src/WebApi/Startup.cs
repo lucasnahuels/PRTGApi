@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using WebApi.Authorization;
@@ -47,7 +48,10 @@ namespace WebApi
             //    o.Authority = "";
             //    o.RequireHttpsMetadata = false;
             //});
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
             services.AddHttpClient("prtg", c =>
             {
                 c.BaseAddress = new Uri(Configuration["LosTerosUrl"]);
@@ -67,8 +71,12 @@ namespace WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            loggerFactory.AddLambdaLogger();
+            else
+            {
+                app.UseExceptionHandler("/error");
+            }
+            app.UseHttpsRedirection();
+            loggerFactory.AddLambdaLogger();            
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();
@@ -77,8 +85,7 @@ namespace WebApi
             {
                 endpoints.MapControllers();
             });
-
-            app.UpdateDatabase();
+            //app.UpdateDatabase();
         }
 
         private string GetConnectionString()

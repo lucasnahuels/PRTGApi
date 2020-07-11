@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TodoSample.WebApi.V1.Controllers
+namespace WebApi.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = true)]
     [ApiController]
