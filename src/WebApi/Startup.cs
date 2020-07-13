@@ -92,7 +92,7 @@ namespace WebApi
             {
                 endpoints.MapControllers();
             });
-            //app.UpdateDatabase();
+            app.UpdateDatabase();
         }
 
         private string GetConnectionString()
