@@ -75,7 +75,7 @@ export default function SearchAppBar() {
                     <Grid container xs={4} spacing={3} item>
                         <Grid item xs={12}>
                             <Typography className={classes.title} variant='h5' noWrap>
-                                PRTG customized App
+                                PRTG customized App Test
                             </Typography>
                         </Grid>
                     </Grid>
