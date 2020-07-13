@@ -13,6 +13,6 @@
     "s3-prefix"     : "WebApi/",
     "template"      : "serverless.template",
     "template-parameters" : "\"ShouldCreateBucket\"=\"true\";\"BucketName\"=\"web-api-prtg-lambda-dev-bucket\"",
-    "s3-bucket"           : "amplify-amplifyprtg-dev-210803-deployment",
+    "s3-bucket"           : "web-api-prtg-dev",
     "stack-name"          : "web-api-prtg-dev"
 }
