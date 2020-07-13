@@ -19,8 +19,6 @@ namespace WebApi
 {
     public class Startup
     {
-        public const string AppS3BucketKey = "AppS3Bucket";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -58,6 +56,16 @@ namespace WebApi
 
             }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
             {
+                ClientCertificateOptions = ClientCertificateOption.Manual,
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+            });
+            services.AddHttpClient("test", c =>
+            {
+                c.BaseAddress = new Uri("https://google.com");
+
+            }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                ClientCertificateOptions = ClientCertificateOption.Manual,
                 ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
             });
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
@@ -75,7 +83,6 @@ namespace WebApi
             {
                 app.UseExceptionHandler("/error");
             }
-            app.UseHttpsRedirection();
             loggerFactory.AddLambdaLogger();            
             app.UseDefaultFiles();
             app.UseStaticFiles();
