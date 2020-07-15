@@ -1,13 +1,6 @@
 {
-	"hosting": {
-		"amplifyhosting": {
-			"service": "amplifyhosting",
-			"providerPlugin": "awscloudformation",
-			"type": "manual"
-		}
-	},
 	"auth": {
-		"amplifyprtg58bbfc1b": {
+		"amplifyprtg60a296ef": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
 			"dependsOn": [],
