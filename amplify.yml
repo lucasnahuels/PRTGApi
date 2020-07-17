@@ -1,0 +1,17 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+        commands:
+            - cd src/amplify-prtg
+            - npm install
+    build:
+        commands:
+            - npm run-script build
+  artifacts:
+    baseDirectory: /src/amplify-prtg/build
+    files:
+      - '**/*'
+  cache:
+    paths:
+        - node_modules/**/*
