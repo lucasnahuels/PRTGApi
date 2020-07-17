@@ -10,11 +10,6 @@
             "StackName": "amplify-amplifyprtg-qa-00907",
             "StackId": "arn:aws:cloudformation:us-east-1:334693231097:stack/amplify-amplifyprtg-qa-00907/900f05b0-c648-11ea-a0c4-0e715b49d7c1",
             "AmplifyAppId": "d2auqs69m9d25n"
-        },
-        "categories": {
-            "auth": {
-                "amplifyprtg60a296ef": {}
-            }
         }
     },
     "dev": {
