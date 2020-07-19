@@ -12,34 +12,52 @@ namespace WebApi.Controllers
     public class SensorController : ControllerBase
     {
         private readonly ISensorService _prtgService;
-        private readonly IHttpClientFactory clientFactory;
 
-        public SensorController(ISensorService prtgService, IHttpClientFactory clientFactory)
+        public SensorController(ISensorService prtgService)
         {
             _prtgService = prtgService;
-            this.clientFactory = clientFactory;
         }
 
         [HttpGet]
-        [Route("GetAllSensors")]
-        public async Task<Sensor> GetAllSensors()
+        [Route("GetAllChannels")]
+        public async Task<SensorList> GetAllChannels()
         {
             return await _prtgService.GetAllSensors();
         }
-        
+
         [HttpGet]
-        public async Task<string> Get()
+        [Route("GetAllDevices")]
+        public async Task<List<DeviceApiModel>> GetAllDevices()
         {
-            var client = clientFactory.CreateClient("test");
-            var response = await client.GetAsync("");
-            return await response.Content.ReadAsStringAsync();
+            return await _prtgService.GetAllDevices();
+        }
+
+        [HttpGet("{objId}")]
+        [Route("GetSensorDetails")]
+        public async Task<SensorDetails> GetSensorDetails(int objId)
+        {
+            return await _prtgService.GetSensorDetails(objId);
+        }
+
+        [HttpGet("{objId}")]
+        [Route("GetContadoresData")]
+        public async Task<SensorsData> GetContadoresData(int objId)
+        {
+            return await _prtgService.GetContadoresData(objId);
+        }
+
+        [HttpGet("{objId}")]
+        [Route("GetTonersData")]
+        public async Task<SensorsData> GetTonersData(int objId)
+        {
+            return await _prtgService.GetTonersData(objId);
         }
 
         [HttpGet]
-        [Route("GetAllPrinters")]
-        public async Task<List<Printer>> GetAllPrinters()
+        [Route("GetApiData")]
+        public DevicesSensor GetApiData()
         {
-            return await _prtgService.GetAllPrinters();
+            return _prtgService.GetApiData();
         }
     }
 }

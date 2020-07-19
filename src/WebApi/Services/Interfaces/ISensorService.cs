@@ -6,7 +6,11 @@ namespace WebApi.Services.Interfaces
 {
     public interface ISensorService
     {
-        Task<Sensor> GetAllSensors();
-        Task<List<Printer>> GetAllPrinters();
+        Task<SensorList> GetAllSensors();
+        Task<List<DeviceApiModel>> GetAllDevices();
+        Task<SensorDetails> GetSensorDetails(int objId);
+        Task<SensorsData> GetContadoresData(int objId);
+        Task<SensorsData> GetTonersData(int objId);
+        DevicesSensor GetApiData();
     }
 }
