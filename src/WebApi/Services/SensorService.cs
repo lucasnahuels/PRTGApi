@@ -100,15 +100,9 @@ namespace WebApi.Services
                 {
                     var sensorDetails = GetSensorDetails(childDevice.ObjId).Result;
                     if (sensorDetails.SensorData.Name == "Contadores")
-                    {
-                        var contadoresData = GetContadoresData(childDevice.ObjId).Result;
-                        sensorsData.Add(contadoresData);
-                    }
+                        sensorsData.Add(GetContadoresData(childDevice.ObjId).Result);
                     if (sensorDetails.SensorData.Name == "Toners")
-                    {
-                        var tonersData = GetTonersData(childDevice.ObjId).Result;
-                        sensorsData.Add(tonersData);
-                    }
+                        sensorsData.Add(GetTonersData(childDevice.ObjId).Result);
                 }
                 device.SensorList = sensorsData;
             }
