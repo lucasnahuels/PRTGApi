@@ -30,15 +30,30 @@ namespace WebApi.Services
         public async Task<List<DeviceApiModel>> GetAllDevices()
         {
             var client = _clientFactory.CreateClient("prtg");
-            var response = await client.GetAsync("" +
-                "api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=0&content=devices&columns=group,device,objid&filter_group=IMPRESORAS"
-                );
+                
+            var response = await client.GetAsync("api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=0&content=devices&columns=group,device,objid&filter_group=IMPRESORAS");
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
             var devicesSensor = JsonConvert.DeserializeObject<DevicesSensor>(jsonResponse);
             
             var devicesList= new List<DeviceApiModel>();
             devicesSensor.Devices.ForEach(device => devicesList.Add(device));
+
+            return devicesList;
+        }
+
+        public async Task<List<DeviceApiModel>> GetChildDevices(int parentDeviceObjId)
+        {
+            var client = _clientFactory.CreateClient("prtg");
+            var response = await client.GetAsync(
+                $"api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=0&content=device&columns=group,device,objid&filter_group=IMPRESORAS&id={parentDeviceObjId.ToString()}"
+                );
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+
+            var devicesSensor = JsonConvert.DeserializeObject<DeviceSensor>(jsonResponse);
+
+            var devicesList = new List<DeviceApiModel>();
+            devicesSensor.Device.ForEach(device => devicesList.Add(device));
 
             return devicesList;
         }
@@ -107,22 +122,6 @@ namespace WebApi.Services
                 device.SensorList = sensorsData;
             }
             return apiData;
-        }
-
-        public async Task<List<DeviceApiModel>> GetChildDevices(int parentDeviceObjId)
-        {
-            var client = _clientFactory.CreateClient("prtg");
-            var response = await client.GetAsync(
-                $"api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=0&content=device&columns=group,device,objid&filter_group=IMPRESORAS&id={parentDeviceObjId.ToString()}"
-                );
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-
-            var devicesSensor = JsonConvert.DeserializeObject<DeviceSensor>(jsonResponse);
-
-            var devicesList = new List<DeviceApiModel>();
-            devicesSensor.Device.ForEach(device => devicesList.Add(device));
-
-            return devicesList;
         }
 
         public DeviceApiModel GetDeviceData(int objId)
