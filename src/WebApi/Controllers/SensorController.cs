@@ -59,5 +59,12 @@ namespace WebApi.Controllers
         {
             return _prtgService.GetApiData();
         }
+
+        [HttpGet("{objId}")]
+        [Route("GetApiData")]
+        public DeviceApiModel GetDeviceData(int objId)
+        {
+            return _prtgService.GetDeviceData(objId);
+        }
     }
 }

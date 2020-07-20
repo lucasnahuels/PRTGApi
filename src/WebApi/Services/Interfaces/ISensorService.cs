@@ -12,5 +12,7 @@ namespace WebApi.Services.Interfaces
         Task<SensorsData> GetContadoresData(int objId);
         Task<SensorsData> GetTonersData(int objId);
         DevicesSensor GetApiData();
+        DevicesSensor GetApiDataObsolete();
+        DeviceApiModel GetDeviceData(int objId);
     }
 }

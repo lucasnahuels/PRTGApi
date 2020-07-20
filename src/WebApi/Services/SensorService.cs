@@ -90,32 +90,70 @@ namespace WebApi.Services
         {
             var apiData = new DevicesSensor();
             apiData.Devices = GetAllDevices().Result;
-            var sensorList = GetAllSensors().Result;
 
             foreach (var device in apiData.Devices)
             {
                 var sensorsData = new List<SensorsData>();
-                foreach (var sensor in sensorList.Channel)
+                var childDevices = GetChildDevices(device.ObjId).Result;
+
+                foreach (var childDevice in childDevices)
                 {
-                    var sensorDetails = GetSensorDetails(sensor.ObjId).Result;
-                    var parentDeviceId = sensorDetails.SensorData.ParentDeviceId;
-                    if (int.Parse(parentDeviceId) == device.ObjId)
+                    var sensorDetails = GetSensorDetails(childDevice.ObjId).Result;
+                    if (sensorDetails.SensorData.Name == "Contadores")
                     {
-                        if (sensorDetails.SensorData.Name == "Contadores")
-                        {
-                            var contadoresData = GetContadoresData(sensor.ObjId).Result;
-                            sensorsData.Add(contadoresData);
-                        }
-                        if (sensorDetails.SensorData.Name == "Toners")
-                        {
-                            var tonersData = GetTonersData(sensor.ObjId).Result;
-                            sensorsData.Add(tonersData);
-                        }
+                        var contadoresData = GetContadoresData(childDevice.ObjId).Result;
+                        sensorsData.Add(contadoresData);
+                    }
+                    if (sensorDetails.SensorData.Name == "Toners")
+                    {
+                        var tonersData = GetTonersData(childDevice.ObjId).Result;
+                        sensorsData.Add(tonersData);
                     }
                 }
                 device.SensorList = sensorsData;
             }
             return apiData;
+        }
+
+        public async Task<List<DeviceApiModel>> GetChildDevices(int parentDeviceObjId)
+        {
+            var client = _clientFactory.CreateClient("prtg");
+            var response = await client.GetAsync(
+                $"api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=0&content=device&columns=group,device,objid&filter_group=IMPRESORAS&id={parentDeviceObjId.ToString()}"
+                );
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+
+            var devicesSensor = JsonConvert.DeserializeObject<DeviceSensor>(jsonResponse);
+
+            var devicesList = new List<DeviceApiModel>();
+            devicesSensor.Device.ForEach(device => devicesList.Add(device));
+
+            return devicesList;
+        }
+
+        public DeviceApiModel GetDeviceData(int objId)
+        {
+            var device = new DeviceApiModel();
+            var sensorsData = new List<SensorsData>();
+            var childDevices = GetChildDevices(device.ObjId).Result;
+
+            foreach (var childDevice in childDevices)
+            {
+                var sensorDetails = GetSensorDetails(childDevice.ObjId).Result;
+                var parentDeviceId = sensorDetails.SensorData.ParentDeviceId;
+                if (sensorDetails.SensorData.ParentDeviceName == "Contadores")
+                {
+                    var contadoresData = GetContadoresData(childDevice.ObjId).Result;
+                    sensorsData.Add(contadoresData);
+                }
+                if (sensorDetails.SensorData.ParentDeviceName == "Toners")
+                {
+                    var tonersData = GetTonersData(childDevice.ObjId).Result;
+                    sensorsData.Add(tonersData);
+                }
+            }
+            device.SensorList = sensorsData;
+            return device;
         }
     }
 }

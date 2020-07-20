@@ -7,6 +7,11 @@ namespace WebApi.Models
         public List<DeviceApiModel> Devices{ get; set; }
     }
 
+    public class DeviceSensor
+    {
+        public List<DeviceApiModel> Device { get; set; }
+    }
+
     public class DeviceApiModel
     {
         public string Device { get; set; }
