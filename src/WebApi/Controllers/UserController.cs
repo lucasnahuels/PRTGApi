@@ -1,8 +1,6 @@
-﻿using Amazon;
-using Amazon.CognitoIdentityProvider;
-using Amazon.CognitoIdentityProvider.Model;
-using Microsoft.AspNetCore.Identity;
+﻿using Amazon.Extensions.CognitoAuthentication;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApi.Services.Interfaces;
@@ -13,34 +11,24 @@ namespace WebApi.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IContractService _contractService;
+        private readonly IUserService _userService;
 
-        public UserController(IContractService contractService)
+        public UserController(IUserService userService)
         {
-            _contractService = contractService;
+            _userService = userService;
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<IdentityUser>>> GetUsers()
-        //{
-        //    var cognito = new AmazonCognitoIdentityProviderClient(RegionEndpoint.USEast1);
-        //    var variable = await cognito.ListUsersAsync(new ListUsersRequest()
-        //    {
-        //        UserPoolId = ""
-        //    });
-
-        //    //variable.Users
-        //    var result = await _contractService.GetAsync();
-
-        //    return Ok(result);
-        //}
-
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<IdentityUser>> GetUser(string id)
-        //{
-        //    var contract = await _contractService.GetAsync(id);
-
-        //    return contract == null ? NotFound() : (ActionResult<IdentityUser>)contract;
-        //}
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CognitoUser>>> GetUsers()
+        {
+            try
+            {
+                return Ok(await _userService.GetAsync());
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e);
+            }            
+        }
     }
 }

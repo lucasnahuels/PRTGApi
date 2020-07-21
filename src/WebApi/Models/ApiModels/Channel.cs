@@ -2,8 +2,6 @@
 
 namespace WebApi.Models
 {
-
-
     public class ChannelData
     {
         public string Name { get; set; }

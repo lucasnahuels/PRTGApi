@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebApi.EntityFramework;
@@ -9,9 +10,10 @@ using WebApi.EntityFramework;
 namespace WebApi.EntityFramework.Migrations
 {
     [DbContext(typeof(PrtgDbContext))]
-    partial class PrtgDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200721193413_UpdatedDailyReports")]
+    partial class UpdatedDailyReports
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,14 +67,12 @@ namespace WebApi.EntityFramework.Migrations
                     b.Property<int>("Month")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("PrinterObjId")
-                        .HasColumnType("integer");
+                    b.Property<long>("PrinterId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("PrinterObjId");
 
                     b.ToTable("Contracts");
                 });
@@ -103,18 +103,6 @@ namespace WebApi.EntityFramework.Migrations
                     b.HasIndex("ContractId");
 
                     b.ToTable("Employee");
-                });
-
-            modelBuilder.Entity("WebApi.Models.Printer", b =>
-                {
-                    b.Property<int>("ObjId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.HasKey("ObjId");
-
-                    b.ToTable("Printer");
                 });
 
             modelBuilder.Entity("WebApi.Models.Reports.DailyPrinter", b =>
@@ -161,10 +149,6 @@ namespace WebApi.EntityFramework.Migrations
                     b.HasOne("WebApi.Models.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId");
-
-                    b.HasOne("WebApi.Models.Printer", "Printer")
-                        .WithMany()
-                        .HasForeignKey("PrinterObjId");
                 });
 
             modelBuilder.Entity("WebApi.Models.Employee", b =>

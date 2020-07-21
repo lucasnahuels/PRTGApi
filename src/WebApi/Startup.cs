@@ -28,6 +28,7 @@ namespace WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCognitoIdentity();
             //services.AddAuthorization(
             //    options =>
             //    {
@@ -53,15 +54,6 @@ namespace WebApi
             services.AddHttpClient("prtg", c =>
             {
                 c.BaseAddress = new Uri(Configuration["LosTerosUrl"]);
-
-            }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-            {
-                ClientCertificateOptions = ClientCertificateOption.Manual,
-                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
-            });
-            services.AddHttpClient("test", c =>
-            {
-                c.BaseAddress = new Uri("https://google.com");
 
             }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
             {

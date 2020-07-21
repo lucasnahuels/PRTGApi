@@ -1,10 +1,11 @@
-﻿namespace WebApi.Models.Reports
+﻿using System;
+
+namespace WebApi.Models.Reports
 {
-    public class WeeklyPrinter : BaseModel
+    public class DailyPrinter : BaseModel
     {
         public long PrinterId { get; set; }
-        public int Week { get; set; }
-        public int Year { get; set; }
+        public DateTime Date { get; set; }
         public int BlackAndWhiteCopies { get; set; }
         public int ColorCopies { get; set; }
     }
