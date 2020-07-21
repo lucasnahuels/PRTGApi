@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
@@ -20,51 +19,58 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("GetAllChannels")]
-        public async Task<SensorList> GetAllChannels()
+        public async Task<ActionResult<SensorList>> GetAllChannels()
         {
-            return await _prtgService.GetAllSensors();
+            var sensors = await _prtgService.GetAllSensors();
+            return Ok(sensors);
         }
 
         [HttpGet]
         [Route("GetAllDevices")]
-        public async Task<List<DeviceApiModel>> GetAllDevices()
+        public async Task<ActionResult<List<DeviceApiModel>>> GetAllDevices()
         {
-            return await _prtgService.GetAllDevices();
+            var devices = await _prtgService.GetAllDevices();
+            return Ok(devices);
         }
 
         [HttpGet("{objId}")]
         [Route("GetSensorDetails")]
-        public async Task<SensorDetails> GetSensorDetails(int objId)
+        public async Task<ActionResult<SensorDetails>> GetSensorDetails(int objId)
         {
-            return await _prtgService.GetSensorDetails(objId);
+            var sensorDetails = await _prtgService.GetSensorDetails(objId);
+            return Ok(sensorDetails);
         }
 
         [HttpGet("{objId}")]
         [Route("GetContadoresData")]
-        public async Task<SensorsData> GetContadoresData(int objId)
+        public async Task<ActionResult<SensorsData>> GetContadoresData(int objId)
         {
-            return await _prtgService.GetContadoresData(objId);
+            var contadores = await _prtgService.GetContadoresData(objId);
+            return Ok(contadores);
         }
 
         [HttpGet("{objId}")]
         [Route("GetTonersData")]
-        public async Task<SensorsData> GetTonersData(int objId)
+        public async Task<ActionResult<SensorsData>> GetTonersData(int objId)
         {
-            return await _prtgService.GetTonersData(objId);
+            var tonersData = await _prtgService.GetTonersData(objId);
+            return Ok(tonersData);
         }
 
         [HttpGet]
         [Route("GetApiData")]
-        public DevicesSensor GetApiData()
+        public async Task<ActionResult<DevicesSensor>> GetApiData()
         {
-            return _prtgService.GetApiData();
+            var apiData = await _prtgService.GetApiData();
+            return Ok(apiData);
         }
 
         [HttpGet("{objId}")]
         [Route("GetApiData")]
-        public DeviceApiModel GetDeviceData(int objId)
+        public async Task<ActionResult<DeviceApiModel>> GetDeviceData(int objId)
         {
-            return _prtgService.GetDeviceData(objId);
+            var deviceData = await _prtgService.GetDeviceData(objId);
+            return Ok(deviceData);
         }
     }
 }

@@ -46,7 +46,7 @@ namespace WebApi.Services
         {
             var client = _clientFactory.CreateClient("prtg");
             var response = await client.GetAsync(
-                $"api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=0&content=device&columns=group,device,objid&filter_group=IMPRESORAS&id={parentDeviceObjId.ToString()}"
+                $"api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=0&content=device&columns=group,device,objid&filter_group=IMPRESORAS&id={parentDeviceObjId}"
                 );
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
@@ -62,7 +62,7 @@ namespace WebApi.Services
         {
             var client = _clientFactory.CreateClient("prtg");
             var response = await client.GetAsync(
-                $"api/getsensordetails.json?username=prtgadmin&password=Si5t3m4s&id={objId.ToString()}"
+                $"api/getsensordetails.json?username=prtgadmin&password=Si5t3m4s&id={objId}"
                 );
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
@@ -75,7 +75,7 @@ namespace WebApi.Services
         {
             var client = _clientFactory.CreateClient("prtg");
             var response = await client.GetAsync(
-                $"/api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=1&content=channels&sortby=name&columns=name%3Dtextraw%2Cinfo%3Dtreejson%2Cminimum%2Cmaximum%2Ccondition%2Clastvalue&id={objId.ToString()}"
+                $"/api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=1&content=channels&sortby=name&columns=name%3Dtextraw%2Cinfo%3Dtreejson%2Cminimum%2Cmaximum%2Ccondition%2Clastvalue&id={objId}"
                 );
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
@@ -90,7 +90,7 @@ namespace WebApi.Services
         {
             var client = _clientFactory.CreateClient("prtg");
             var response = await client.GetAsync(
-                $"/api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=1&content=channels&sortby=name&columns=name%3Dtextraw%2Cinfo%3Dtreejson%2Cminimum%2Cmaximum%2Ccondition%2Clastvalue&id={objId.ToString()}"
+                $"/api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=1&content=channels&sortby=name&columns=name%3Dtextraw%2Cinfo%3Dtreejson%2Cminimum%2Cmaximum%2Ccondition%2Clastvalue&id={objId}"
                 );
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
@@ -101,10 +101,12 @@ namespace WebApi.Services
             return toners;
         }
 
-        public DevicesSensor GetApiData()
+        public async Task<DevicesSensor> GetApiData()
         {
-            var apiData = new DevicesSensor();
-            apiData.Devices = GetAllDevices().Result;
+            var apiData = new DevicesSensor
+            {
+                Devices = await GetAllDevices()
+            };
 
             foreach (var device in apiData.Devices)
             {
@@ -124,11 +126,11 @@ namespace WebApi.Services
             return apiData;
         }
 
-        public DeviceApiModel GetDeviceData(int objId)
+        public async Task<DeviceApiModel> GetDeviceData(int objId)
         {
             var device = new DeviceApiModel();
             var sensorsData = new List<SensorsData>();
-            var childDevices = GetChildDevices(device.ObjId).Result;
+            var childDevices = await GetChildDevices(device.ObjId);
 
             foreach (var childDevice in childDevices)
             {

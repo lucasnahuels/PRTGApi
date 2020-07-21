@@ -28,7 +28,7 @@ namespace WebApi.Services.Extensions
             services.AddTransient<ISensorService, SensorService>();
             services.AddTransient<IContractService, ContractService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IWeeklyPrinterService, WeeklyPrinterService>();
+            services.AddTransient<IDailyPrinterService, DailyPrinterService>();
         }
     }
 }

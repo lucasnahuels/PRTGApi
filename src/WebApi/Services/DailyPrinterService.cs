@@ -7,15 +7,15 @@ using WebApi.Services.Interfaces.Reports;
 
 namespace WebApi.Services
 {
-    public class WeeklyPrinterService : IWeeklyPrinterService
+    public class DailyPrinterService : IDailyPrinterService
     {
         private readonly PrtgDbContext _context;
 
-        public WeeklyPrinterService(PrtgDbContext context)
+        public DailyPrinterService(PrtgDbContext context)
         {
             _context = context;
         }
-        public async Task<WeeklyPrinter> CreateAsync(WeeklyPrinter weeklyPrinter)
+        public async Task<DailyPrinter> CreateAsync(DailyPrinter weeklyPrinter)
         {
             await _context.WeeklyPrinters.AddAsync(weeklyPrinter);
             await _context.SaveChangesAsync();
@@ -23,12 +23,12 @@ namespace WebApi.Services
             return weeklyPrinter;
         }
 
-        public async Task<IEnumerable<WeeklyPrinter>> GetAsync()
+        public async Task<IEnumerable<DailyPrinter>> GetAsync()
         {
             return await _context.WeeklyPrinters.ToListAsync();
         }
 
-        public async Task<WeeklyPrinter> GetAsync(int id)
+        public async Task<DailyPrinter> GetAsync(int id)
         {
             return await _context.WeeklyPrinters.FirstOrDefaultAsync(weeklyPrinter => weeklyPrinter.Id == id);
         }

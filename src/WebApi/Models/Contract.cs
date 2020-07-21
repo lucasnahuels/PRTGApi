@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
+using Amazon.Extensions.CognitoAuthentication;
 
 namespace WebApi.Models
 {
@@ -14,8 +14,7 @@ namespace WebApi.Models
         public float ColorPrice { get; set; }
         public float ExcedenteBlackAndWhitePrice { get; set; }
         public float ExcedenteColorPrice { get; set; }
-        //Add when testing is done with elastic beanstalk
-        //public IEnumerable<IdentityUser> Users { get; set; }
+        public IEnumerable<CognitoUser> Users { get; set; }
         public IEnumerable<Employee> Employees { get; set; }
     }
 }
