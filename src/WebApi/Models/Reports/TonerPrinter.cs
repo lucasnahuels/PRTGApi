@@ -2,9 +2,9 @@
 
 namespace WebApi.Models.Reports
 {
-    public class TonnerPrinter : BaseModel
+    public class TonerPrinter : BaseModel
     {
-        public long PrinterId { get; set; }
+        public Printer Printer { get; set; }
         public DateTime Date { get; set; }
         
 //-Cyan | Porcentaje

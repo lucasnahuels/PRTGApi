@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebApi.EntityFramework;
@@ -9,9 +10,10 @@ using WebApi.EntityFramework;
 namespace WebApi.EntityFramework.Migrations
 {
     [DbContext(typeof(PrtgDbContext))]
-    partial class PrtgDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200721212658_UpdatedEmployees")]
+    partial class UpdatedEmployees
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

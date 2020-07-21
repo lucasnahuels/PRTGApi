@@ -9,6 +9,6 @@ namespace WebApi.EntityFramework
         public PrtgDbContext(DbContextOptions<PrtgDbContext> options) : base(options) { }
 
         public DbSet<Contract> Contracts { get; set; }
-        public DbSet<DailyPrinter> WeeklyPrinters { get; set; }
+        public DbSet<DailyPrinter> DailyPrinters { get; set; }
     }
 }

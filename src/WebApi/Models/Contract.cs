@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Amazon.Extensions.CognitoAuthentication;
 
 namespace WebApi.Models
@@ -6,7 +7,7 @@ namespace WebApi.Models
     public class Contract : BaseModel
     {
         public Company Company { get; set; }
-        public long PrinterId { get; set; }
+        public Printer Printer { get; set; }
         public int BlackAndWhiteSheets { get; set; }
         public int ColorSheets { get; set; }
         public int Month { get; set; }    
@@ -14,7 +15,9 @@ namespace WebApi.Models
         public float ColorPrice { get; set; }
         public float ExcedenteBlackAndWhitePrice { get; set; }
         public float ExcedenteColorPrice { get; set; }
+        [NotMapped]
         public IEnumerable<CognitoUser> Users { get; set; }
+        public IEnumerable<User> UsersId { get; set; }
         public IEnumerable<Employee> Employees { get; set; }
     }
 }

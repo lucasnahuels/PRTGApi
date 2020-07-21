@@ -18,5 +18,4 @@ namespace WebApi.Models
         public int ObjId { get; set; }
         public List<SensorsData> SensorList { get; set; }
     }
-
 }

@@ -5,7 +5,6 @@ namespace WebApi.Models
     public class SensorDetails
     {
         public SensorDetailsData SensorData { get; set; }
-
     }
     public class SensorDetailsData
     {
@@ -30,5 +29,4 @@ namespace WebApi.Models
         public string Device { get; set; }
         public int ObjId { get; set; }
     }
-
 }
