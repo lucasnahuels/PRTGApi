@@ -129,6 +129,9 @@ namespace WebApi.Services
         public async Task<DeviceApiModel> GetDeviceData(int objId)
         {
             var device = new DeviceApiModel();
+            device.ObjId = objId;
+            device.Device = GetSensorDetails(objId).Result.SensorData.Name;
+
             var sensorsData = new List<SensorsData>();
             var childDevices = await GetChildDevices(device.ObjId);
 
