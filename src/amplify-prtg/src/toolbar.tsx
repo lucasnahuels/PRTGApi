@@ -81,9 +81,11 @@ export default function SearchAppBar() {
                     </Grid>
                     <Grid container xs={8} spacing={1} item>
                         <Grid item xs={4}>
+                            <Link to="/sensors" >
                                 <Button className={classes.colorButton}>
                                     Open sensor views
                                 </Button>
+                            </Link>
                         </Grid>
                         <Grid item xs={4}>
                             <Link to="/contracts" >

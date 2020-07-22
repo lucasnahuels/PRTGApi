@@ -11,12 +11,7 @@ import ContractList from './components/contracts/contract-list';
 import { Route } from 'react-router-dom'
 import SensorList from './components/sensors/sensor-list';
 
-// Create browser history to use in the Redux store
-// const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href') as string;
-// const history = createBrowserHistory({ basename: baseUrl });
 const history = createBrowserHistory();
-
-// Get the application-wide store instance, prepopulating with state from the server where available.
 const store = configureStore(history);
 
 ReactDOM.render(
@@ -30,4 +25,5 @@ ReactDOM.render(
             </div>        
         </ConnectedRouter>
     </Provider>,
-    document.getElementById('root'));
+    document.getElementById('root')
+    );

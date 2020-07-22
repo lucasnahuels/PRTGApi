@@ -63,6 +63,14 @@ namespace WebApi
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddDatabaseContext(Configuration.GetConnectionString("prtg"));
             services.AddPRTGServices();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Default",
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000");
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -79,6 +87,7 @@ namespace WebApi
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseCors((builder) => builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             //app.UseAuthentication();
             app.UseEndpoints(endpoints =>
             {
