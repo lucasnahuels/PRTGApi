@@ -66,7 +66,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{objId}")]
-        [Route("GetDeviceData")]
+        [Route("GetDeviceData/{objId}")]
         public async Task<ActionResult<DeviceApiModel>> GetDeviceData(int objId)
         {
             var deviceData = await _prtgService.GetDeviceData(objId);
