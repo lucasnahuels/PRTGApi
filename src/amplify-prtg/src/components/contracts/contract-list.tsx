@@ -121,10 +121,17 @@ const ContractList = () => {
         setPage(0);
     };
 
-    React.useEffect(() => { GetContractsConst(); }, []);
-    React.useEffect(() => { GetContracts(); }, []);
+    React.useEffect(() => { 
+        console.log("renderGetContractsConst");
+        GetContractsConst(); 
+    }, []);
+    React.useEffect(() => { 
+        console.log("renderGetContracts");
+        GetContracts(); 
+    }, []);
 
     React.useEffect( () => {
+        console.log("renderSearchTerm");
         let results : any = [];
         if( stateContractConst !== undefined && stateContractConst.listOfContract !== undefined) {
             results = stateContractConst!.listOfContract!.filter(contract =>

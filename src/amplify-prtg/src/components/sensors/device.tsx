@@ -6,7 +6,8 @@ export interface Device{
 export interface DeviceData {
     objId: Number,
     device: string,
-    sensorList : Sensor[],
+    toners: Sensor,
+    contadores: Sensor
 }
 
 export interface Sensor {
@@ -29,4 +30,15 @@ export interface ChannelInfo {
 export interface ChannelInfoData {
     isPercent : boolean,
     average : string
+}
+
+export interface DeviceDataViewModel {
+    objId: Number,
+    thisMonthQuantityColorSheets: string,
+    thisMonthQuantityBandWSheets: string,
+    thisMonthQuantityTotalSheets: string,
+    thisMonthQuantityCyanToners?: string,
+    thisMonthQuantityYellowToners?: string,
+    thisMonthQuantityMagentaToners?: string,
+    thisMonthQuantityBlackToners?: string
 }
