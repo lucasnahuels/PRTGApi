@@ -14,7 +14,6 @@ namespace WebApi.Models
     }
     public class SensorsData
     {
-        public string SensorName { get; set; }
         public List<ChannelData> Channels { get; set; }
     }
 

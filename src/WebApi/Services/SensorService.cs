@@ -85,8 +85,6 @@ namespace WebApi.Services
 
             var contadoresData = JsonConvert.DeserializeObject<SensorsData>(jsonResponse);
 
-            contadoresData.SensorName = "Contadores";
-
             return contadoresData;
         }
 
@@ -99,8 +97,6 @@ namespace WebApi.Services
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
             var toners = JsonConvert.DeserializeObject<SensorsData>(jsonResponse);
-
-            toners.SensorName = "Toners";
 
             return toners;
         }
@@ -121,11 +117,10 @@ namespace WebApi.Services
                 {
                     var sensorDetails = await GetSensorDetails(childDevice.ObjId);
                     if (sensorDetails.SensorData.Name == "Contadores")
-                        sensorsData.Add(await GetContadoresData(childDevice.ObjId));
+                        device.Contadores = GetContadoresData(childDevice.ObjId).Result;
                     if (sensorDetails.SensorData.Name == "Toners")
-                        sensorsData.Add(await GetTonersData(childDevice.ObjId));
+                        device.Toners= GetTonersData(childDevice.ObjId).Result;
                 }
-                device.SensorList = sensorsData;
             }
             return apiData;
         }
@@ -138,7 +133,6 @@ namespace WebApi.Services
                 Device = (await GetSensorDetails(objId)).SensorData.Name
             };
 
-            var sensorsData = new List<SensorsData>();
             var childDevices = await GetChildDevices(device.ObjId);
 
             foreach (var childDevice in childDevices)
@@ -146,16 +140,15 @@ namespace WebApi.Services
                 var sensorDetails = await GetSensorDetails(childDevice.ObjId);
                 if (sensorDetails.SensorData.Name == "Contadores")
                 {
-                    var contadoresData = await GetContadoresData(childDevice.ObjId);
-                    sensorsData.Add(contadoresData);
+                    var contadoresData = GetContadoresData(childDevice.ObjId).Result;
+                    device.Contadores= contadoresData;
                 }
                 if (sensorDetails.SensorData.Name == "Toners")
                 {
-                    var tonersData = await GetTonersData(childDevice.ObjId);
-                    sensorsData.Add(tonersData);
+                    var tonersData = GetTonersData(childDevice.ObjId).Result;
+                    device.Toners= tonersData;
                 }
             }
-            device.SensorList = sensorsData;
             return device;
         }
     }

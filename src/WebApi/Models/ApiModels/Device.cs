@@ -16,6 +16,7 @@ namespace WebApi.Models
     {
         public string Device { get; set; }
         public int ObjId { get; set; }
-        public List<SensorsData> SensorList { get; set; }
+        public SensorsData Toners { get; set; }
+        public SensorsData Contadores { get; set; }
     }
 }
