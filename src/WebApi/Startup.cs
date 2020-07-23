@@ -1,24 +1,24 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using WebApi.Authorization;
-using WebApi.EntityFramework;
 using WebApi.Services.Extensions;
 
 namespace WebApi
 {
     public class Startup
     {
+        private const string PrtgCorsPolicy = "_prtgCorsPolicy";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -33,20 +33,20 @@ namespace WebApi
             //    options =>
             //    {
             //        options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme).Build();
-            //        options.AddPolicy("", policy => policy.Requirements.Add(new CognitoGroupAuthorizationRequirement("")));
+            //        //options.AddPolicy("", policy => policy.Requirements.Add(new CognitoGroupAuthorizationRequirement("")));
             //    });
 
-            //services.AddSingleton<IAuthorizationHandler, CognitoGroupAuthorizationHandler>();
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //}).AddJwtBearer(o =>
-            //{
-            //    o.Audience = "";
-            //    o.Authority = "";
-            //    o.RequireHttpsMetadata = false;
-            //});
+            services.AddSingleton<IAuthorizationHandler, CognitoGroupAuthorizationHandler>();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(o =>
+            {
+                o.Audience = "";
+                o.Authority = "";
+                o.RequireHttpsMetadata = false;
+            });
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -63,14 +63,7 @@ namespace WebApi
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddDatabaseContext(Configuration.GetConnectionString("prtg"));
             services.AddPRTGServices();
-            services.AddCors(options =>
-            {
-                options.AddPolicy("Default",
-                builder =>
-                {
-                    builder.WithOrigins("http://localhost:3000");
-                });
-            });
+            services.AddCors(SetupCorsPolicyAction);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -87,26 +80,30 @@ namespace WebApi
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseCors((builder) => builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
-            //app.UseAuthentication();
+            app.UseCors(PrtgCorsPolicy);
+            app.UseAuthentication();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-            //app.UpdateDatabase();
+            app.UpdateDatabase();
         }
 
-        private string GetConnectionString()
+        private void SetupCorsPolicyAction(CorsOptions options)
         {
-            string dbname = Environment.GetEnvironmentVariable("RDS_DB_NAME");
+            var domainsAllowed = "http://localhost:3000;https://dev.d115kdf62p0izj.amplifyapp.com/";
 
-            if (string.IsNullOrEmpty(dbname)) return null;
-
-            string username = Environment.GetEnvironmentVariable("RDS_USERNAME");
-            string password = Environment.GetEnvironmentVariable("RDS_PASSWORD");
-            string hostname = Environment.GetEnvironmentVariable("RDS_HOSTNAME");
-
-            return "Data Source=" + hostname + ";Initial Catalog=" + dbname + ";User ID=" + username + ";Password=" + password + ";";
+            if (!string.IsNullOrEmpty(domainsAllowed))
+            {
+                options.AddPolicy(
+                    PrtgCorsPolicy,
+                    builder =>
+                    {
+                        builder.WithOrigins(domainsAllowed.Split(';'))
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            }
         }
     }
 }

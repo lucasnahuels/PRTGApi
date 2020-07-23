@@ -10,6 +10,10 @@ namespace WebApi.Services
     public class SensorService : ISensorService
     {
         private readonly IHttpClientFactory _clientFactory;
+        private const string username = "prtgadmin";
+        private const string password = "Si5t3m4s";
+        private const string apiTable = "api/table.json";
+        private const string apiSensorDetails = "api/getsensordetails.json";
 
         public SensorService(IHttpClientFactory clientFactory)
         {
@@ -20,7 +24,7 @@ namespace WebApi.Services
         {
             var client = _clientFactory.CreateClient("prtg");
             var response = await client.GetAsync(
-                "api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=0&content=channel&columns=group,device,objid&filter_group=IMPRESORAS"
+                $"{apiTable}?username={username}&password={password}&noraw=0&content=channel&columns=group,device,objid&filter_group=IMPRESORAS"
                 );
             var jsonResponse = await response.Content.ReadAsStringAsync();
             
@@ -31,7 +35,7 @@ namespace WebApi.Services
         {
             var client = _clientFactory.CreateClient("prtg");
                 
-            var response = await client.GetAsync("api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=0&content=devices&columns=group,device,objid&filter_group=IMPRESORAS");
+            var response = await client.GetAsync($"{apiTable}?username={username}&password={password}&noraw=0&content=devices&columns=group,device,objid&filter_group=IMPRESORAS");
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
             var devicesSensor = JsonConvert.DeserializeObject<DevicesSensor>(jsonResponse);
@@ -46,7 +50,7 @@ namespace WebApi.Services
         {
             var client = _clientFactory.CreateClient("prtg");
             var response = await client.GetAsync(
-                $"api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=0&content=device&columns=group,device,objid&filter_group=IMPRESORAS&id={parentDeviceObjId}"
+                $"{apiTable}?username={username}&password={password}&noraw=0&content=device&columns=group,device,objid&filter_group=IMPRESORAS&id={parentDeviceObjId}"
                 );
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
@@ -62,7 +66,7 @@ namespace WebApi.Services
         {
             var client = _clientFactory.CreateClient("prtg");
             var response = await client.GetAsync(
-                $"api/getsensordetails.json?username=prtgadmin&password=Si5t3m4s&id={objId}"
+                $"{apiSensorDetails}?username={username}&password={password}&id={objId}"
                 );
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
@@ -75,7 +79,7 @@ namespace WebApi.Services
         {
             var client = _clientFactory.CreateClient("prtg");
             var response = await client.GetAsync(
-                $"/api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=1&content=channels&sortby=name&columns=name%3Dtextraw%2Cinfo%3Dtreejson%2Cminimum%2Cmaximum%2Ccondition%2Clastvalue&id={objId}"
+                $"{apiTable}?username={username}&password={password}&noraw=1&content=channels&sortby=name&columns=name%3Dtextraw%2Cinfo%3Dtreejson%2Cminimum%2Cmaximum%2Ccondition%2Clastvalue&id={objId}"
                 );
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
@@ -90,7 +94,7 @@ namespace WebApi.Services
         {
             var client = _clientFactory.CreateClient("prtg");
             var response = await client.GetAsync(
-                $"/api/table.json?username=prtgadmin&password=Si5t3m4s&noraw=1&content=channels&sortby=name&columns=name%3Dtextraw%2Cinfo%3Dtreejson%2Cminimum%2Cmaximum%2Ccondition%2Clastvalue&id={objId}"
+                $"{apiTable}?username={username}&password={password}&noraw=1&content=channels&sortby=name&columns=name%3Dtextraw%2Cinfo%3Dtreejson%2Cminimum%2Cmaximum%2Ccondition%2Clastvalue&id={objId}"
                 );
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
@@ -111,15 +115,15 @@ namespace WebApi.Services
             foreach (var device in apiData.Devices)
             {
                 var sensorsData = new List<SensorsData>();
-                var childDevices = GetChildDevices(device.ObjId).Result;
+                var childDevices = await GetChildDevices(device.ObjId);
 
                 foreach (var childDevice in childDevices)
                 {
-                    var sensorDetails = GetSensorDetails(childDevice.ObjId).Result;
+                    var sensorDetails = await GetSensorDetails(childDevice.ObjId);
                     if (sensorDetails.SensorData.Name == "Contadores")
-                        sensorsData.Add(GetContadoresData(childDevice.ObjId).Result);
+                        sensorsData.Add(await GetContadoresData(childDevice.ObjId));
                     if (sensorDetails.SensorData.Name == "Toners")
-                        sensorsData.Add(GetTonersData(childDevice.ObjId).Result);
+                        sensorsData.Add(await GetTonersData(childDevice.ObjId));
                 }
                 device.SensorList = sensorsData;
             }
@@ -128,25 +132,26 @@ namespace WebApi.Services
 
         public async Task<DeviceApiModel> GetDeviceData(int objId)
         {
-            var device = new DeviceApiModel();
-            device.ObjId = objId;
-            device.Device = GetSensorDetails(objId).Result.SensorData.Name;
+            var device = new DeviceApiModel
+            {
+                ObjId = objId,
+                Device = (await GetSensorDetails(objId)).SensorData.Name
+            };
 
             var sensorsData = new List<SensorsData>();
             var childDevices = await GetChildDevices(device.ObjId);
 
             foreach (var childDevice in childDevices)
             {
-                var sensorDetails = GetSensorDetails(childDevice.ObjId).Result;
-                var parentDeviceId = sensorDetails.SensorData.ParentDeviceId;
+                var sensorDetails = await GetSensorDetails(childDevice.ObjId);
                 if (sensorDetails.SensorData.Name == "Contadores")
                 {
-                    var contadoresData = GetContadoresData(childDevice.ObjId).Result;
+                    var contadoresData = await GetContadoresData(childDevice.ObjId);
                     sensorsData.Add(contadoresData);
                 }
                 if (sensorDetails.SensorData.Name == "Toners")
                 {
-                    var tonersData = GetTonersData(childDevice.ObjId).Result;
+                    var tonersData = await GetTonersData(childDevice.ObjId);
                     sensorsData.Add(tonersData);
                 }
             }
