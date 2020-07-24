@@ -117,9 +117,9 @@ namespace WebApi.Services
                 {
                     var sensorDetails = await GetSensorDetails(childDevice.ObjId);
                     if (sensorDetails.SensorData.Name == "Contadores")
-                        device.Contadores = GetContadoresData(childDevice.ObjId).Result;
+                        device.Contadores = await GetContadoresData(childDevice.ObjId);
                     if (sensorDetails.SensorData.Name == "Toners")
-                        device.Toners= GetTonersData(childDevice.ObjId).Result;
+                        device.Toners = await GetTonersData(childDevice.ObjId);
                 }
             }
             return apiData;
@@ -140,12 +140,12 @@ namespace WebApi.Services
                 var sensorDetails = await GetSensorDetails(childDevice.ObjId);
                 if (sensorDetails.SensorData.Name == "Contadores")
                 {
-                    var contadoresData = GetContadoresData(childDevice.ObjId).Result;
+                    var contadoresData = await GetContadoresData(childDevice.ObjId);
                     device.Contadores= contadoresData;
                 }
                 if (sensorDetails.SensorData.Name == "Toners")
                 {
-                    var tonersData = GetTonersData(childDevice.ObjId).Result;
+                    var tonersData = await GetTonersData(childDevice.ObjId);
                     device.Toners= tonersData;
                 }
             }

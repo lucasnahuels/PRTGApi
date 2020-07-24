@@ -79,12 +79,12 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
     const CheckEmailExistence = (): boolean =>{
         // let notInTheList : boolean = true;
         // listOfEmails!.forEach(email => {
-        //     if(email.emailAdress == state.emailAdress!) 
+        //     if(email.emailAdress === state.emailAdress!) 
         //         notInTheList = false;
         // });
         // return notInTheList;
 
-        const email = listOfEmails!.find(x => x.emailAdress == state.emailAdress);
+        const email = listOfEmails!.find(x => x.emailAdress === state.emailAdress);
         return (email) ? true : false;
     }
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { Grid, makeStyles, Theme, createStyles, FormControl, InputLabel, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, TableFooter, TablePagination } from "@material-ui/core";
 import { myConfig } from '../../configurations';
 import { Device, DeviceData, DeviceDataViewModel } from './device';
