@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebApi.Services.Interfaces;
+using ApplicationCore.Services.Interfaces;
 
 namespace WebApi.Controllers
 {

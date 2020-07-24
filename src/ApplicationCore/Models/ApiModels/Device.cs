@@ -1,0 +1,22 @@
+﻿using System.Collections.Generic;
+
+namespace ApplicationCore.Models
+{
+    public class DevicesSensor
+    {
+        public List<DeviceApiModel> Devices{ get; set; }
+    }
+
+    public class DeviceSensor
+    {
+        public List<DeviceApiModel> Device { get; set; }
+    }
+
+    public class DeviceApiModel
+    {
+        public string Device { get; set; }
+        public int ObjId { get; set; }
+        public SensorsData Toners { get; set; }
+        public SensorsData Contadores { get; set; }
+    }
+}

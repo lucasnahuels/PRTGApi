@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Models;
-using WebApi.Services.Interfaces;
+using ApplicationCore.Models;
+using ApplicationCore.Services.Interfaces;
 
 namespace WebApi.Controllers
 {

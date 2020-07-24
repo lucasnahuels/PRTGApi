@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
-using WebApi.Services.Extensions;
+using ApplicationCore.Services.Extensions;
 
 namespace WebApi
 {
