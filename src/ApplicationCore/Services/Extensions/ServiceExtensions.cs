@@ -28,7 +28,7 @@ namespace ApplicationCore.Services.Extensions
             services.AddTransient<ISensorService, SensorService>();
             services.AddTransient<IContractService, ContractService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IDailyPrinterService, DailyPrinterService>();
+            services.AddTransient<IDailyDeviceService, DailyDeviceService>();
         }
     }
 }

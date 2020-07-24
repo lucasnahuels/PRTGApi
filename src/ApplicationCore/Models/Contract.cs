@@ -7,7 +7,7 @@ namespace ApplicationCore.Models
     public class Contract : BaseModel
     {
         public Company Company { get; set; }
-        public Printer Printer { get; set; }
+        public Device Printer { get; set; }
         public int BlackAndWhiteSheets { get; set; }
         public int ColorSheets { get; set; }
         public int Month { get; set; }    

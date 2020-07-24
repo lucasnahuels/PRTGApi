@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Models;
+using ApplicationCore.Models.Reports;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,5 +14,6 @@ namespace ApplicationCore.Services.Interfaces
         Task<SensorsData> GetTonersData(int objId);
         Task<DevicesSensor> GetApiData();
         Task<DeviceApiModel> GetDeviceData(int objId);
+        DailyDevices GetDailyContadoresDevicesValues(string objId);
     }
 }

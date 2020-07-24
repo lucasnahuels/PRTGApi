@@ -9,6 +9,6 @@ namespace ApplicationCore.EntityFramework
         public PrtgDbContext(DbContextOptions<PrtgDbContext> options) : base(options) { }
 
         public DbSet<Contract> Contracts { get; set; }
-        public DbSet<DailyPrinter> DailyPrinters { get; set; }
+        public DbSet<DailyDevices> DailyPrinters { get; set; }
     }
 }

@@ -4,6 +4,8 @@ using ApplicationCore.Services.Interfaces;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ApplicationCore.Models.Reports;
+using System;
 
 namespace ApplicationCore.Services
 {
@@ -151,5 +153,33 @@ namespace ApplicationCore.Services
             }
             return device;
         }
+
+        public DailyDevices GetDailyContadoresDevicesValues(string objId)
+        {
+            var contadores = GetContadoresData(int.Parse(objId)).Result;
+            DateTime localDate = DateTime.Now;
+            var dailyDevice = new DailyDevices
+            {
+                ColorCopies = int.Parse(contadores.Channels[1].LastValue) + int.Parse(contadores.Channels[6].LastValue),
+                BlackAndWhiteCopies = int.Parse(contadores.Channels[0].LastValue) + int.Parse(contadores.Channels[5].LastValue),
+                Device = new Device { ObjId = objId },
+                Date = localDate
+            };
+            return dailyDevice;
+        }
+        public DailyDevices GetDailyTonersDevicesValues(string objId)
+        {
+            var contadores = GetContadoresData(int.Parse(objId)).Result;
+            DateTime localDate = DateTime.Now;
+            var dailyDevice = new DailyDevices
+            {
+                ColorCopies = int.Parse(contadores.Channels[1].LastValue) + int.Parse(contadores.Channels[6].LastValue),
+                BlackAndWhiteCopies = int.Parse(contadores.Channels[0].LastValue) + int.Parse(contadores.Channels[5].LastValue),
+                Device = new Device { ObjId = objId },
+                Date = localDate
+            };
+            return dailyDevice;
+        }
+
     }
 }

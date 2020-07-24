@@ -2,9 +2,9 @@
 
 namespace ApplicationCore.Models
 {
-    public class Printer
+    public class Device
     {
         [Key]
-        public int ObjId { get; set; }
+        public string ObjId { get; set; }
     }
 }
