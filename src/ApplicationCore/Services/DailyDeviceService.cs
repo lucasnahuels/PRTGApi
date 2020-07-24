@@ -26,17 +26,17 @@ namespace ApplicationCore.Services
         //    return dailyPrinter;
         //}
 
-        public async Task<IEnumerable<DailyDevices>> GetAsync()
+        public async Task<IEnumerable<DailyContadoresDataDevices>> GetAsync()
         {
             return await _context.DailyPrinters.ToListAsync();
         }
 
-        public async Task<DailyDevices> GetAsync(int id)
+        public async Task<DailyContadoresDataDevices> GetAsync(int id)
         {
             return await _context.DailyPrinters.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.Id == id);
         }
 
-        public async Task<DailyDevices> CreateDailyContadoresDeviceValues(string objId)
+        public async Task<DailyContadoresDataDevices> CreateDailyContadoresDeviceValues(string objId)
         {
             var dailyPrinter = _sensorService.GetDailyContadoresDevicesValues(objId);
             await _context.DailyPrinters.AddAsync(dailyPrinter);
@@ -45,13 +45,24 @@ namespace ApplicationCore.Services
             return dailyPrinter;
         }
 
-        //public async Task<DailyDevices> CreateDailyTonersDeviceValues(string objId)
-        //{
-        //    var dailyPrinter = _sensorService.GetDailyContadoresDevicesValues(objId);
-        //    await _context.DailyPrinters.AddAsync(dailyPrinter);
-        //    await _context.SaveChangesAsync();
+        public async Task<DailyTonersDataDevices> CreateDailyTonersDeviceValues(string objId)
+        {
+            var dailyPrinter = _sensorService.GetDailyTonersDevicesValues(objId);
+            //crear tabla para daily toners devices
+            //await _context.DailyPrinters.AddAsync(dailyPrinter);
+            await _context.SaveChangesAsync();
 
-        //    return dailyPrinter;
-        //}
+            return dailyPrinter;
+        }
+
+        public async Task<DailyTonersDataDevices> CreateFifteenMinutesTonersDeviceValues(string objId)
+        {
+            var dailyPrinter = _sensorService.GetDailyTonersDevicesValues(objId);
+            //crear tabla para fifteen minutes toners devices
+            //await _context.DailyPrinters.AddAsync(dailyPrinter);
+            await _context.SaveChangesAsync();
+
+            return dailyPrinter;
+        }
     }
 }

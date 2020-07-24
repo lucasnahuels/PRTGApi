@@ -2,7 +2,7 @@
 
 namespace ApplicationCore.Models.Reports
 {
-    public class DailyDevices : BaseModel
+    public class DailyContadoresDataDevices : BaseModel
     {
         public Device Device { get; set; }
         public DateTime Date { get; set; }

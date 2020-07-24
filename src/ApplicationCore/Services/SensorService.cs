@@ -29,20 +29,20 @@ namespace ApplicationCore.Services
                 $"{apiTable}?username={username}&password={password}&noraw=0&content=channel&columns=group,device,objid&filter_group=IMPRESORAS"
                 );
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            
+
             return JsonConvert.DeserializeObject<SensorList>(jsonResponse);
         }
 
         public async Task<List<DeviceApiModel>> GetAllDevices()
         {
             var client = _clientFactory.CreateClient("prtg");
-                
+
             var response = await client.GetAsync($"{apiTable}?username={username}&password={password}&noraw=0&content=devices&columns=group,device,objid&filter_group=IMPRESORAS");
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
             var devicesSensor = JsonConvert.DeserializeObject<DevicesSensor>(jsonResponse);
-            
-            var devicesList= new List<DeviceApiModel>();
+
+            var devicesList = new List<DeviceApiModel>();
             devicesSensor.Devices.ForEach(device => devicesList.Add(device));
 
             return devicesList;
@@ -143,22 +143,23 @@ namespace ApplicationCore.Services
                 if (sensorDetails.SensorData.Name == "Contadores")
                 {
                     var contadoresData = await GetContadoresData(childDevice.ObjId);
-                    device.Contadores= contadoresData;
+                    device.Contadores = contadoresData;
                 }
                 if (sensorDetails.SensorData.Name == "Toners")
                 {
                     var tonersData = await GetTonersData(childDevice.ObjId);
-                    device.Toners= tonersData;
+                    device.Toners = tonersData;
                 }
             }
             return device;
         }
 
-        public DailyDevices GetDailyContadoresDevicesValues(string objId)
+        public DailyContadoresDataDevices GetDailyContadoresDevicesValues(string objId)
         {
             var contadores = GetContadoresData(int.Parse(objId)).Result;
             DateTime localDate = DateTime.Now;
-            var dailyDevice = new DailyDevices
+            //falta restarle el valor de ayer a los siguientes valores
+            var dailyDevice = new DailyContadoresDataDevices
             {
                 ColorCopies = int.Parse(contadores.Channels[1].LastValue) + int.Parse(contadores.Channels[6].LastValue),
                 BlackAndWhiteCopies = int.Parse(contadores.Channels[0].LastValue) + int.Parse(contadores.Channels[5].LastValue),
@@ -167,18 +168,27 @@ namespace ApplicationCore.Services
             };
             return dailyDevice;
         }
-        public DailyDevices GetDailyTonersDevicesValues(string objId)
+        public DailyTonersDataDevices GetDailyTonersDevicesValues(string objId)
         {
-            var contadores = GetContadoresData(int.Parse(objId)).Result;
+            var tonersUsed = GetQuantityTonersToday(objId);
             DateTime localDate = DateTime.Now;
-            var dailyDevice = new DailyDevices
+            var dailyDevice = new DailyTonersDataDevices
             {
-                ColorCopies = int.Parse(contadores.Channels[1].LastValue) + int.Parse(contadores.Channels[6].LastValue),
-                BlackAndWhiteCopies = int.Parse(contadores.Channels[0].LastValue) + int.Parse(contadores.Channels[5].LastValue),
+                BlackTonersUsed = tonersUsed.BlackTonersUsed,
+                CyanTonersUsed = tonersUsed.CyanTonersUsed,
+                MagentaTonersUsed = tonersUsed.MagentaTonersUsed,
+                YellowTonersUsed = tonersUsed.YellowTonersUsed,
                 Device = new Device { ObjId = objId },
                 Date = localDate
             };
             return dailyDevice;
+        }
+
+        public DailyTonersDataDevices GetQuantityTonersToday(string objId)
+        {
+            //get from database the values from toners used today
+            var tonersUsedToday = new DailyTonersDataDevices();
+            return tonersUsedToday;
         }
 
     }

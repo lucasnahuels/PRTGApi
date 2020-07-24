@@ -6,8 +6,8 @@ namespace ApplicationCore.Services.Interfaces.Reports
 {
     public interface IDailyDeviceService
     {
-        Task<IEnumerable<DailyDevices>> GetAsync();
-        Task<DailyDevices> GetAsync(int id);
-        Task<DailyDevices> CreateDailyContadoresDeviceValues(string objId);
+        Task<IEnumerable<DailyContadoresDataDevices>> GetAsync();
+        Task<DailyContadoresDataDevices> GetAsync(int id);
+        Task<DailyContadoresDataDevices> CreateDailyContadoresDeviceValues(string objId);
     }
 }
