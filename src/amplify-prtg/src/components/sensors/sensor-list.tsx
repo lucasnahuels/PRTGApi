@@ -1,11 +1,11 @@
 import React from 'react';
-import axios from 'axios';
 import { Grid, makeStyles, Theme, createStyles, FormControl, InputLabel, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, TableFooter, TablePagination } from "@material-ui/core";
 import { myConfig } from '../../configurations';
 import { Device, DeviceData, DeviceDataViewModel } from './device';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
+import axios from "axios"
 
 export interface IDeviceList {
     listOfDevices: Device[]
@@ -54,20 +54,20 @@ const SensorList = () => {
     React.useEffect(() => {
         if(stateDeviceData !== undefined){
             let color: number = 0; let blackAndWhite: number = 0;
-            if (stateDeviceData?.contadores.channels[1].lastValue !== "No hay datos"
-                || stateDeviceData?.contadores.channels[6].lastValue !== "No hay datos") {
-                color = (parseInt(stateDeviceData?.contadores.channels[1].lastValue!) +
-                    parseInt(stateDeviceData?.contadores.channels[6].lastValue!)
+            if (stateDeviceData.contadores.channels[1].lastValue !== "No hay datos"
+                || stateDeviceData.contadores.channels[6].lastValue !== "No hay datos") {
+                color = (parseInt(stateDeviceData.contadores.channels[1].lastValue!) +
+                    parseInt(stateDeviceData.contadores.channels[6].lastValue!)
                 );
             }
-            if (stateDeviceData?.contadores.channels[0].lastValue !== "No hay datos"
-                || stateDeviceData?.contadores.channels[5].lastValue !== "No hay datos") {
-                blackAndWhite = (parseInt(stateDeviceData?.contadores.channels[0].lastValue!) +
-                    parseInt(stateDeviceData?.contadores.channels[5].lastValue!)
+            if (stateDeviceData.contadores.channels[0].lastValue !== "No hay datos"
+                || stateDeviceData.contadores.channels[5].lastValue !== "No hay datos") {
+                blackAndWhite = (parseInt(stateDeviceData.contadores.channels[0].lastValue!) +
+                    parseInt(stateDeviceData.contadores.channels[5].lastValue!)
                 );
             }
             setDeviceDataViewModel({
-                objId: stateDeviceData?.objId!,
+                objId: stateDeviceData.objId!,
                 thisMonthQuantityColorSheets: color.toString(),
                 thisMonthQuantityBandWSheets: blackAndWhite.toString(),
                 thisMonthQuantityTotalSheets: (blackAndWhite + color).toString()
