@@ -6,16 +6,13 @@ import { Contract } from './contract';
 import { Paper } from '@material-ui/core';
 import {Chart, BarSeries, Title, ArgumentAxis, ValueAxis} from '@devexpress/dx-react-chart-material-ui';
 import { Animation } from '@devexpress/dx-react-chart';
+import { Toner } from './toner';
 
 
-export interface TonnersModalProps {
+export interface TonersModalProps {
     show: boolean,
     hideModal: Function,
-    contractInfo? : Contract
-}
-
-export interface ICategoryList {
-    tonners: Contract
+    info? : Toner
 }
 
 function getModalStyle() {
@@ -43,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const TonnersModal = ({ show, hideModal, contractInfo}: TonnersModalProps) => {
+const TonersModal = ({ show, hideModal, info}: TonersModalProps) => {
     const [modalStyle] = React.useState(getModalStyle);
 
     const classes = useStyles();
@@ -53,10 +50,10 @@ const TonnersModal = ({ show, hideModal, contractInfo}: TonnersModalProps) => {
     };
 
     const data = [
-        { color: 'Black', black: contractInfo!.blackToner },
-        { color: 'Cyan', cyan: contractInfo!.cyanToner },
-        { color: 'Yellow', yellow: contractInfo!.yellowToner },
-        { color: 'Magenta', magenta: contractInfo!.magentaToner },
+        { color: 'Black', black: info!.blackToner },
+        { color: 'Cyan', cyan: info!.cyanToner },
+        { color: 'Yellow', yellow: info!.yellowToner },
+        { color: 'Magenta', magenta: info!.magentaToner },
         { color: '', total :100 },
     ];
 
@@ -101,7 +98,7 @@ const TonnersModal = ({ show, hideModal, contractInfo}: TonnersModalProps) => {
                                 valueField="total"
                                 argumentField="color"
                             />
-                            <Title text="Tonners" />
+                            <Title text="Toners" />
                             <Animation />
                         </Chart>
                     </Paper>
@@ -111,4 +108,4 @@ const TonnersModal = ({ show, hideModal, contractInfo}: TonnersModalProps) => {
     );
 }
 
-export default TonnersModal
+export default TonersModal

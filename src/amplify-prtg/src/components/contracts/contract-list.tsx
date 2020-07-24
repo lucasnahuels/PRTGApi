@@ -12,7 +12,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import TonnersModal from './tonners-modal';
+import TonersModal from './toners-modal';
 import ContractFormModal from './ContractsFormModal';
 import ContractDeleteConfirmModal from './contract-delete-confirm-modal';
 import { Grid, TablePagination, TableFooter, TextField } from '@material-ui/core';
@@ -232,10 +232,10 @@ const ContractList = () => {
                 </TableContainer>
 
                 {showTonnerModal ?
-                    <TonnersModal 
+                    <TonersModal 
                         show={showTonnerModal} 
                         hideModal={HideForm} 
-                        contractInfo={contractInfoForTonners}/>
+                        info={contractInfoForTonners}/>
                     : null
                 }
                 {showFormModal ?
