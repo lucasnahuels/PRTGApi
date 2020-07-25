@@ -5,6 +5,6 @@ namespace ApplicationCore.Models
     public class Device
     {
         [Key]
-        public string ObjId { get; set; }
+        public int ObjId { get; set; }
     }
 }

@@ -154,9 +154,9 @@ namespace ApplicationCore.Services
             return device;
         }
 
-        public DailyContadoresDataDevices GetDailyContadoresDevicesValues(string objId)
+        public DailyContadoresDataDevices GetDailyContadoresDevicesValues(int objId)
         {
-            var contadores = GetContadoresData(int.Parse(objId)).Result;
+            var contadores = GetContadoresData(objId).Result;
             DateTime localDate = DateTime.Now;
             //falta restarle el valor de ayer a los siguientes valores
             var dailyDevice = new DailyContadoresDataDevices
@@ -168,7 +168,7 @@ namespace ApplicationCore.Services
             };
             return dailyDevice;
         }
-        public DailyTonersDataDevices GetDailyTonersDevicesValues(string objId)
+        public DailyTonersDataDevices GetDailyTonersDevicesValues(int objId)
         {
             var tonersUsed = GetQuantityTonersToday(objId);
             DateTime localDate = DateTime.Now;
@@ -184,7 +184,7 @@ namespace ApplicationCore.Services
             return dailyDevice;
         }
 
-        public DailyTonersDataDevices GetQuantityTonersToday(string objId)
+        public DailyTonersDataDevices GetQuantityTonersToday(int objId)
         {
             //get from database the values from toners used today
             var tonersUsedToday = new DailyTonersDataDevices();

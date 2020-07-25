@@ -72,12 +72,14 @@ const ContractList = () => {
 
     const GetContracts = async () => {
         await axios.get(myConfig.backUrl + `Contracts`).then( (response) => {
+            console.log("contracts", response.data);
             setContract({ ...stateContract, listOfContract: response.data });
         });
     };
 
     const GetContractsConst = async () => {
         await axios.get(myConfig.backUrl + `Contracts`).then((response) => {
+            console.log("contractsConst", response.data);
             setContractConst({ ...stateContractConst, listOfContract: response.data });
         });
     };

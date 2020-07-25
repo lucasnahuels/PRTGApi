@@ -28,24 +28,29 @@ namespace ApplicationCore.Services
 
         public async Task<IEnumerable<DailyContadoresDataDevices>> GetAsync()
         {
-            return await _context.DailyPrinters.ToListAsync();
+            return await _context.DailyContadores.ToListAsync();
         }
 
         public async Task<DailyContadoresDataDevices> GetAsync(int id)
         {
-            return await _context.DailyPrinters.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.Id == id);
+            return await _context.DailyContadores.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.Id == id);
         }
 
-        public async Task<DailyContadoresDataDevices> CreateDailyContadoresDeviceValues(string objId)
+        public async Task<DailyContadoresDataDevices> CreateDailyContadoresDeviceValues()
         {
-            var dailyPrinter = _sensorService.GetDailyContadoresDevicesValues(objId);
-            await _context.DailyPrinters.AddAsync(dailyPrinter);
+            var devices = _sensorService.GetAllDevices().Result;
+            var dailyDevices= new DailyContadoresDataDevices();
+            foreach (var device in devices)
+            {
+                dailyDevices = _sensorService.GetDailyContadoresDevicesValues(device.ObjId);
+            } 
+            await _context.DailyContadores.AddAsync(dailyDevices);
             await _context.SaveChangesAsync();
 
-            return dailyPrinter;
+            return dailyDevices;
         }
 
-        public async Task<DailyTonersDataDevices> CreateDailyTonersDeviceValues(string objId)
+        public async Task<DailyTonersDataDevices> CreateDailyTonersDeviceValues(int objId)
         {
             var dailyPrinter = _sensorService.GetDailyTonersDevicesValues(objId);
             //crear tabla para daily toners devices
@@ -55,7 +60,7 @@ namespace ApplicationCore.Services
             return dailyPrinter;
         }
 
-        public async Task<DailyTonersDataDevices> CreateFifteenMinutesTonersDeviceValues(string objId)
+        public async Task<DailyTonersDataDevices> CreateFifteenMinutesTonersDeviceValues(int objId)
         {
             var dailyPrinter = _sensorService.GetDailyTonersDevicesValues(objId);
             //crear tabla para fifteen minutes toners devices

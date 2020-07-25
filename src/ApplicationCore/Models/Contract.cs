@@ -13,8 +13,8 @@ namespace ApplicationCore.Models
         public int Month { get; set; }    
         public float BlackAndWhitePrice { get; set; }
         public float ColorPrice { get; set; }
-        public float ExcedenteBlackAndWhitePrice { get; set; }
-        public float ExcedenteColorPrice { get; set; }
+        public float SurplusBlackAndWhitePrice { get; set; }
+        public float SurplusColorPrice { get; set; }
         [NotMapped]
         public IEnumerable<CognitoUser> Users { get; set; }
         public IEnumerable<User> UsersId { get; set; }

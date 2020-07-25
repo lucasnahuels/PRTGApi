@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ApplicationCore.Models.Reports
 {
-    public class DailyTonersDataDevices
+    public class DailyTonersDataDevices : BaseModel
     {
         public Device Device { get; set; }
         public DateTime Date { get; set; }
