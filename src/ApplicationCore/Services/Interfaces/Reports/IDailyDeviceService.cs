@@ -8,6 +8,6 @@ namespace ApplicationCore.Services.Interfaces.Reports
     {
         Task<IEnumerable<DailyContadoresDataDevices>> GetAsync();
         Task<DailyContadoresDataDevices> GetAsync(int id);
-        Task<DailyContadoresDataDevices> CreateDailyContadoresDeviceValues();
+        Task CreateDailyContadoresDeviceValues();
     }
 }
