@@ -16,6 +16,8 @@ import { Grid, TablePagination, TableFooter} from '@material-ui/core';
 import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import { Contract } from '../contracts/contract';
+import OwnerFormModal from './ownersFormModal';
+import OwnerDeleteConfirmModal from './owner-delete-confirm-modal';
 
 const OwnersList = () => {
     const useStyles = makeStyles((theme: Theme) =>
@@ -46,7 +48,6 @@ const OwnersList = () => {
     );
     const classes = useStyles();
 
-    const [stateMail, setOwner] = React.useState<Contract>();
     const [showModal, setShowModal] = React.useState(false);
     const [showDeleteConfirmModal, setShowDeleteConfirmModal] = React.useState(false);
     const [formIsEdit, setFormIsEdit] = React.useState(false);
@@ -114,18 +115,16 @@ const OwnersList = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                           
-                                    <TableRow >
-                                        <TableCell className={classes.dataRow}></TableCell>
-                                        <TableCell className={classes.dataRow}>
-                                            <Button variant='contained' color='default' onClick={() => ShowOwnersForm()}> <EditIcon /> </Button>
-                                        </TableCell>
-                                        <TableCell className={classes.dataRow}>
-                                            <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm()}><DeleteIcon /></Button>
-                                        </TableCell>
+                            <TableRow >
+                                <TableCell className={classes.dataRow}></TableCell>
+                                <TableCell className={classes.dataRow}>
+                                    <Button variant='contained' color='default' onClick={() => ShowOwnersForm()}> <EditIcon /> </Button>
+                                </TableCell>
+                                <TableCell className={classes.dataRow}>
+                                    <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm()}><DeleteIcon /></Button>
+                                </TableCell>
 
-                                    </TableRow>
-                          
+                            </TableRow>
                         </TableBody>
                         <TableFooter>
                             <TableRow>
@@ -148,7 +147,7 @@ const OwnersList = () => {
                     </Table>
                 </TableContainer>
                 
-                {/* {showModal ?
+                {showModal ?
                     <OwnerFormModal
                         show={showModal}
                         hideModal={HideForm}
@@ -156,7 +155,7 @@ const OwnersList = () => {
                         isEdit={formIsEdit}
                         // listOfOwners={}
                         ownerId={ownerIdToEdit}
-                        adress={ownerAdressToEdit} />
+                    />
                     : null
                 }
                 {showDeleteConfirmModal ?
@@ -167,7 +166,7 @@ const OwnersList = () => {
                         ownerId={ownerIdToDelete} 
                         ownerAdress={ownerAdressToDelete} />
                     : null
-                } */}
+                }
             </Grid>
             <Grid item xs={3}></Grid>
         </Grid>
