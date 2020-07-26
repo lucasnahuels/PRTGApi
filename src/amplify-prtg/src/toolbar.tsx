@@ -95,9 +95,9 @@ export default function SearchAppBar() {
                             </Link>
                         </Grid>
                         <Grid item xs={4}>
-                            <Link to="/mails" >
+                            <Link to="/owners" >
                                 <Button className={classes.colorButton}>
-                                        Handle E-mails
+                                        Handle owners
                                 </Button>
                             </Link>
                         </Grid>

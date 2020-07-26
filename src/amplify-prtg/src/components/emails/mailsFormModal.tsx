@@ -5,7 +5,6 @@ import { Button} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
-import { Mail } from './mail';
 import { myConfig } from '../../configurations';
 
 export interface EmailFormModalProps {
@@ -13,7 +12,6 @@ export interface EmailFormModalProps {
     hideModal: Function,
     getAllEmails: Function,
     isEdit: boolean,
-    listOfEmails?: Mail[] 
     emailId?: number | undefined
     adress?: string,
 }
@@ -55,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress, listOfEmails}: EmailFormModalProps) => {
+const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress}: EmailFormModalProps) => {
 
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
@@ -76,53 +74,53 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
         }
     }
     
-    const CheckEmailExistence = (): boolean =>{
-        // let notInTheList : boolean = true;
-        // listOfEmails!.forEach(email => {
-        //     if(email.emailAdress === state.emailAdress!) 
-        //         notInTheList = false;
-        // });
-        // return notInTheList;
+    // const CheckEmailExistence = (): boolean =>{
+    //     // let notInTheList : boolean = true;
+    //     // listOfEmails!.forEach(email => {
+    //     //     if(email.emailAdress === state.emailAdress!) 
+    //     //         notInTheList = false;
+    //     // });
+    //     // return notInTheList;
 
-        const email = listOfEmails!.find(x => x.emailAdress === state.emailAdress);
-        return (email) ? true : false;
-    }
+    //     const email = listOfEmails!.find(x => x.emailAdress === state.emailAdress);
+    //     return (email) ? true : false;
+    // }
 
     const AddEmail = () => {
-        if(CheckEmailExistence()){
-            ToastsStore.error('The email adress already exists');
-            return;
-        }
+        // if(CheckEmailExistence()){
+        //     ToastsStore.error('The email adress already exists');
+        //     return;
+        // }
 
-        let emailData: Mail = {
-            emailAdress: state.emailAdress!
-        };
-        axios.post(myConfig.backUrl + 'emails', emailData).then(() => {
-            handleClose();
-            ToastsStore.success('The email was saved');
-            getAllEmails();
-        }).catch(() => {
-            ToastsStore.error('The email was not saved');
-        })
+        // let emailData: Email = {
+        //     emailAdress: state.emailAdress!
+        // };
+        // axios.post(myConfig.backUrl + 'emails', emailData).then(() => {
+        //     handleClose();
+        //     ToastsStore.success('The email was saved');
+        //     getAllEmails();
+        // }).catch(() => {
+        //     ToastsStore.error('The email was not saved');
+        // })
     }
 
     const UpdateEmail = async () => {
-        if (CheckEmailExistence()) {
-            ToastsStore.error('The email adress already exists');
-            return;
-        }
+        // if (CheckEmailExistence()) {
+        //     ToastsStore.error('The email adress already exists');
+        //     return;
+        // }
 
-        let emailData: Mail = {
-            emailId : emailId,
-            emailAdress: state.emailAdress!
-        };
-        await axios.put(myConfig.backUrl + 'emails/' + emailId!.toString(), emailData).then(() => {
-            handleClose();
-            ToastsStore.success('The email was saved');
-            getAllEmails();
-        }).catch(() => {
-            ToastsStore.error('The Email was not saved');
-        });
+        // let emailData: Email = {
+        //     emailId : emailId,
+        //     emailAdress: state.emailAdress!
+        // };
+        // await axios.put(myConfig.backUrl + 'emails/' + emailId!.toString(), emailData).then(() => {
+        //     handleClose();
+        //     ToastsStore.success('The email was saved');
+        //     getAllEmails();
+        // }).catch(() => {
+        //     ToastsStore.error('The Email was not saved');
+        // });
     }
 
     const handleInputEmailAdressChange = (e: ChangeEvent<HTMLInputElement>) => {

@@ -84,17 +84,17 @@ const ContractList = () => {
     const [inputValue, setInputValue] = React.useState('');
 
     const GetContracts = async () => {
-        await axios.get(myConfig.backUrl + `Contracts`).then( (response) => {
-            console.log("contracts", response.data);
-            setContract({ ...stateContract, listOfContract: response.data });
-        });
+        // await axios.get(myConfig.backUrl + `Contracts`).then( (response) => {
+        //     console.log("contracts", response.data);
+        //     setContract({ ...stateContract, listOfContract: response.data });
+        // });
     };
 
     const GetContractsConst = async () => {
-        await axios.get(myConfig.backUrl + `Contracts`).then((response) => {
-            console.log("contractsConst", response.data);
-            setContractConst({ ...stateContractConst, listOfContract: response.data });
-        });
+        // await axios.get(myConfig.backUrl + `Contracts`).then((response) => {
+        //     console.log("contractsConst", response.data);
+        //     setContractConst({ ...stateContractConst, listOfContract: response.data });
+        // });
     };
 
     const ShowContractForm = (isEdit: boolean, contractToEdit?: Contract) => {
@@ -205,7 +205,9 @@ const ContractList = () => {
                                     <TableCell className={classes.dataRow}></TableCell>
                                     <TableCell className={classes.dataRow}></TableCell>
                                     <TableCell className={classes.dataRow}>
-                                        <Button variant='contained' color='default'> <EditIcon /> </Button>
+                                        <Link to="/emails/deviceObjId=" >
+                                            <Button variant='contained' color='default'> <EditIcon /> </Button>
+                                        </Link>
                                     </TableCell>
                                     <TableCell className={classes.dataRow}>
                                         <Button variant='contained' color='default' onClick={() => ShowContractForm(true)}> <EditIcon /> </Button>

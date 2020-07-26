@@ -1,3 +1,5 @@
+import { Company } from "../owners/owner";
+
 export interface Contract {
         id? : number,
         owner :Company,
@@ -10,7 +12,7 @@ export interface Contract {
         surplusColorPrice: number, 
         users?: CognitoUser[], 
         usersid?: User[], 
-        employees?: Employee[], 
+        employees?: Person[], 
 }
 
 export interface CognitoUser {
@@ -21,13 +23,9 @@ export interface User {
         userId?: Number,
 }
 
-export interface Employee {
+export interface Person {
+        id?: number,
         company : Company,
         name: string,
         email: string,
-}
-
-export interface Company {
-        name: string,
-        employees?: Employee[], 
 }

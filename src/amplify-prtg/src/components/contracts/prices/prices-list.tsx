@@ -9,9 +9,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
-import { Grid, Paper, TableFooter, InputLabel, Select} from '@material-ui/core';
+import { Grid, Paper, TableFooter, InputLabel, Select } from '@material-ui/core';
 import register from '../../../registerServiceWorker';
 import { Link } from 'react-router-dom';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const PricesList = (deviceObjId: number) => {
     const useStyles = makeStyles((theme: Theme) =>
@@ -47,8 +48,15 @@ const PricesList = (deviceObjId: number) => {
       })
     );
     const classes = useStyles();
-    const [selectedValue, setSelectedValue] = React.useState((new Date().getMonth()).toString());
-        
+    const [selectedValue, setSelectedValue] = React.useState((new Date().getMonth()+1).toString());
+    const MonthList = () : string[] => {
+      let monthList: string[] = [];
+      let i: number;
+      for (i = 1; i <= 12; i++) {
+        monthList.push(i.toString());
+      }
+      return monthList;
+    }; 
     const HandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setSelectedValue(event.target.value as string);
     };
@@ -92,7 +100,13 @@ const PricesList = (deviceObjId: number) => {
                       inputRef={register}
                       value={selectedValue}
                       onChange={HandleChange}
-                    ></Select>
+                    >
+                        {
+                        MonthList().map(month =>
+                            <MenuItem key={month} value={month}>{month}</MenuItem>
+                        ) 
+                        }
+                    </Select>
                   </TableCell>
                   <TableCell className={classes.dataRow}></TableCell>
                   <TableCell className={classes.dataRow}></TableCell>

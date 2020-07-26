@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
-import { Mail } from './mail';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -13,21 +12,20 @@ import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import EmailFormModal from './mailsFormModal';
-import EmailDeleteConfirmModal from './mail-delete-confirm-modal';
 import { Grid, TablePagination, TableFooter} from '@material-ui/core';
 import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
+import { Contract } from '../contracts/contract';
 
-export interface IMailList {
-    listOfMail: Mail[]
-}
-
-const MailList = () => {
+const OwnersList = () => {
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
-            titlesRow: {
-                fontWeight: 'bold'
+            titlesRow :{
+                fontWeight : 'bold',
+                textAlign : 'center'
+            },
+            dataRow:{
+                textAlign : 'center'
             },
             margins: {
                 paddingTop: '70px',
@@ -48,40 +46,39 @@ const MailList = () => {
     );
     const classes = useStyles();
 
-    const [stateMail, setMail] = React.useState<IMailList>();
+    const [stateMail, setOwner] = React.useState<Contract>();
     const [showModal, setShowModal] = React.useState(false);
     const [showDeleteConfirmModal, setShowDeleteConfirmModal] = React.useState(false);
     const [formIsEdit, setFormIsEdit] = React.useState(false);
-    const [mailIdToEdit, setMailIdToEdit] = React.useState(0);
-    const [mailAdressToEdit, setMailAdressToEdit] = React.useState('');
-    const [mailIdToDelete, setMailIdToDelete] = React.useState(0);
-    const [mailAdressToDelete, setMailAdressToDelete] = React.useState('');
+    const [ownerIdToEdit, setOwnerIdToEdit] = React.useState(0);
+    const [ownerAdressToEdit, setOwnerAdressToEdit] = React.useState('');
+    const [ownerIdToDelete, setOwnerIdToDelete] = React.useState(0);
+    const [ownerAdressToDelete, setOwnerAdressToDelete] = React.useState('');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
     
-    useEffect(() => { GetMails() }, []);
+    useEffect(() => { GetOwners() }, []);
 
-    const GetMails = async () => {
-        const response = await axios.get(myConfig.backUrl + `emails`);
-        setMail({ ...stateMail, listOfMail: response.data });
+    const GetOwners = async () => {
+        
     };
    
-    const ShowEmailForm = (isEdit: boolean, mailToEdit? : Mail) => {
+    const ShowOwnersForm = (isEdit?: boolean, ownerToEdit? : string) => {
         setShowModal(true);
         if (!isEdit) {
             setFormIsEdit(false);
         }
         else {
             setFormIsEdit(true);
-            setMailIdToEdit(mailToEdit!.emailId!);
-            setMailAdressToEdit(mailToEdit!.emailAdress);
+            // setOwnerIdToEdit();
+            // setOwnerAdressToEdit();
         }
     }
 
-    const ShowDeleteConfirm = async (mailToDelete : Mail) => {
+    const ShowDeleteConfirm = async (ownerToDelete? : number) => {
         setShowDeleteConfirmModal(true);
-        setMailIdToDelete(mailToDelete.emailId!);
-        setMailAdressToDelete(mailToDelete.emailAdress);
+        // setOwnerIdToDelete();
+        // setOwnerAdressToDelete();
     }
 
     const HideForm = () => {
@@ -105,43 +102,37 @@ const MailList = () => {
         <Grid container xs={12} item>
             <Grid item xs={3}></Grid>
             <Grid item xs={6}>
-                <Button className={classes.buttonAdd} onClick={() => ShowEmailForm(false)}>
-                    Add new E-Mail
+                <Button className={classes.buttonAdd} onClick={() => ShowOwnersForm(false)}>
+                    Add new Owner
                 </Button>
                 <TableContainer component={Paper}>
                     <Table size='medium'>
                         <TableHead aria-label="simple table">
                             <TableRow>
-                                <TableCell className={classes.titlesRow} size='medium'>E-mail adress</TableCell>
-                                <TableCell className={classes.titlesRow} size='medium'></TableCell>
-                                <TableCell className={classes.titlesRow} size='medium'></TableCell>
+                                <TableCell className={classes.titlesRow} size='medium'>Owner</TableCell>
+                                <TableCell className={classes.titlesRow} size='medium' colSpan={2}>Owner actions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {stateMail !== undefined && stateMail.listOfMail !== undefined ? 
-                                (rowsPerPage > 0
-                                    ? stateMail.listOfMail.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    : stateMail.listOfMail
-                                )
-                                .map(mail => (
-                                    <TableRow key={`${mail.emailId}`}>
-                                        <TableCell>{mail.emailAdress}</TableCell>
-                                        <TableCell>
-                                            <Button variant='contained' color='default' onClick={() => ShowEmailForm(true, mail)}> <EditIcon /> </Button>
+                           
+                                    <TableRow >
+                                        <TableCell className={classes.dataRow}></TableCell>
+                                        <TableCell className={classes.dataRow}>
+                                            <Button variant='contained' color='default' onClick={() => ShowOwnersForm()}> <EditIcon /> </Button>
                                         </TableCell>
-                                        <TableCell>
-                                            <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(mail)}><DeleteIcon /></Button>
+                                        <TableCell className={classes.dataRow}>
+                                            <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm()}><DeleteIcon /></Button>
                                         </TableCell>
 
                                     </TableRow>
-                            )) : null}
+                          
                         </TableBody>
                         <TableFooter>
                             <TableRow>
-                                <TablePagination
+                                {/* <TablePagination
                                     rowsPerPageOptions={[3, 6, 9, { label: 'All', value: -1 }]}
                                     colSpan={3}
-                                    count={stateMail !== undefined && stateMail.listOfMail !== undefined ? stateMail.listOfMail.length : 0}
+                                    count={stateOwner !== undefined && stateOwner.listOfOwner !== undefined ? stateOwner.listOfOwner.length : 0}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
                                     SelectProps={{
@@ -151,32 +142,32 @@ const MailList = () => {
                                     onChangePage={handleChangePage}
                                     onChangeRowsPerPage={handleChangeRowsPerPage}
                                     ActionsComponent={TablePaginationActions}
-                                />
+                                /> */}
                             </TableRow>
                         </TableFooter>
                     </Table>
                 </TableContainer>
                 
-                {showModal ?
-                    <EmailFormModal
+                {/* {showModal ?
+                    <OwnerFormModal
                         show={showModal}
                         hideModal={HideForm}
-                        getAllEmails={GetMails}
+                        getAllOwners={GetOwners}
                         isEdit={formIsEdit}
-                        listOfEmails={stateMail!.listOfMail}
-                        emailId={mailIdToEdit}
-                        adress={mailAdressToEdit} />
+                        // listOfOwners={}
+                        ownerId={ownerIdToEdit}
+                        adress={ownerAdressToEdit} />
                     : null
                 }
                 {showDeleteConfirmModal ?
-                    <EmailDeleteConfirmModal 
+                    <OwnerDeleteConfirmModal 
                         show={showDeleteConfirmModal} 
                         hideModal={HideForm} 
-                        getAllEmails={GetMails} 
-                        emailId={mailIdToDelete} 
-                        emailAdress={mailAdressToDelete} />
+                        getAllOwners={GetOwners} 
+                        ownerId={ownerIdToDelete} 
+                        ownerAdress={ownerAdressToDelete} />
                     : null
-                }
+                } */}
             </Grid>
             <Grid item xs={3}></Grid>
         </Grid>
@@ -184,4 +175,4 @@ const MailList = () => {
     )
 }
 
-export default MailList
+export default OwnersList

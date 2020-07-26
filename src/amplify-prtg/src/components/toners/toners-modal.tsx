@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
-import { Contract } from './contract';
 import { Paper } from '@material-ui/core';
 import {Chart, BarSeries, Title, ArgumentAxis, ValueAxis} from '@devexpress/dx-react-chart-material-ui';
 import { Animation } from '@devexpress/dx-react-chart';

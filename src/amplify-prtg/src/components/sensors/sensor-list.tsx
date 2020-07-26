@@ -6,8 +6,11 @@ import { Device, DeviceData, DeviceDataViewModel } from './device';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
-import TonersModal from '../contracts/toners-modal';
-import { Toner } from '../contracts/toner';
+import { Toner } from '../toners/toner';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import TonersModal from '../toners/toners-modal';
+ 
 
 export interface IDeviceList {
     listOfDevices: Device[]
@@ -52,6 +55,10 @@ const SensorList = () => {
         cyanToner : 0,
         magentaToner : 0,
         yellowToner : 0
+    });
+    const [inputDate, setInputDate] = React.useState({
+      startDate: new Date((new Date()).getFullYear(), (new Date()).getMonth(), 1),
+      endDate: new Date(),
     });
 
     React.useEffect(() => {
@@ -146,6 +153,16 @@ const SensorList = () => {
         setPage(0);
     };
 
+    const handleInputStartDate = (date : Date) => {
+      setInputDate({
+         ...inputDate, startDate :  date,
+      });
+    };
+    const handleInputEndDate = (date: Date) => {
+      setInputDate({
+        ...inputDate, endDate: date,
+      });
+    };
 
     
     return (
@@ -184,7 +201,13 @@ const SensorList = () => {
                 <TableHead aria-label="simple table">
                   <TableRow>
                     <TableCell className={classes.titlesRow} size="medium">
-                      color sheets
+                      Since
+                    </TableCell>
+                    <TableCell className={classes.titlesRow} size="medium">
+                      To
+                    </TableCell>
+                    <TableCell className={classes.titlesRow} size="medium">
+                      Color sheets
                     </TableCell>
                     <TableCell className={classes.titlesRow} size="medium">
                       B&W sheets
@@ -200,6 +223,18 @@ const SensorList = () => {
                 </TableHead>
                 <TableBody>
                   <TableRow key={`${deviceDataViewModel.objId}`}>
+                    <TableCell className={classes.dataRow}>
+                      <DatePicker
+                        selected={inputDate.startDate}
+                        onChange={handleInputStartDate}
+                      />
+                    </TableCell>
+                    <TableCell className={classes.dataRow}>
+                      <DatePicker
+                        selected={inputDate.endDate}
+                        onChange={handleInputEndDate}
+                      />
+                    </TableCell>
                     <TableCell className={classes.dataRow}>
                       {deviceDataViewModel.thisMonthQuantityColorSheets}
                     </TableCell>
