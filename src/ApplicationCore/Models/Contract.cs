@@ -6,10 +6,10 @@ namespace ApplicationCore.Models
 {
     public class Contract : BaseModel
     {
-        public Company Company { get; set; }
-        public Device Printer { get; set; }
-        public int BlackAndWhiteSheets { get; set; }
-        public int ColorSheets { get; set; }
+        public Company Owner { get; set; }
+        public Device Device { get; set; }
+        public int BlackAndWhiteLimitSet { get; set; }
+        public int ColorLimitSet { get; set; }
         public int Month { get; set; }    
         public float BlackAndWhitePrice { get; set; }
         public float ColorPrice { get; set; }

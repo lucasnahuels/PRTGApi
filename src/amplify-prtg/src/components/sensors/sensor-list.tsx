@@ -25,7 +25,11 @@ const SensorList = () => {
                 minWidth: 120,
             },
             titlesRow: {
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                textAlign : 'center'
+            },
+            dataRow:{
+                textAlign : 'center'
             },
         })
     );
@@ -196,16 +200,16 @@ const SensorList = () => {
                 </TableHead>
                 <TableBody>
                   <TableRow key={`${deviceDataViewModel.objId}`}>
-                    <TableCell>
+                    <TableCell className={classes.dataRow}>
                       {deviceDataViewModel.thisMonthQuantityColorSheets}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className={classes.dataRow}>
                       {deviceDataViewModel.thisMonthQuantityBandWSheets}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className={classes.dataRow}>
                       {deviceDataViewModel.thisMonthQuantityTotalSheets}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className={classes.dataRow}>
                       <Button
                         variant="contained"
                         color="primary"

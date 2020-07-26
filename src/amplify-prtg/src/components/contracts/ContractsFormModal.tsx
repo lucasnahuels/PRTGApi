@@ -1,12 +1,13 @@
 import React, { ChangeEvent, useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import { Button } from '@material-ui/core';
+import { Button, Step, Select, InputLabel } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
-import { Contract } from './contract';
+import { Contract, Company } from './contract';
 import { myConfig } from '../../configurations';
+import { useForm } from "react-hook-form";
 
 export interface ContractFormModalProps {
     show: boolean,
@@ -18,11 +19,10 @@ export interface ContractFormModalProps {
 
 
 function getModalStyle() {
-    const top = 28;
-    const left = 31;
-
+    const top = 50;
+    const left = 50;
     return {
-        top: `${15}%`,
+        top: `${top}%`,
         left: `${left}%`,
         transform: `translate(-${top}%, -${left}%)`,
     };
@@ -32,8 +32,6 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         paper: {
             position: 'absolute',
-            margin: 100,
-            width: 600,
             backgroundColor: theme.palette.background.paper,
             border: '1px solid #000',
             boxShadow: theme.shadows[5],
@@ -46,6 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
         container: {
             display: 'flex',
             flexWrap: 'wrap',
+            justifyContent: 'center',
         },
     })
 );
@@ -55,106 +54,98 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = React.useState(getModalStyle);
-    const [state, setState] = React.useState({
-        nameOfCompany: '',
-        printer: '',
-        blackAndWhiteSheets: 0,
-        colorSheets: 0,
-        blackToner: 0,
-        cyanToner: 0,
-        yellowToner: 0,
-        magentaToner: 0,
-        month: 0,
-    })
-    
+
+    const [selectedValue, setSelectedValue] = React.useState("0");
+    const [contract, setContract] = React.useState<Contract>();
+
+    type FormData = {
+        owner : string,
+        device :string,
+        blackAndWhiteLimitSet:number,
+        colorLimitSet:number,
+        blackAndWhitePrice:number,
+        colorPrice: number,
+        surplusBlackAndWhitePrice: number,
+        surplusColorPrice: number, 
+    };
+
+    const { register, setValue, handleSubmit } = useForm<FormData>({
+      defaultValues: {
+        owner: "",
+        device: "",
+        blackAndWhiteLimitSet: 0,
+        colorLimitSet: 0,
+        blackAndWhitePrice: 0,
+        colorPrice: 0,
+        surplusBlackAndWhitePrice: 0,
+        surplusColorPrice: 0,
+      },
+    });
+    const onSubmit = handleSubmit(({ 
+        device, 
+        owner,
+        blackAndWhiteLimitSet,
+        colorLimitSet,
+        blackAndWhitePrice,
+        colorPrice,
+        surplusBlackAndWhitePrice,
+        surplusColorPrice,
+    }) => {
+        let ownerName: Company = { name : owner};
+        let contractData: Contract = {
+          device : device,
+          owner : ownerName,
+          blackAndWhiteLimitSet : blackAndWhiteLimitSet,
+          colorLimitSet : colorLimitSet,
+          blackAndWhitePrice : blackAndWhitePrice,
+          colorPrice : colorPrice,
+          surplusBlackAndWhitePrice : surplusBlackAndWhitePrice,
+          surplusColorPrice : surplusColorPrice,
+        };
+        setContract(contractData);
+    }); 
+
     useEffect(() => { fillList(); }, []); 
 
     const fillList = () => {
         if (isEdit) {
-            setState({
-                nameOfCompany: contractToEdit!.nameOfCompany,
-                printer: contractToEdit!.printer,
-                blackAndWhiteSheets: contractToEdit!.blackAndWhiteSheets,
-                colorSheets: contractToEdit!.colorSheets,
-                blackToner: contractToEdit!.blackToner,
-                cyanToner: contractToEdit!.cyanToner,
-                yellowToner: contractToEdit!.yellowToner,
-                magentaToner: contractToEdit!.magentaToner,
-                month: contractToEdit!.month
-            });
+            // setState({
+            //     nameOfCompany: contractToEdit!.nameOfCompany,
+            //     printer: contractToEdit!.printer,
+            //     blackAndWhiteSheets: contractToEdit!.blackAndWhiteSheets,
+            //     colorSheets: contractToEdit!.colorSheets,
+            //     blackToner: contractToEdit!.blackToner,
+            //     cyanToner: contractToEdit!.cyanToner,
+            //     yellowToner: contractToEdit!.yellowToner,
+            //     magentaToner: contractToEdit!.magentaToner,
+            //     month: contractToEdit!.month
+            // });
         }
     }
 
     const AddContract = () => {
-    let contractData: Contract = { nameOfCompany: state.nameOfCompany,
-                                    printer: state.printer,
-                                    month: state.month,
-                                    blackAndWhiteSheets: state.blackAndWhiteSheets,
-                                    colorSheets: state.colorSheets,
-                                    blackToner: state.blackToner,
-                                    cyanToner: state.cyanToner,
-                                    magentaToner: state.magentaToner,
-                                    yellowToner: state.yellowToner 
-                                };
-        axios.post(myConfig.backUrl + 'contracts', contractData).then(() => {
-            handleClose();
-            ToastsStore.success('The contract was saved');
-            getAllContracts();
-        }).catch(() => {
-            ToastsStore.error('The contract was not saved');
-        })
+        // axios.post(myConfig.backUrl + 'contracts', contract).then(() => {
+        //     handleClose();
+        //     ToastsStore.success('The contract was saved');
+        //     getAllContracts();
+        // }).catch(() => {
+        //     ToastsStore.error('The contract was not saved');
+        // })
     }
 
     const UpdateContract = async () => {
-        let contractData: Contract = {
-                                    contractId: contractToEdit!.contractId!,
-                                    nameOfCompany: state.nameOfCompany,
-                                    printer: state.printer,
-                                    month: state.month,
-                                    blackAndWhiteSheets: state.blackAndWhiteSheets,
-                                    colorSheets: state.colorSheets,
-                                    blackToner: state.blackToner,
-                                    cyanToner: state.cyanToner,
-                                    magentaToner: state.magentaToner,
-                                    yellowToner: state.yellowToner
-                                 };
-        await axios.put(myConfig.backUrl + 'contracts/' + contractToEdit!.contractId!.toString(), contractData).then(() => {
-            handleClose();
-            ToastsStore.success('The contract was saved');
-            getAllContracts();
-        }).catch(() => {
-            ToastsStore.error('The contract was not saved');
-        });
+        // await axios.put(myConfig.backUrl + 'contracts/' + contractToEdit!.contractId!.toString(), contract).then(() => {
+        //     handleClose();
+        //     ToastsStore.success('The contract was saved');
+        //     getAllContracts();
+        // }).catch(() => {
+        //     ToastsStore.error('The contract was not saved');
+        // });
     }
 
-    const handleInputNameOfCompanyChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setState({ ...state, nameOfCompany: e.target.value }); 
-    }
-    const handleInputNameOfPrinterChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setState({ ...state, printer: e.target.value });
-    }
-    const handleInputMonthChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setState({ ...state, month: parseInt(e.target.value) });
-    }
-    const handleInputBWSheetsChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setState({ ...state, blackAndWhiteSheets: parseInt(e.target.value) }); 
-    }
-    const handleInputColorSheetsChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setState({ ...state, colorSheets: parseInt(e.target.value) });
-    }
-    const handleInputBlackTonnerChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setState({ ...state, blackToner: parseInt(e.target.value) });
-    }
-    const handleInputCyanTonnerChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setState({ ...state, cyanToner: parseInt(e.target.value) });
-    }
-    const handleInputMagentaTonnerChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setState({ ...state, magentaToner: parseInt(e.target.value) });
-    }
-    const handleInputYellowTonnerChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setState({ ...state, yellowToner: parseInt(e.target.value) });
-    }
-
+    const HandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setSelectedValue(event.target.value as string);
+    };
 
     const handleClose = () => {
         hideModal();
@@ -169,34 +160,70 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                 open={show}
                 onClose={handleClose}
             >
-                <div style={modalStyle} className={classes.paper}>
-                <div style={{ textAlign: 'center' }}>
-                    <h2 id='contractform-modal-title'>Add contract</h2>
-                    <div id='contractform-modal-description'>
-                        <TextField className={classes.formRoot} required label='company name' id='inputName' name='inputName' placeholder='input the name of the company' value={state.nameOfCompany} onChange={handleInputNameOfCompanyChange} />
-                        <TextField className={classes.formRoot} required label='printer name' id='inputPrinter' name='inputPrinter' placeholder='input the name of the printer' value={state.printer} onChange={handleInputNameOfPrinterChange} />
-                        <br /><br />
-                        <TextField className={classes.formRoot} required label='month' id='inputMonth' name='inputMonth' placeholder='input the month' value={state.month} onChange={handleInputMonthChange} />
-                        <br /><br />
-                        <TextField className={classes.formRoot} required label='black and white sheets' id='inputQuantityBWSheets' name='inputQuantityBWSheets' placeholder='input the quantity of the black and white sheets' value={state.blackAndWhiteSheets} onChange={handleInputBWSheetsChange} />
-                        <TextField className={classes.formRoot} required label='color sheets' id='inputColorSheets' name='inputColorSheets' placeholder='input the quantity of color sheets' value={state.colorSheets} onChange={handleInputColorSheetsChange} />
-                        <br /><br />
-                        <TextField className={classes.formRoot} required label='black tonner' id='inputBlackTonner' name='inputBlackTonner' placeholder='input the the quantity of black tonner remaining' value={state.blackToner} onChange={handleInputBlackTonnerChange} />
-                        <TextField className={classes.formRoot} required label='cyan tonner' id='inputCyanTonner' name='inputCyanTonner' placeholder='input the the quantity of cyan tonner remaining' value={state.cyanToner} onChange={handleInputCyanTonnerChange} />
-                        <TextField className={classes.formRoot} required label='magenta tonner' id='inputMagentaTonner' name='inputMagentaTonner' placeholder='input the the quantity of magenta tonner remaining' value={state.magentaToner} onChange={handleInputMagentaTonnerChange} />
-                        <TextField className={classes.formRoot} required label='yellow tonner' id='inputYellowTonner' name='inputYellowTonner' placeholder='input the the quantity of yellow tonner remaining' value={state.yellowToner} onChange={handleInputYellowTonnerChange} />
-                        <br /><br />
-
-                        {!isEdit ? (
-                            <Button variant='contained' color='default' onClick={() => AddContract()}>Save new</Button>
-                        ) : (
-                                <Button variant='contained' color='default' onClick={() => UpdateContract()} >Save update</Button>
-                            )
-                        }
-                        <Button variant='contained' color='default' onClick={handleClose} >Cancel</Button> {/*en el momento del click y manda el elemento como parametro por defecto.. Si fuera handleClose(), el onClick estaria esperando lo que le retorna esa funcion (x ej. una llamada a aotra funcion)*/}
+                <form onSubmit={onSubmit}>
+                    <div style={modalStyle} className={classes.paper}>
+                    <div style={{ textAlign: 'center' }}>
+                        <h2 id='contractform-modal-title'>Add contract</h2>
+                        <div id='contractform-modal-description'>
+                                <InputLabel id="deviceNameLabel">Device</InputLabel>
+                                <Select
+                                    className={classes.formRoot} 
+                                    required
+                                    id='inputDevice'
+                                    labelId="deviceNameLabel"
+                                    name="device" inputRef={register}
+                                    value={"devices"}
+                                    onChange={HandleChange}
+                                ></Select>
+                                <InputLabel id="ownerNameLabel">Owner</InputLabel>
+                                <Select
+                                    className={classes.formRoot} 
+                                    required
+                                    id='inputName'
+                                    labelId="ownerNameLabel"
+                                    name="owner" inputRef={register}
+                                    value={"owners"}
+                                    onChange={HandleChange}
+                                ></Select>
+                            <br /><br />
+                                <TextField className={classes.formRoot} required type="number"
+                                    label='black and white limit set' placeholder='black and white limit set'
+                                    id='inputBWLimitSheets' name="blackAndWhiteLimitSet" inputRef={register}
+                                />
+                                <TextField className={classes.formRoot} required type="number" 
+                                    label='color sheets limit set'
+                                    id='inputColorLimitSheets' name='colorLimitSet' inputRef={register}
+                                />
+                            <br /><br />
+                                <TextField className={classes.formRoot} required type="number" inputProps={{step:'any'}}
+                                    label='black and white normal price per unit'
+                                    id='inputPriceBWSheet' name='blackAndWhitePrice' inputRef={register}
+                                />
+                                <TextField className={classes.formRoot} required type="number" inputProps={{step:'any'}}
+                                    label='color normal price per unit'
+                                    id='inputPriceColorSheet' name='colorPrice' inputRef={register}
+                                />
+                            <br /><br />
+                                <TextField className={classes.formRoot} required type="number" inputProps={{step:'any'}}
+                                    label='black and white surplus price per unit'
+                                    id='inputPriceBWSurplusSheet' name='surplusBlackAndWhitePrice' inputRef={register} 
+                                />
+                                <TextField className={classes.formRoot} required type="number" inputProps={{step:'any'}}
+                                    label='color surplus price per unit' 
+                                    id='inputPriceColorSurplusSheet' name='surplusColorPrice' inputRef={register}  
+                                />
+                            <br /><br />
+                            {!isEdit ? (
+                                <Button type="submit" variant='contained' color='default' onClick={() => AddContract()}>Save new</Button>
+                            ) : (
+                                    <Button variant='contained' color='default' onClick={() => UpdateContract()} >Save update</Button>
+                                )
+                            }
+                            <Button variant='contained' color='default' onClick={handleClose} >Cancel</Button> {/*en el momento del click y manda el elemento como parametro por defecto.. Si fuera handleClose(), el onClick estaria esperando lo que le retorna esa funcion (x ej. una llamada a aotra funcion)*/}
+                        </div>
+                    </div>    
                     </div>
-                </div>    
-                </div>
+                </form>
             </Modal>
         </div>
     );
