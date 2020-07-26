@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import { Button} from '@material-ui/core';
+import { Button, RadioGroup, FormControlLabel, Radio} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
@@ -60,7 +60,8 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
     const [modalStyle] = React.useState(getModalStyle);
 
     const [state, setState] = React.useState({
-        emailAdress: ''
+        emailAdress: '',
+        personValue: ''
     });
 
     useEffect(() => { fillList(); }, []);
@@ -69,7 +70,8 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
     const fillList = () =>{
         if(isEdit){
             setState({
-            emailAdress : adress!
+            emailAdress : adress!,
+            personValue : ''
         }) 
         }
     }
@@ -126,6 +128,11 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
     const handleInputEmailAdressChange = (e: ChangeEvent<HTMLInputElement>) => {
         setState({ ...state, emailAdress: e.target.value });
     }
+    const handleChangeRadioButton = (e: ChangeEvent<HTMLInputElement>) => {
+      setState({ ...state, personValue: e.target.value });
+    };
+
+    
 
     const handleClose = () => {
         hideModal();
@@ -141,20 +148,32 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
                 onClose={handleClose}
             >
                 <div style={modalStyle} className={classes.paper}>
-                    <h2 id='emailform-modal-title'>Add email</h2>
-                    <div id='emailform-modal-description'>
-                        <TextField label='email adress' id='inputEmailAdress' name='inputEmailAdress' placeholder='input the email adress' value={state.emailAdress} onChange={handleInputEmailAdressChange} />
-                        <br /><br />
-                        <br /><br />
-
-                        {!isEdit ? (
-                            <Button variant='contained' color='default' onClick={() => AddEmail()} >Save new</Button>
-                        ) : (
-                                <Button variant='contained' color='default' onClick={() => UpdateEmail()} >Save update</Button>
-                            )
-                        }
-                        <Button variant='contained' color='default' onClick={handleClose} >Cancel</Button> 
-                        {/*en el momento del click y manda el elemento como parametro por defecto.. Si fuera handleClose(), el onClick estaria esperando lo que le retorna esa funcion (x ej. una llamada a aotra funcion)*/}
+                    <div style={{ textAlign: 'center' }}>
+                        <h2 id='emailform-modal-title'>Add email</h2>
+                        <div id='emailform-modal-description'>
+                            <TextField label='email adress' id='inputEmailAdress' name='inputEmailAdress' placeholder='input the email adress' value={state.emailAdress} onChange={handleInputEmailAdressChange} />
+                            <br />
+                            <br />
+                            <RadioGroup 
+                                row 
+                                aria-label="person" 
+                                name="person" 
+                                style={{ marginLeft:'20%' }}
+                                value={state.personValue} 
+                                onChange={handleChangeRadioButton}>
+                                    <FormControlLabel value="It-one person" control={<Radio />} label="It-one person" />
+                                    <FormControlLabel value="Device owner person" control={<Radio />} label="Device owner person" />
+                            </RadioGroup>
+                            <br/><br/><br/><br/>
+                            {!isEdit ? (
+                                <Button variant='contained' color='default' onClick={() => AddEmail()} >Save new</Button>
+                            ) : (
+                                    <Button variant='contained' color='default' onClick={() => UpdateEmail()} >Save update</Button>
+                                )
+                            }
+                            <Button variant='contained' color='default' onClick={handleClose} >Cancel</Button> 
+                            {/*en el momento del click y manda el elemento como parametro por defecto.. Si fuera handleClose(), el onClick estaria esperando lo que le retorna esa funcion (x ej. una llamada a aotra funcion)*/}
+                        </div>
                     </div>
                 </div>
             </Modal>

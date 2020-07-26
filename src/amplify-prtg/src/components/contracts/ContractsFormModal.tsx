@@ -1,13 +1,14 @@
 import React, { ChangeEvent, useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import { Button, Step, Select, InputLabel } from '@material-ui/core';
+import { Button, Step, Select, InputLabel, Tooltip } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
-import { Contract, Company } from './contract';
+import { Contract } from './contract';
 import { myConfig } from '../../configurations';
 import { useForm } from "react-hook-form";
+import { Company } from '../owners/owner';
 
 export interface ContractFormModalProps {
     show: boolean,
@@ -16,7 +17,6 @@ export interface ContractFormModalProps {
     isEdit: boolean,
     contractToEdit? : Contract 
 }
-
 
 function getModalStyle() {
     const top = 50;
@@ -175,16 +175,22 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                                     value={"devices"}
                                     onChange={HandleChange}
                                 ></Select>
-                                <InputLabel id="ownerNameLabel">Owner</InputLabel>
-                                <Select
-                                    className={classes.formRoot} 
-                                    required
-                                    id='inputName'
-                                    labelId="ownerNameLabel"
-                                    name="owner" inputRef={register}
-                                    value={"owners"}
-                                    onChange={HandleChange}
-                                ></Select>
+                                <Tooltip title="If the owner you need is not in the list, 
+                                you will have to add it since the 'Handle owners view'">
+                                    <div>
+                                    <InputLabel id="ownerNameLabel">Owner</InputLabel>
+                                    <Select
+                                        className={classes.formRoot} 
+                                        required
+                                        id='inputName'
+                                        labelId="ownerNameLabel"
+                                        name="owner" inputRef={register}
+                                        value={"owners"}
+                                        onChange={HandleChange}
+                                    >
+                                    </Select>
+                                    </div>
+                                </Tooltip>
                             <br /><br />
                                 <TextField className={classes.formRoot} required type="number"
                                     label='black and white limit set' placeholder='black and white limit set'

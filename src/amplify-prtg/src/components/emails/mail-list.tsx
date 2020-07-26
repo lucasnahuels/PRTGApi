@@ -116,23 +116,45 @@ const EmailsList = () => {
                                 <TableCell className={classes.titlesRow} size='medium' colSpan={2}>Email actions</TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody>
-                           
-                                    <TableRow >
-                                        <TableCell className={classes.dataRow}></TableCell>
-                                        <TableCell className={classes.dataRow}>
-                                            <input type="checkbox"/>
-                                        </TableCell>
-                                        <TableCell className={classes.dataRow}>
-                                            <Button variant='contained' color='default' onClick={() => ShowEmailForm()}> <EditIcon /> </Button>
-                                        </TableCell>
-                                        <TableCell className={classes.dataRow}>
-                                            <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm()}><DeleteIcon /></Button>
-                                        </TableCell>
 
-                                    </TableRow>
-                          
+                        <TableBody>
+                            <TableRow>
+                                <h6 style={{textAlign:'center', color:'#9400D3', fontWeight:'bold'}}>
+                                    It one employee
+                                </h6>
+                            </TableRow>
+                            <TableRow >
+                                <TableCell className={classes.dataRow}></TableCell>
+                                <TableCell className={classes.dataRow}>
+                                    <input type="checkbox"/>
+                                </TableCell>
+                                <TableCell className={classes.dataRow}>
+                                    <Button variant='contained' color='default' onClick={() => ShowEmailForm()}> <EditIcon /> </Button>
+                                </TableCell>
+                                <TableCell className={classes.dataRow}>
+                                    <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm()}><DeleteIcon /></Button>
+                                </TableCell>
+                            </TableRow>
+
+                            <TableRow>
+                                <h6 style={{textAlign:'center', color:'#9400D3', fontWeight:'bold'}}>
+                                    Device owner
+                                </h6>
+                            </TableRow>
+                            <TableRow >
+                                <TableCell className={classes.dataRow}></TableCell>
+                                <TableCell className={classes.dataRow}>
+                                    <input type="checkbox"/>
+                                </TableCell>
+                                <TableCell className={classes.dataRow}>
+                                    <Button variant='contained' color='default' onClick={() => ShowEmailForm()}> <EditIcon /> </Button>
+                                </TableCell>
+                                <TableCell className={classes.dataRow}>
+                                    <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm()}><DeleteIcon /></Button>
+                                </TableCell>
+                            </TableRow>
                         </TableBody>
+
                         <TableFooter>
                             <TableRow>
                                 {/* <TablePagination
