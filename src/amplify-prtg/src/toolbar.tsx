@@ -97,7 +97,7 @@ export default function SearchAppBar() {
                         <Grid item xs={4}>
                             <Link to="/owners" >
                                 <Button className={classes.colorButton}>
-                                        Handle owners
+                                        Handle device owners
                                 </Button>
                             </Link>
                         </Grid>

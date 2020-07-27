@@ -110,7 +110,7 @@ const OwnersList = () => {
                     <Table size='medium'>
                         <TableHead aria-label="simple table">
                             <TableRow>
-                                <TableCell className={classes.titlesRow} size='medium'>Owner</TableCell>
+                                <TableCell className={classes.titlesRow} size='medium'>Owner name</TableCell>
                                 <TableCell className={classes.titlesRow} size='medium' colSpan={2}>Owner actions</TableCell>
                             </TableRow>
                         </TableHead>

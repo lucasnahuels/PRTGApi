@@ -10,6 +10,7 @@ import { Toner } from '../toners/toner';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TonersModal from '../toners/toners-modal';
+import PreviousMonthModal from './previous-month-modal';
  
 
 export interface IDeviceList {
@@ -26,6 +27,8 @@ const SensorList = () => {
             formControl: {
                 margin: theme.spacing(1),
                 minWidth: 120,
+                marginLeft:'30%',
+                marginRight:'30%'
             },
             titlesRow: {
                 fontWeight: 'bold',
@@ -33,6 +36,19 @@ const SensorList = () => {
             },
             dataRow:{
                 textAlign : 'center'
+            },
+            buttonPreviousMonth: {
+                position: 'absolute',
+                left: '45%',
+                right: '45%',
+                backgroundColor: 'blue',
+                borderRadius: '18px',
+                color: 'white',
+                fontSize: '10px',
+                fontWeight: 'bold',
+                '&:hover': {
+                    backgroundColor: 'lightblue',
+                }
             },
         })
     );
@@ -50,11 +66,18 @@ const SensorList = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
     const [showTonnerModal, setShowTonnerModal] = React.useState(false);
+    const [showPreviousMonthModal, setShowPreviousMonthModal] = React.useState(false);
     const [infoForTonners, setInfoForTonners] = React.useState<Toner>({
         blackToner: 0,
         cyanToner : 0,
         magentaToner : 0,
         yellowToner : 0
+    });
+    const [infoForPreviousMonth, setInfoForPreviousMonth] = React.useState<DeviceDataViewModel>({
+      objId: 0,
+      thisMonthQuantityColorSheets: "",
+      thisMonthQuantityBandWSheets: "",
+      thisMonthQuantityTotalSheets: "",
     });
     const [inputDate, setInputDate] = React.useState({
       startDate: new Date((new Date()).getFullYear(), (new Date()).getMonth(), 1),
@@ -132,6 +155,10 @@ const SensorList = () => {
         
     const HandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setSelectedValue(event.target.value as string);
+    };
+
+    const OpenPreviousMonthModal = () => {
+      setShowPreviousMonthModal(true);
     };
 
     const OpenTonersModal = () => {
@@ -286,6 +313,21 @@ const SensorList = () => {
                 </TableFooter>
               </Table>
             </TableContainer>
+            <br />
+
+            <Button
+              className={classes.buttonPreviousMonth}
+              onClick={() => OpenPreviousMonthModal()}
+            >
+              See previous month
+            </Button>
+            {showPreviousMonthModal ? (
+              <PreviousMonthModal
+                show={showPreviousMonthModal}
+                hideModal={HideModal}
+                info={infoForPreviousMonth}
+              />
+            ) : null}
 
             {showTonnerModal ? (
               <TonersModal

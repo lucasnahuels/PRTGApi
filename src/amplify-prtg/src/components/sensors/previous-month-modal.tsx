@@ -1,0 +1,129 @@
+import React, { ChangeEvent, useEffect } from "react";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import Modal from "@material-ui/core/Modal";
+import { Button, RadioGroup, FormControlLabel, Radio, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
+import axios from "axios";
+import {
+  ToastsStore,
+  ToastsContainer,
+  ToastsContainerPosition,
+} from "react-toasts";
+import { myConfig } from "../../configurations";
+import { Link } from "react-router-dom";
+import { DeviceDataViewModel } from "./device";
+
+export interface PreviousMonthModalProps {
+  show: boolean;
+  hideModal: Function;
+  info: DeviceDataViewModel;
+}
+
+function getModalStyle() {
+  const top = 28;
+  const left = 35;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    paper: {
+      position: "absolute",
+      margin: 100,
+      width: 400,
+      backgroundColor: theme.palette.background.paper,
+      border: "1px solid #000",
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+    root: {
+      display: "flex",
+      flexWrap: "wrap",
+    },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
+    titlesRow: {
+      fontWeight: "bold",
+      textAlign: "center",
+    },
+    dataRow: {
+      textAlign: "center",
+    },
+  })
+);
+
+const PreviousMonthModal = ({show, hideModal, info }: PreviousMonthModalProps) => {
+  const classes = useStyles();
+  // getModalStyle is not a pure function, we roll the style only on the first render
+  const [modalStyle] = React.useState(getModalStyle);
+
+
+  useEffect(() => {
+    fillList();
+  }, []);
+
+  const fillList = () => {
+    
+  };
+
+  const handleClose = () => {
+    hideModal();
+  };
+
+  return (
+    <div>
+      <ToastsContainer
+        position={ToastsContainerPosition.TOP_RIGHT}
+        store={ToastsStore}
+      />
+      <Modal
+        aria-labelledby="ownerform-modal-title"
+        aria-describedby="ownerform-modal-description"
+        open={show}
+        onClose={handleClose}
+      >
+        <div style={modalStyle} className={classes.paper}>
+          <div style={{ textAlign: "center" }}>
+            <h2 id="ownerform-modal-title">Device info for previous month</h2>
+            <div id="ownerform-modal-description">
+               <TableContainer component={Paper}>
+                    <Table size='medium'>
+                        <TableHead aria-label="simple table">
+                            <TableCell className={classes.titlesRow} size="medium">
+                                Color sheets
+                            </TableCell>
+                            <TableCell className={classes.titlesRow} size="medium">
+                                B&W sheets
+                            </TableCell>
+                            <TableCell className={classes.titlesRow} size="medium">
+                                Total
+                            </TableCell>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow >
+                                <TableCell className={classes.dataRow}></TableCell>
+                                <TableCell className={classes.dataRow}></TableCell>
+                                <TableCell className={classes.dataRow}></TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
+export default PreviousMonthModal;
