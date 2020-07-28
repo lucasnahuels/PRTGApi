@@ -97,6 +97,7 @@ const PreviousMonthModal = ({show, hideModal, info }: PreviousMonthModalProps) =
                <TableContainer component={Paper}>
                     <Table size='medium'>
                         <TableHead aria-label="simple table">
+                          <TableRow>
                             <TableCell className={classes.titlesRow} size="medium">
                                 Color sheets
                             </TableCell>
@@ -106,6 +107,7 @@ const PreviousMonthModal = ({show, hideModal, info }: PreviousMonthModalProps) =
                             <TableCell className={classes.titlesRow} size="medium">
                                 Total
                             </TableCell>
+                          </TableRow>
                         </TableHead>
                         <TableBody>
                             <TableRow >
