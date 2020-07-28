@@ -20,8 +20,8 @@ export interface OwnerFormModalProps {
 }
 
 function getModalStyle() {
-  const top = 28;
-  const left = 35;
+  const top = 50;
+  const left = 50;
 
   return {
     top: `${top}%`,
@@ -34,8 +34,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       position: "absolute",
-      margin: 100,
-      width: 400,
       backgroundColor: theme.palette.background.paper,
       border: "1px solid #000",
       boxShadow: theme.shadows[5],

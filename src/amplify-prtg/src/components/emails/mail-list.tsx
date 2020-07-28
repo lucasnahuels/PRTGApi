@@ -138,7 +138,7 @@ const EmailsList = () => {
 
                             <TableRow>
                                 <h6 style={{textAlign:'center', color:'#9400D3', fontWeight:'bold'}}>
-                                    Device owner
+                                    Device owner employee
                                 </h6>
                             </TableRow>
                             <TableRow >

@@ -167,6 +167,7 @@ const SensorList = () => {
     
     const HideModal = () => {
         setShowTonnerModal(false);
+        setShowPreviousMonthModal(false);
     };
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {

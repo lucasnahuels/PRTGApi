@@ -48,7 +48,8 @@ const PricesList = (deviceObjId: number) => {
       })
     );
     const classes = useStyles();
-    const [selectedValue, setSelectedValue] = React.useState((new Date().getMonth()+1).toString());
+    const [selectedMonthValue, setSelectedMonthValue] = React.useState((new Date().getMonth() + 1).toString());
+    const [selectedYearValue, setSelectedYearValue] = React.useState((new Date().getFullYear()).toString());
     const MonthList = () : string[] => {
       let monthList: string[] = [];
       let i: number;
@@ -57,8 +58,20 @@ const PricesList = (deviceObjId: number) => {
       }
       return monthList;
     }; 
-    const HandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setSelectedValue(event.target.value as string);
+    const YearList = () : string[] => {
+      let yearList: string[] = [];
+      let i: number;
+      for (i = 2020; i <= 2050; i++) {
+        yearList.push(i.toString());
+      }
+      return yearList;
+    }; 
+
+    const HandleChangeMonth = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setSelectedMonthValue(event.target.value as string);
+    };
+    const HandleChangeYear = (event: React.ChangeEvent<{ value: unknown }>) => {
+      setSelectedYearValue(event.target.value as string);
     };
 
   return (
@@ -72,6 +85,9 @@ const PricesList = (deviceObjId: number) => {
                 <TableRow>
                   <TableCell className={classes.titlesRow} size="medium">
                     Device
+                  </TableCell>
+                  <TableCell className={classes.titlesRow} size="medium">
+                    Year
                   </TableCell>
                   <TableCell className={classes.titlesRow} size="medium">
                     Month
@@ -95,11 +111,27 @@ const PricesList = (deviceObjId: number) => {
                   <TableCell className={classes.dataRow}>
                     <Select
                       className={classes.formRoot}
+                      id="inputYear"
+                      name="year"
+                      inputRef={register}
+                      value={selectedYearValue}
+                      onChange={HandleChangeYear}
+                    >
+                      {
+                        YearList().map(year =>
+                          <MenuItem key={year} value={year}>{year}</MenuItem>
+                        )
+                      }
+                    </Select>
+                  </TableCell>
+                  <TableCell className={classes.dataRow}>
+                    <Select
+                      className={classes.formRoot}
                       id="inputMonth"
                       name="month"
                       inputRef={register}
-                      value={selectedValue}
-                      onChange={HandleChange}
+                      value={selectedMonthValue}
+                      onChange={HandleChangeMonth}
                     >
                         {
                         MonthList().map(month =>
