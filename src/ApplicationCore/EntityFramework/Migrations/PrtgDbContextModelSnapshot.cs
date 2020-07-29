@@ -19,21 +19,6 @@ namespace ApplicationCore.EntityFramework.Migrations
                 .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("ApplicationCore.Models.Company", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Company");
-                });
-
             modelBuilder.Entity("ApplicationCore.Models.Contract", b =>
                 {
                     b.Property<long>("Id")
@@ -41,46 +26,48 @@ namespace ApplicationCore.EntityFramework.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int>("BlackAndWhiteLimitSet")
+                        .HasColumnType("integer");
+
                     b.Property<float>("BlackAndWhitePrice")
                         .HasColumnType("real");
 
-                    b.Property<int>("BlackAndWhiteSheets")
+                    b.Property<int>("ColorLimitSet")
                         .HasColumnType("integer");
 
                     b.Property<float>("ColorPrice")
                         .HasColumnType("real");
 
-                    b.Property<int>("ColorSheets")
+                    b.Property<int?>("DeviceObjId")
                         .HasColumnType("integer");
-
-                    b.Property<long?>("CompanyId")
-                        .HasColumnType("bigint");
-
-                    b.Property<float>("ExcedenteBlackAndWhitePrice")
-                        .HasColumnType("real");
-
-                    b.Property<float>("ExcedenteColorPrice")
-                        .HasColumnType("real");
 
                     b.Property<int>("Month")
                         .HasColumnType("integer");
 
-                    b.Property<string>("PrinterObjId")
-                        .HasColumnType("text");
+                    b.Property<long?>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<float>("SurplusBlackAndWhitePrice")
+                        .HasColumnType("real");
+
+                    b.Property<float>("SurplusColorPrice")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("DeviceObjId");
 
-                    b.HasIndex("PrinterObjId");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Contracts");
                 });
 
             modelBuilder.Entity("ApplicationCore.Models.Device", b =>
                 {
-                    b.Property<string>("ObjId")
-                        .HasColumnType("text");
+                    b.Property<int>("ObjId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.HasKey("ObjId");
 
@@ -94,9 +81,6 @@ namespace ApplicationCore.EntityFramework.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<long?>("CompanyId")
-                        .HasColumnType("bigint");
-
                     b.Property<long?>("ContractId")
                         .HasColumnType("bigint");
 
@@ -106,13 +90,31 @@ namespace ApplicationCore.EntityFramework.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.Property<long?>("OwnerId")
+                        .HasColumnType("bigint");
 
-                    b.HasIndex("CompanyId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ContractId");
 
+                    b.HasIndex("OwnerId");
+
                     b.ToTable("Employee");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Models.Owner", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Owner");
                 });
 
             modelBuilder.Entity("ApplicationCore.Models.Reports.DailyContadoresDataDevices", b =>
@@ -131,8 +133,8 @@ namespace ApplicationCore.EntityFramework.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("DeviceObjId")
-                        .HasColumnType("text");
+                    b.Property<int?>("DeviceObjId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -157,8 +159,8 @@ namespace ApplicationCore.EntityFramework.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("DeviceObjId")
-                        .HasColumnType("text");
+                    b.Property<int?>("DeviceObjId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("MagentaTonersUsed")
                         .HasColumnType("integer");
@@ -190,24 +192,24 @@ namespace ApplicationCore.EntityFramework.Migrations
 
             modelBuilder.Entity("ApplicationCore.Models.Contract", b =>
                 {
-                    b.HasOne("ApplicationCore.Models.Company", "Company")
+                    b.HasOne("ApplicationCore.Models.Device", "Device")
                         .WithMany()
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("DeviceObjId");
 
-                    b.HasOne("ApplicationCore.Models.Device", "Printer")
+                    b.HasOne("ApplicationCore.Models.Owner", "Owner")
                         .WithMany()
-                        .HasForeignKey("PrinterObjId");
+                        .HasForeignKey("OwnerId");
                 });
 
             modelBuilder.Entity("ApplicationCore.Models.Employee", b =>
                 {
-                    b.HasOne("ApplicationCore.Models.Company", "Company")
-                        .WithMany("Employees")
-                        .HasForeignKey("CompanyId");
-
                     b.HasOne("ApplicationCore.Models.Contract", null)
                         .WithMany("Employees")
                         .HasForeignKey("ContractId");
+
+                    b.HasOne("ApplicationCore.Models.Owner", "Owner")
+                        .WithMany("Employees")
+                        .HasForeignKey("OwnerId");
                 });
 
             modelBuilder.Entity("ApplicationCore.Models.Reports.DailyContadoresDataDevices", b =>

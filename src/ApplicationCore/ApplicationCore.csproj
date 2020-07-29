@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="EntityFramework\Migrations\20200729031904_RefactorEntities.cs" />
+    <Compile Remove="EntityFramework\Migrations\20200729031904_RefactorEntities.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Amazon.AspNetCore.Identity.Cognito" Version="1.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
