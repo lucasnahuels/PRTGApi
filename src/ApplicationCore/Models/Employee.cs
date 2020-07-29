@@ -2,6 +2,6 @@
 {
     public class Employee : Person
     {
-        public Company Company { get; set; }
+        public Owner Owner { get; set; }
     }
 }

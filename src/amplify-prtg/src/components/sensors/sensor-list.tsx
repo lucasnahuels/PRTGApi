@@ -21,14 +21,13 @@ const SensorList = () => {
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
             margins: {
-                paddingTop: '60px',
+                paddingTop: '20px',
                 paddingBottom: '60px',
             },
             formControl: {
                 margin: theme.spacing(1),
                 minWidth: 120,
-                marginLeft:'30%',
-                marginRight:'30%'
+                marginLeft:'0%',
             },
             titlesRow: {
                 fontWeight: 'bold',
@@ -196,149 +195,183 @@ const SensorList = () => {
     return (
       <div className={classes.margins}>
         <Grid container xs={12} item>
-          <Grid item xs={5}></Grid>
-          <Grid item xs={1}>
-            <FormControl className={classes.formControl}>
-              <InputLabel id="demo-simple-select-label">Device</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={selectedValue}
-                onChange={HandleChange}
+          <Grid item xs={1}></Grid>
+          <Grid item xs={10}>
+              <FormControl className={classes.formControl}>
+                <InputLabel id="demo-simple-select-label">Device</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={selectedValue}
+                  onChange={HandleChange}
+                >
+                  {stateDevice !== undefined &&
+                  stateDevice.listOfDevices !== undefined
+                    ? stateDevice.listOfDevices.map((device) => (
+                        <MenuItem
+                          key={device.objId!.toString()}
+                          value={device.objId!.toString()}
+                        >
+                          {device.device}
+                        </MenuItem>
+                      ))
+                    : null}
+                </Select>
+              </FormControl>
+
+          {selectedValue !== "0" ? (
+            <div>
+
+              <TableContainer component={Paper}>
+                <Table size="medium">
+                  <TableHead aria-label="simple table">
+                  </TableHead>
+                  <TableBody>
+                    <TableRow key={`${deviceDataViewModel.objId}`}>
+                      <TableCell className={classes.dataRow} style={{paddingLeft:'30%'}}>
+                          <p style={{ display: 'inline', fontWeight: 'bold' }}>{'<'}-{'<'}-since </p>
+                        <DatePicker
+                          selected={inputDate.startDate}
+                          onChange={handleInputStartDate}
+                        />
+                      </TableCell>
+                        <TableCell className={classes.dataRow} style={{ paddingRight: '30%' }}>
+                        <DatePicker
+                          selected={inputDate.endDate}
+                          onChange={handleInputEndDate}
+                          />
+                          <p style={{display:'inline', fontWeight:'bold'}}> to-{'>'}-{'>'}</p>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                  <TableFooter>
+                  </TableFooter>
+                </Table>
+              </TableContainer>
+
+              <br /><br />
+              
+              <TableContainer component={Paper}>
+                <Table size="medium">
+                  <TableHead aria-label="simple table">
+                    <TableRow>
+                      <TableCell className={classes.titlesRow} size="medium">
+                        Color sheets
+                      </TableCell>
+                      <TableCell className={classes.titlesRow} size="medium">
+                        B&W sheets
+                      </TableCell>
+                      <TableCell className={classes.titlesRow} size="medium">
+                        Total
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow key={`${deviceDataViewModel.objId}`}>
+                      <TableCell className={classes.dataRow}>
+                        {deviceDataViewModel.thisMonthQuantityColorSheets}
+                      </TableCell>
+                      <TableCell className={classes.dataRow}>
+                        {deviceDataViewModel.thisMonthQuantityBandWSheets}
+                      </TableCell>
+                      <TableCell className={classes.dataRow}>
+                        {deviceDataViewModel.thisMonthQuantityTotalSheets}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                  <TableFooter>
+                    <TableRow>
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </TableContainer>
+
+              <br /><br/>
+
+              <TableContainer component={Paper}>
+                <Table size="medium">
+                  <TableHead aria-label="simple table">
+                    <TableRow>
+                      <TableCell className={classes.titlesRow} size="medium">
+                        Unit of black tonners
+                      </TableCell>
+                      <TableCell className={classes.titlesRow} size="medium">
+                        Unit of cyan tonners
+                      </TableCell>
+                      <TableCell className={classes.titlesRow} size="medium">
+                        Unit of magenta tonners
+                      </TableCell>
+                      <TableCell className={classes.titlesRow} size="medium">
+                        Unit of yellow tonners
+                      </TableCell>
+                      <TableCell
+                        className={classes.titlesRow}
+                        size="medium"
+                      ></TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow key={`${deviceDataViewModel.objId}`}>
+                      <TableCell className={classes.dataRow}>
+                        {deviceDataViewModel.thisMonthQuantityColorSheets}
+                      </TableCell>
+                      <TableCell className={classes.dataRow}>
+                        {deviceDataViewModel.thisMonthQuantityBandWSheets}
+                      </TableCell>
+                      <TableCell className={classes.dataRow}>
+                        {deviceDataViewModel.thisMonthQuantityTotalSheets}
+                      </TableCell>
+                      <TableCell className={classes.dataRow}>
+                        {deviceDataViewModel.thisMonthQuantityTotalSheets}
+                      </TableCell>
+                      <TableCell className={classes.dataRow}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={() => OpenTonersModal()}
+                        >
+                          Tonners info
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                  <TableFooter>
+                    <TableRow>
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </TableContainer>
+
+              <br/>
+
+              <Button
+                className={classes.buttonPreviousMonth}
+                onClick={() => OpenPreviousMonthModal()}
               >
-                {stateDevice !== undefined &&
-                stateDevice.listOfDevices !== undefined
-                  ? stateDevice.listOfDevices.map((device) => (
-                      <MenuItem
-                        key={device.objId!.toString()}
-                        value={device.objId!.toString()}
-                      >
-                        {device.device}
-                      </MenuItem>
-                    ))
-                  : null}
-              </Select>
-            </FormControl>
+                See previous month
+              </Button>
+              {showPreviousMonthModal ? (
+                <PreviousMonthModal
+                  show={showPreviousMonthModal}
+                  hideModal={HideModal}
+                  info={infoForPreviousMonth}
+                />
+              ) : null}
+
+              {showTonnerModal ? (
+                <TonersModal
+                  show={showTonnerModal}
+                  hideModal={HideModal}
+                  info={infoForTonners}
+                />
+              ) : null}
+            </div>
+          ) : null}
+
           </Grid>
-          <Grid item xs={5}></Grid>
+          <Grid item xs={1}></Grid>
         </Grid>
-        {selectedValue !== "0" ? (
-          <div>
-            <TableContainer component={Paper}>
-              <Table size="medium">
-                <TableHead aria-label="simple table">
-                  <TableRow>
-                    <TableCell className={classes.titlesRow} size="medium">
-                      Since
-                    </TableCell>
-                    <TableCell className={classes.titlesRow} size="medium">
-                      To
-                    </TableCell>
-                    <TableCell className={classes.titlesRow} size="medium">
-                      Color sheets
-                    </TableCell>
-                    <TableCell className={classes.titlesRow} size="medium">
-                      B&W sheets
-                    </TableCell>
-                    <TableCell className={classes.titlesRow} size="medium">
-                      Total
-                    </TableCell>
-                    <TableCell
-                      className={classes.titlesRow}
-                      size="medium"
-                    ></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow key={`${deviceDataViewModel.objId}`}>
-                    <TableCell className={classes.dataRow}>
-                      <DatePicker
-                        selected={inputDate.startDate}
-                        onChange={handleInputStartDate}
-                      />
-                    </TableCell>
-                    <TableCell className={classes.dataRow}>
-                      <DatePicker
-                        selected={inputDate.endDate}
-                        onChange={handleInputEndDate}
-                      />
-                    </TableCell>
-                    <TableCell className={classes.dataRow}>
-                      {deviceDataViewModel.thisMonthQuantityColorSheets}
-                    </TableCell>
-                    <TableCell className={classes.dataRow}>
-                      {deviceDataViewModel.thisMonthQuantityBandWSheets}
-                    </TableCell>
-                    <TableCell className={classes.dataRow}>
-                      {deviceDataViewModel.thisMonthQuantityTotalSheets}
-                    </TableCell>
-                    <TableCell className={classes.dataRow}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        onClick={() => OpenTonersModal()}
-                      >
-                        Tonners info
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    <TablePagination
-                      rowsPerPageOptions={[
-                        3,
-                        6,
-                        9,
-                        { label: "All", value: -1 },
-                      ]}
-                      colSpan={3}
-                      count={
-                        stateDevice !== undefined &&
-                        stateDevice.listOfDevices !== undefined
-                          ? stateDevice.listOfDevices.length
-                          : 0
-                      }
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                      SelectProps={{
-                        inputProps: { "aria-label": "rows per page" },
-                        native: true,
-                      }}
-                      onChangePage={handleChangePage}
-                      onChangeRowsPerPage={handleChangeRowsPerPage}
-                      ActionsComponent={TablePaginationActions}
-                    />
-                  </TableRow>
-                </TableFooter>
-              </Table>
-            </TableContainer>
-            <br />
-
-            <Button
-              className={classes.buttonPreviousMonth}
-              onClick={() => OpenPreviousMonthModal()}
-            >
-              See previous month
-            </Button>
-            {showPreviousMonthModal ? (
-              <PreviousMonthModal
-                show={showPreviousMonthModal}
-                hideModal={HideModal}
-                info={infoForPreviousMonth}
-              />
-            ) : null}
-
-            {showTonnerModal ? (
-              <TonersModal
-                show={showTonnerModal}
-                hideModal={HideModal}
-                info={infoForTonners}
-              />
-            ) : null}
-          </div>
-        ) : null}
       </div>
     );
 }

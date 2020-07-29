@@ -6,7 +6,7 @@ namespace ApplicationCore.Models
 {
     public class Contract : BaseModel
     {
-        public Company Owner { get; set; }
+        public Owner Owner { get; set; }
         public Device Device { get; set; }
         public int BlackAndWhiteLimitSet { get; set; }
         public int ColorLimitSet { get; set; }
