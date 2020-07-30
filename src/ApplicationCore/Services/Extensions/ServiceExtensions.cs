@@ -26,7 +26,7 @@ namespace ApplicationCore.Services.Extensions
         public static void AddPRTGServices(this IServiceCollection services)
         {
             services.AddTransient<ISensorService, SensorService>();
-            services.AddTransient<IPersonService, PersonService>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
             services.AddTransient<IOwnerService, OwnerService>();
             services.AddTransient<IContractService, ContractService>();
             services.AddTransient<IUserService, UserService>();

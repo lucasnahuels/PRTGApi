@@ -16,11 +16,26 @@ namespace WebApi.Controllers
             _dailyDeviceService = dailyDeviceService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetUsers()
+        [HttpGet("contadores")]
+        public async Task<ActionResult> DailyContadores()
         {
             try
             {
+                await _dailyDeviceService.CreateDailyContadoresDeviceValues();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ExcedenteCopias()
+        {
+            try
+            {
+
                 await _dailyDeviceService.CreateDailyContadoresDeviceValues();
                 return Ok();
             }
