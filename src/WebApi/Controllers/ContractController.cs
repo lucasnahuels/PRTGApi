@@ -35,13 +35,9 @@ namespace WebApi.Controllers
             return contract == null ? NotFound() : (ActionResult<Contract>)contract;
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Contract>> PutContract(long id, Contract contract)
+        [HttpPut]
+        public async Task<ActionResult<Contract>> PutContract(Contract contract)
         {
-            if (id != contract.Id)
-            {
-                return BadRequest();
-            }
             await _contractService.UpdateAsync(contract);
 
             return contract;

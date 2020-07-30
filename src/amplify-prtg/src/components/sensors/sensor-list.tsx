@@ -229,7 +229,6 @@ const SensorList = () => {
                   <TableBody>
                     <TableRow key={`${deviceDataViewModel.objId}`}>
                       <TableCell className={classes.dataRow} style={{paddingLeft:'30%'}}>
-                          <p style={{ display: 'inline', fontWeight: 'bold' }}>{'<'}-{'<'}-since </p>
                         <DatePicker
                           selected={inputDate.startDate}
                           onChange={handleInputStartDate}
@@ -240,7 +239,6 @@ const SensorList = () => {
                           selected={inputDate.endDate}
                           onChange={handleInputEndDate}
                           />
-                          <p style={{display:'inline', fontWeight:'bold'}}> to-{'>'}-{'>'}</p>
                       </TableCell>
                     </TableRow>
                   </TableBody>

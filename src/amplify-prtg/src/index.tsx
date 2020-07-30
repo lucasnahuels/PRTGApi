@@ -6,7 +6,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import configureStore from './store/configureStore';
 import App from './App';
-import EmailsList from './components/emails/mail-list';
+import EmailsList from './components/emails/email-list';
 import ContractList from './components/contracts/contract-list';
 import { Route } from 'react-router-dom'
 import SensorList from './components/sensors/sensor-list';

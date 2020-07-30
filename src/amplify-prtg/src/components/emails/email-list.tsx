@@ -12,8 +12,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import EmailFormModal from './mailsFormModal';
-import EmailDeleteConfirmModal from './mail-delete-confirm-modal';
+import EmailFormModal from './emailsFormModal';
+import EmailDeleteConfirmModal from './email-delete-confirm-modal';
 import { Grid, TablePagination, TableFooter} from '@material-ui/core';
 import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
@@ -105,7 +105,7 @@ const EmailsList = () => {
             <Grid item xs={3}></Grid>
             <Grid item xs={6}>
                 <Button className={classes.buttonAdd} onClick={() => ShowEmailForm(false)}>
-                    Add new E-Mail
+                    Add new employee
                 </Button>
                 <TableContainer component={Paper}>
                     <Table size='medium'>

@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import { Button, Step, Select, InputLabel, Tooltip } from '@material-ui/core';
+import { Button, Step, Select, InputLabel, Tooltip, MenuItem } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
@@ -9,6 +9,7 @@ import { Contract } from './contract';
 import { myConfig } from '../../configurations';
 import { useForm } from "react-hook-form";
 import { Company } from '../owners/owner';
+import { Device } from '../sensors/device';
 
 export interface ContractFormModalProps {
     show: boolean,
@@ -16,6 +17,9 @@ export interface ContractFormModalProps {
     getAllContracts: Function,
     isEdit: boolean,
     contractToEdit? : Contract 
+}
+export interface IDeviceList {
+    listOfDevices: Device[]
 }
 
 function getModalStyle() {
@@ -56,6 +60,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     const [modalStyle] = React.useState(getModalStyle);
 
     const [selectedValue, setSelectedValue] = React.useState("0");
+    const [stateDevice, setDevice] = React.useState<IDeviceList>();
     const [contract, setContract] = React.useState<Contract>();
 
     type FormData = {
@@ -106,6 +111,16 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     }); 
 
     useEffect(() => { fillList(); }, []); 
+    React.useEffect(() => {
+        console.log("renderGetDevices");
+        GetDevices();
+    }, []);
+
+    const GetDevices = async () => {
+        await axios.get(myConfig.backUrl + `sensor/GetAllDevices`).then((response) => {
+            setDevice({ ...stateDevice, listOfDevices: response.data });
+        });
+    };
 
     const fillList = () => {
         if (isEdit) {
@@ -143,7 +158,11 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         // });
     }
 
-    const HandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const HandleChangeDevice = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setSelectedValue(event.target.value as string);
+    };
+
+    const HandleChangeOwner = (event: React.ChangeEvent<{ value: unknown }>) => {
         setSelectedValue(event.target.value as string);
     };
 
@@ -173,8 +192,20 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                                     labelId="deviceNameLabel"
                                     name="device" inputRef={register}
                                     value={"devices"}
-                                    onChange={HandleChange}
-                                ></Select>
+                                    onChange={HandleChangeDevice}
+                                >
+                                    {stateDevice !== undefined &&
+                                        stateDevice.listOfDevices !== undefined
+                                        ? stateDevice.listOfDevices.map((device) => (
+                                            <MenuItem
+                                                key={device.objId!.toString()}
+                                                value={device.objId!.toString()}
+                                            >
+                                                {device.device}
+                                            </MenuItem>
+                                        ))
+                                        : null}
+                                </Select>
                                 <Tooltip title="If the owner you need is not in the list, 
                                 you will have to add it since the 'Handle owners view'">
                                     <div>
@@ -186,7 +217,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                                         labelId="ownerNameLabel"
                                         name="owner" inputRef={register}
                                         value={"owners"}
-                                        onChange={HandleChange}
+                                        onChange={HandleChangeOwner}
                                     >
                                     </Select>
                                     </div>

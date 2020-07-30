@@ -86,7 +86,7 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
     //     return (email) ? true : false;
     // }
 
-    const AddEmail = () => {
+    const AddPerson = () => {
         // if(CheckEmailExistence()){
         //     ToastsStore.error('The email adress already exists');
         //     return;
@@ -104,7 +104,7 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
         // })
     }
 
-    const UpdateEmail = async () => {
+    const UpdatePerson = async () => {
         // if (CheckEmailExistence()) {
         //     ToastsStore.error('The email adress already exists');
         //     return;
@@ -147,7 +147,7 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
             >
                 <div style={modalStyle} className={classes.paper}>
                     <div style={{ textAlign: 'center' }}>
-                        <h2 id='emailform-modal-title'>Add email</h2>
+                        <h2 id='emailform-modal-title'>Add person</h2>
                         <div id='emailform-modal-description'>
                             <TextField label='email adress' id='inputEmailAdress' name='inputEmailAdress' placeholder='input the email adress' value={state.emailAdress} onChange={handleInputEmailAdressChange} />
                             <br />
@@ -164,9 +164,9 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
                             </RadioGroup>
                             <br/><br/><br/><br/>
                             {!isEdit ? (
-                                <Button variant='contained' color='default' onClick={() => AddEmail()} >Save new</Button>
+                                <Button variant='contained' color='default' onClick={() => AddPerson()} >Save new</Button>
                             ) : (
-                                    <Button variant='contained' color='default' onClick={() => UpdateEmail()} >Save update</Button>
+                                    <Button variant='contained' color='default' onClick={() => UpdatePerson()} >Save update</Button>
                                 )
                             }
                             <Button variant='contained' color='default' onClick={handleClose} >Cancel</Button> 
