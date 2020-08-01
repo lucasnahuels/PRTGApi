@@ -185,9 +185,9 @@ namespace ApplicationCore.Services
 
             int blackAndWhiteCopies = 0;
 
-            if(!int.TryParse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasFullColor).LastValue, out int colorCopies))
+            if(!int.TryParse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasFullColor)?.LastValue, out int colorCopies))
             {
-                throw new Exception("");
+                return null;
             }
             colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintFullColor).LastValue);
             colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintSingleColor).LastValue);

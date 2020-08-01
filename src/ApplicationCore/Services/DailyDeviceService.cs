@@ -39,12 +39,16 @@ namespace ApplicationCore.Services
         public async Task CreateDailyContadoresDeviceValues()
         {
             var devices = await _sensorService.GetAllDevices();
-            var dailyDevices= new DailyContadoresDataDevices();
+            var dailyDevices = new List<DailyContadoresDataDevices>();
             foreach (var device in devices)
             {
-                dailyDevices = await _sensorService.GetDailyContadoresDevicesValues(device.ObjId);
+                var dailyContadoresDataDevice = await _sensorService.GetDailyContadoresDevicesValues(device.ObjId);
+                if(dailyContadoresDataDevice != null)
+                {
+                    dailyDevices.Add(dailyContadoresDataDevice);
+                }
             } 
-            await _context.DailyContadores.AddAsync(dailyDevices);
+            await _context.DailyContadores.AddRangeAsync(dailyDevices);
             await _context.SaveChangesAsync();
         }
 
