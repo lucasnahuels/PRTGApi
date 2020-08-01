@@ -6,16 +6,39 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using ApplicationCore.Models.Reports;
 using System;
+using System.Linq;
 
 namespace ApplicationCore.Services
 {
     public class SensorService : ISensorService
     {
         private readonly IHttpClientFactory _clientFactory;
+
+        #region ApiData
         private const string username = "prtgadmin";
         private const string password = "Si5t3m4s";
         private const string apiTable = "api/table.json";
         private const string apiSensorDetails = "api/getsensordetails.json";
+        #endregion
+
+        #region ChannelNames
+        private const string CopiasBlackAndWhite = "Copias Black & White";
+        private const string PrintBlackAndWhite = "Print Black & White";
+
+        private const string CopiasFullColor = "Copias Full Color";
+        private const string CopiasSingleColor = "Copias Single Color";
+        private const string CopiasTwoColor = "Copias Two-color";
+        private const string PrintFullColor = "Print Full Color";
+        private const string PrintSingleColor = "Print Single Color";
+        private const string PrintTwoColor = "Print Two-color";
+
+        private const string Duplex = "Duplex";
+        #endregion
+
+        #region SensorDataNames
+        private const string Contadores = "Contadores";
+        private const string Toners = "Toners"; 
+        #endregion
 
         public SensorService(IHttpClientFactory clientFactory)
         {
@@ -118,9 +141,9 @@ namespace ApplicationCore.Services
                 foreach (var childDevice in childDevices)
                 {
                     var sensorDetails = await GetSensorDetails(childDevice.ObjId);
-                    if (sensorDetails.SensorData.Name == "Contadores")
+                    if (sensorDetails.SensorData.Name == Contadores)
                         device.Contadores = await GetContadoresData(childDevice.ObjId);
-                    if (sensorDetails.SensorData.Name == "Toners")
+                    if (sensorDetails.SensorData.Name == Toners)
                         device.Toners = await GetTonersData(childDevice.ObjId);
                 }
             }
@@ -140,12 +163,12 @@ namespace ApplicationCore.Services
             foreach (var childDevice in childDevices)
             {
                 var sensorDetails = await GetSensorDetails(childDevice.ObjId);
-                if (sensorDetails.SensorData.Name == "Contadores")
+                if (sensorDetails.SensorData.Name == Contadores)
                 {
                     var contadoresData = await GetContadoresData(childDevice.ObjId);
                     device.Contadores = contadoresData;
                 }
-                if (sensorDetails.SensorData.Name == "Toners")
+                if (sensorDetails.SensorData.Name == Toners)
                 {
                     var tonersData = await GetTonersData(childDevice.ObjId);
                     device.Toners = tonersData;
@@ -159,10 +182,26 @@ namespace ApplicationCore.Services
             var contadores = await GetContadoresData(objId);
             DateTime localDate = DateTime.Now;
             //falta restarle el valor de ayer a los siguientes valores
+
+            int blackAndWhiteCopies = 0;
+
+            if(!int.TryParse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasFullColor).LastValue, out int colorCopies))
+            {
+                throw new Exception("");
+            }
+            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintFullColor).LastValue);
+            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintSingleColor).LastValue);
+            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintTwoColor).LastValue);
+            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasSingleColor).LastValue);
+            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasTwoColor).LastValue);
+            blackAndWhiteCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasBlackAndWhite).LastValue);
+            blackAndWhiteCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintBlackAndWhite).LastValue);
+            //blackAndWhiteCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == Duplex).LastValue);
+
             var dailyDevice = new DailyContadoresDataDevices
             {
-                ColorCopies = int.Parse(contadores.Channels[1].LastValue) + int.Parse(contadores.Channels[6].LastValue),
-                BlackAndWhiteCopies = int.Parse(contadores.Channels[0].LastValue) + int.Parse(contadores.Channels[5].LastValue),
+                ColorCopies = colorCopies,
+                BlackAndWhiteCopies = blackAndWhiteCopies,
                 DeviceId = objId,
                 Date = localDate
             };
