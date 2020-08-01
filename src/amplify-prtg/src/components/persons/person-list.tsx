@@ -196,7 +196,7 @@ const PersonsList = () => {
                         hideModal={HideForm}
                         getAllPersons={GetPersons}
                         isEdit={formIsEdit}
-                        person={personToEdit}
+                        person={personToEdit!}
                     />
                     : null
                 }
@@ -205,7 +205,7 @@ const PersonsList = () => {
                         show={showDeleteConfirmModal} 
                         hideModal={HideForm} 
                         getAllPersons={GetPersons} 
-                        person={personToDelete} 
+                        person={personToDelete!} 
                     />
                     : null
                 }

@@ -5,13 +5,13 @@ import { Button } from '@material-ui/core';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import { myConfig } from '../../configurations';
+import { Person } from '../contracts/contract';
 
 export interface PersonDeleteConfirmModalProps {
     show: boolean,
     hideModal: Function,
     getAllPersons: Function,
-    personId: number | undefined
-    personAdress: string | undefined
+    person: Person | undefined
 }
 
 function getModalStyle() {
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const PersonDeleteConfirmModal = ({ show, hideModal, getAllPersons, personId, personAdress }: PersonDeleteConfirmModalProps) => {
+const PersonDeleteConfirmModal = ({ show, hideModal, getAllPersons, person }: PersonDeleteConfirmModalProps) => {
 
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
@@ -49,7 +49,7 @@ const PersonDeleteConfirmModal = ({ show, hideModal, getAllPersons, personId, pe
     useEffect(() => { }, []);
 
     const DeletePerson = async () => {
-        await axios.delete(myConfig.backUrl + 'persons/' + personId!.toString()).then( () => {
+        await axios.delete(myConfig.backUrl + 'persons/' + person!.id!.toString()).then( () => {
             handleClose();
             ToastsStore.success('The Person was deleted');
             getAllPersons();
@@ -73,7 +73,7 @@ const PersonDeleteConfirmModal = ({ show, hideModal, getAllPersons, personId, pe
             >
                 <div style={modalStyle} className={classes.paper}>
                 <div style={{textAlign:'center'}}>    
-                 <h3>Are you sure to delete the employee "{personAdress}"</h3>
+                 <h3>Are you sure to delete the employee "{person!.email}"</h3>
                     <br/><br/>
                         <Button variant='contained' color='primary' onClick={DeletePerson}>Yes</Button>
                         <Button variant='contained' color='secondary' onClick={handleClose}>No</Button>

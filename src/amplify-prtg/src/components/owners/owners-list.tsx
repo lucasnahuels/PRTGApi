@@ -163,7 +163,7 @@ const OwnersList = () => {
                         hideModal={HideForm}
                         getAllOwners={GetOwners}
                         isEdit={formIsEdit}
-                        owner={ownerToEdit}
+                        owner={ownerToEdit!}
                     />
                     : null
                 }
@@ -172,7 +172,7 @@ const OwnersList = () => {
                         show={showDeleteConfirmModal} 
                         hideModal={HideForm} 
                         getAllOwners={GetOwners} 
-                        owner={ownerToDelete} 
+                        owner={ownerToDelete!} 
                     />
                     : null
                 }

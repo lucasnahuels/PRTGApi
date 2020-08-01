@@ -87,16 +87,16 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
         //     return;
         // }
 
-        // let personData: Person = {
-        //     personAdress: state.personAdress!
-        // };
-        // axios.post(myConfig.backUrl + 'persons', personData).then(() => {
-        //     handleClose();
-        //     ToastsStore.success('The person was saved');
-        //     getAllPersons();
-        // }).catch(() => {
-        //     ToastsStore.error('The person was not saved');
-        // })
+        let personData: Person = {
+            email: email
+        };
+        axios.post(myConfig.backUrl + 'employee', personData).then(() => {
+            handleClose();
+            ToastsStore.success('The person was saved');
+            getAllPersons();
+        }).catch(() => {
+            ToastsStore.error('The person was not saved');
+        })
     }
 
     const UpdatePerson = async () => {
@@ -105,17 +105,17 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
         //     return;
         // }
 
-        // let personData: Person = {
-        //     personId : personId,
-        //     personAdress: state.personAdress!
-        // };
-        // await axios.put(myConfig.backUrl + 'persons/' + personId!.toString(), personData).then(() => {
-        //     handleClose();
-        //     ToastsStore.success('The person was saved');
-        //     getAllPersons();
-        // }).catch(() => {
-        //     ToastsStore.error('The Person was not saved');
-        // });
+        let personData: Person = {
+            id : person!.id!,
+            email: email
+        };
+        await axios.put(myConfig.backUrl + 'employee/', personData).then(() => {
+            handleClose();
+            ToastsStore.success('The person was saved');
+            getAllPersons();
+        }).catch(() => {
+            ToastsStore.error('The Person was not saved');
+        });
     }
 
     const handleInputPersonAdressChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -142,7 +142,7 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
                     <div style={{ textAlign: 'center' }}>
                         <h2 id='personform-modal-title'>Add person</h2>
                         <div id='personform-modal-description'>
-                            <TextField label='person adress' id='inputPersonAdress' name='inputPersonAdress' placeholder='input the person adress' value={state.personAdress} onChange={handleInputPersonAdressChange} />
+                            <TextField label='person adress' id='inputPersonAdress' name='inputPersonAdress' placeholder='input the person adress' value={email} onChange={handleInputPersonAdressChange} />
                             <br />
                             <br />
                             <RadioGroup 

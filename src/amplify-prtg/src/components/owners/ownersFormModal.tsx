@@ -17,7 +17,7 @@ export interface OwnerFormModalProps {
   hideModal: Function;
   getAllOwners: Function;
   isEdit: boolean;
-  owner: Owner | undefined;
+  owner?: Owner | undefined;
 }
 
 function getModalStyle() {
@@ -74,8 +74,7 @@ const OwnerFormModal = ({
 
   const fillList = () => {
     if (isEdit) {
-    //   setState({
-    //   });
+      setInputOwnerName(owner!.name!)
     }
   };
 
@@ -155,7 +154,7 @@ const OwnerFormModal = ({
                 id="inputOwner"
                 name="inputOwner"
                 placeholder="input the owner name"
-                value={owner!.name!}
+                value={inputOwnerName}
                 onChange={handleInputOwnerChange}
               />
               <br />
