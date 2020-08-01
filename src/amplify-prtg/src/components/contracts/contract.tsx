@@ -1,9 +1,10 @@
-import { Company } from "../owners/owner";
+import { Owner } from "../owners/owner";
+import { Device} from "../sensors/device";
 
 export interface Contract {
         id? : number,
-        owner :Company,
-        device :string,
+        owner :Owner,
+        device :Device,
         blackAndWhiteLimitSet:number,
         colorLimitSet:number,
         blackAndWhitePrice :number,
@@ -25,7 +26,7 @@ export interface User {
 
 export interface Person {
         id?: number,
-        company : Company,
-        name: string,
+        company? : Owner,
+        name?: string,
         email: string,
 }

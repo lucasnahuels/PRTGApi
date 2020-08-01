@@ -6,12 +6,12 @@ import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import { myConfig } from '../../configurations';
 
-export interface EmailDeleteConfirmModalProps {
+export interface PersonDeleteConfirmModalProps {
     show: boolean,
     hideModal: Function,
-    getAllEmails: Function,
-    emailId: number | undefined
-    emailAdress: string | undefined
+    getAllPersons: Function,
+    personId: number | undefined
+    personAdress: string | undefined
 }
 
 function getModalStyle() {
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const EmailDeleteConfirmModal = ({ show, hideModal, getAllEmails, emailId, emailAdress }: EmailDeleteConfirmModalProps) => {
+const PersonDeleteConfirmModal = ({ show, hideModal, getAllPersons, personId, personAdress }: PersonDeleteConfirmModalProps) => {
 
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
@@ -48,13 +48,13 @@ const EmailDeleteConfirmModal = ({ show, hideModal, getAllEmails, emailId, email
     // tslint:disable-next-line: no-floating-promises
     useEffect(() => { }, []);
 
-    const DeleteEmail = async () => {
-        await axios.delete(myConfig.backUrl + 'emails/' + emailId!.toString()).then( () => {
+    const DeletePerson = async () => {
+        await axios.delete(myConfig.backUrl + 'persons/' + personId!.toString()).then( () => {
             handleClose();
-            ToastsStore.success('The E-Mail was deleted');
-            getAllEmails();
+            ToastsStore.success('The Person was deleted');
+            getAllPersons();
         }).catch( () => {
-            ToastsStore.error('The E-Mail was not deleted');
+            ToastsStore.error('The Person was not deleted');
         });
     }
 
@@ -66,16 +66,16 @@ const EmailDeleteConfirmModal = ({ show, hideModal, getAllEmails, emailId, email
         <div>
             <ToastsContainer position={ToastsContainerPosition.TOP_RIGHT} store={ToastsStore} />
             <Modal
-                aria-labelledby='emailform-modal-title'
-                aria-describedby='emailform-modal-description'
+                aria-labelledby='personform-modal-title'
+                aria-describedby='personform-modal-description'
                 open={show}
                 onClose={handleClose}
             >
                 <div style={modalStyle} className={classes.paper}>
                 <div style={{textAlign:'center'}}>    
-                 <h3>Are you sure to delete the E-Mail "{emailAdress}"</h3>
+                 <h3>Are you sure to delete the employee "{personAdress}"</h3>
                     <br/><br/>
-                        <Button variant='contained' color='primary' onClick={DeleteEmail}>Yes</Button>
+                        <Button variant='contained' color='primary' onClick={DeletePerson}>Yes</Button>
                         <Button variant='contained' color='secondary' onClick={handleClose}>No</Button>
                 </div>
                 </div>
@@ -84,4 +84,4 @@ const EmailDeleteConfirmModal = ({ show, hideModal, getAllEmails, emailId, email
     );
 }
 
-export default EmailDeleteConfirmModal
+export default PersonDeleteConfirmModal

@@ -6,12 +6,12 @@ import { ConnectedRouter } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import configureStore from './store/configureStore';
 import App from './App';
-import EmailsList from './components/emails/email-list';
 import ContractList from './components/contracts/contract-list';
 import { Route } from 'react-router-dom'
 import SensorList from './components/sensors/sensor-list';
 import PricesList from './components/contracts/prices/prices-list';
 import OwnersList from './components/owners/owners-list';
+import PersonsList from './components/persons/person-list';
 
 const history = createBrowserHistory();
 const store = configureStore(history);
@@ -25,7 +25,7 @@ ReactDOM.render(
         <Route path="/owners" component={OwnersList} />
         <Route path="/sensors" component={SensorList} />
         <Route path="/prices" component={PricesList} />
-        <Route path="/emails" component={EmailsList} />
+        <Route path="/persons" component={PersonsList} />
       </div>
     </ConnectedRouter>
   </Provider>,

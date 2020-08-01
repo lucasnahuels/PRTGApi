@@ -144,7 +144,7 @@ const ContractList = () => {
         let results : any = [];
         if( stateContractConst !== undefined && stateContractConst.listOfContract !== undefined) {
             results = stateContractConst!.listOfContract!.filter(contract =>
-                contract.device.toLowerCase().includes(searchTerm)
+                contract.device.device!.toLowerCase().includes(searchTerm)
             );
         }
         setContract({ ...stateContract, listOfContract: results });
@@ -168,7 +168,7 @@ const ContractList = () => {
                         setInputValue(newInputValue);
                         event.preventDefault();
                     }}
-                    options={(stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract : []).map((contract) => contract.device)}
+                    options={(stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract : []).map((contract) => contract.device.device!)}
                     renderInput={(params) => (
                         <TextField {...params} 
                             label="Filter by device name" 

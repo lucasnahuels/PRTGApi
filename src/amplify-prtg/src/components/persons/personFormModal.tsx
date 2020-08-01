@@ -6,14 +6,14 @@ import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import { myConfig } from '../../configurations';
+import { Person } from '../contracts/contract';
 
-export interface EmailFormModalProps {
+export interface PersonFormModalProps {
     show: boolean,
     hideModal: Function,
-    getAllEmails: Function,
+    getAllPersons: Function,
     isEdit: boolean,
-    emailId?: number | undefined
-    adress?: string,
+    person?: Person | undefined
 }
 
 
@@ -51,86 +51,79 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress}: EmailFormModalProps) => {
+const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: PersonFormModalProps) => {
 
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = React.useState(getModalStyle);
 
-    const [state, setState] = React.useState({
-        emailAdress: '',
-        personValue: ''
-    });
+    const [email, setEmail] = React.useState("");
+    const [radiobutton, setRadioButton] = React.useState("");
 
     useEffect(() => { fillList(); }, []);
     //when format is "useEffect(() => {}, []);" only render the first time instead of every time there´re changes
 
     const fillList = () =>{
         if(isEdit){
-            setState({
-            emailAdress : adress!,
-            personValue : ''
-        }) 
+            setEmail(person!.email)
         }
     }
     
-    // const CheckEmailExistence = (): boolean =>{
+    // const CheckPersonExistence = (): boolean =>{
     //     // let notInTheList : boolean = true;
-    //     // listOfEmails!.forEach(email => {
-    //     //     if(email.emailAdress === state.emailAdress!) 
+    //     // listOfPersons!.forEach(person => {
+    //     //     if(person.personAdress === state.personAdress!) 
     //     //         notInTheList = false;
     //     // });
     //     // return notInTheList;
 
-    //     const email = listOfEmails!.find(x => x.emailAdress === state.emailAdress);
-    //     return (email) ? true : false;
+    //     const person = listOfPersons!.find(x => x.personAdress === state.personAdress);
+    //     return (person) ? true : false;
     // }
 
     const AddPerson = () => {
-        // if(CheckEmailExistence()){
-        //     ToastsStore.error('The email adress already exists');
+        // if(CheckPersonExistence()){
+        //     ToastsStore.error('The person adress already exists');
         //     return;
         // }
 
-        // let emailData: Email = {
-        //     emailAdress: state.emailAdress!
+        // let personData: Person = {
+        //     personAdress: state.personAdress!
         // };
-        // axios.post(myConfig.backUrl + 'emails', emailData).then(() => {
+        // axios.post(myConfig.backUrl + 'persons', personData).then(() => {
         //     handleClose();
-        //     ToastsStore.success('The email was saved');
-        //     getAllEmails();
+        //     ToastsStore.success('The person was saved');
+        //     getAllPersons();
         // }).catch(() => {
-        //     ToastsStore.error('The email was not saved');
+        //     ToastsStore.error('The person was not saved');
         // })
     }
 
     const UpdatePerson = async () => {
-        // if (CheckEmailExistence()) {
-        //     ToastsStore.error('The email adress already exists');
+        // if (CheckPersonExistence()) {
+        //     ToastsStore.error('The person adress already exists');
         //     return;
         // }
 
-        // let emailData: Email = {
-        //     emailId : emailId,
-        //     emailAdress: state.emailAdress!
+        // let personData: Person = {
+        //     personId : personId,
+        //     personAdress: state.personAdress!
         // };
-        // await axios.put(myConfig.backUrl + 'emails/' + emailId!.toString(), emailData).then(() => {
+        // await axios.put(myConfig.backUrl + 'persons/' + personId!.toString(), personData).then(() => {
         //     handleClose();
-        //     ToastsStore.success('The email was saved');
-        //     getAllEmails();
+        //     ToastsStore.success('The person was saved');
+        //     getAllPersons();
         // }).catch(() => {
-        //     ToastsStore.error('The Email was not saved');
+        //     ToastsStore.error('The Person was not saved');
         // });
     }
 
-    const handleInputEmailAdressChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setState({ ...state, emailAdress: e.target.value });
+    const handleInputPersonAdressChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value);
     }
     const handleChangeRadioButton = (e: ChangeEvent<HTMLInputElement>) => {
-      setState({ ...state, personValue: e.target.value });
+        setRadioButton(e.target.value);
     };
-
-    
 
     const handleClose = () => {
         hideModal();
@@ -140,16 +133,16 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
         <div>
             <ToastsContainer position={ToastsContainerPosition.TOP_RIGHT} store={ToastsStore} />
             <Modal
-                aria-labelledby='emailform-modal-title'
-                aria-describedby='emailform-modal-description'
+                aria-labelledby='personform-modal-title'
+                aria-describedby='personform-modal-description'
                 open={show}
                 onClose={handleClose}
             >
                 <div style={modalStyle} className={classes.paper}>
                     <div style={{ textAlign: 'center' }}>
-                        <h2 id='emailform-modal-title'>Add person</h2>
-                        <div id='emailform-modal-description'>
-                            <TextField label='email adress' id='inputEmailAdress' name='inputEmailAdress' placeholder='input the email adress' value={state.emailAdress} onChange={handleInputEmailAdressChange} />
+                        <h2 id='personform-modal-title'>Add person</h2>
+                        <div id='personform-modal-description'>
+                            <TextField label='person adress' id='inputPersonAdress' name='inputPersonAdress' placeholder='input the person adress' value={state.personAdress} onChange={handleInputPersonAdressChange} />
                             <br />
                             <br />
                             <RadioGroup 
@@ -157,7 +150,7 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
                                 aria-label="person" 
                                 name="person" 
                                 style={{ marginLeft:'20%' }}
-                                value={state.personValue} 
+                                value={radiobutton} 
                                 onChange={handleChangeRadioButton}>
                                     <FormControlLabel value="It-one person" control={<Radio />} label="It-one person" />
                                     <FormControlLabel value="Device owner person" control={<Radio />} label="Device owner person" />
@@ -179,4 +172,4 @@ const EmailFormModal = ({ show, hideModal, getAllEmails, isEdit, emailId, adress
     );
 }
 
-export default EmailFormModal
+export default PersonFormModal

@@ -8,7 +8,7 @@ import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toa
 import { Contract } from './contract';
 import { myConfig } from '../../configurations';
 import { useForm } from "react-hook-form";
-import { Company } from '../owners/owner';
+import { Owner } from '../owners/owner';
 import { Device } from '../sensors/device';
 
 export interface ContractFormModalProps {
@@ -19,7 +19,8 @@ export interface ContractFormModalProps {
     contractToEdit? : Contract 
 }
 export interface IDeviceList {
-    listOfDevices: Device[]
+    listOfDevices?: Device[],
+    listOfOwners?: Owner[]
 }
 
 function getModalStyle() {
@@ -59,8 +60,10 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = React.useState(getModalStyle);
 
-    const [selectedValue, setSelectedValue] = React.useState("0");
+    const [selectedDeviceValue, setSelectedDeviceValue] = React.useState("");
+    const [selectedOwnerValue, setSelectedOwnerValue] = React.useState("");
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
+    const [stateOwner, setOwner] = React.useState<IDeviceList>();
     const [contract, setContract] = React.useState<Contract>();
 
     type FormData = {
@@ -96,9 +99,10 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         surplusBlackAndWhitePrice,
         surplusColorPrice,
     }) => {
-        let ownerName: Company = { name : owner};
+        let ownerName: Owner = { name: owner };
+        let deviceObjId: Device = { objId : parseInt(device)};
         let contractData: Contract = {
-          device : device,
+          device: deviceObjId,
           owner : ownerName,
           blackAndWhiteLimitSet : blackAndWhiteLimitSet,
           colorLimitSet : colorLimitSet,
@@ -114,11 +118,18 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     React.useEffect(() => {
         console.log("renderGetDevices");
         GetDevices();
+        console.log("renderGetOwners");
+        GetOwners();
     }, []);
 
     const GetDevices = async () => {
         await axios.get(myConfig.backUrl + `sensor/GetAllDevices`).then((response) => {
             setDevice({ ...stateDevice, listOfDevices: response.data });
+        });
+    };
+    const GetOwners = async () => {
+        await axios.get(myConfig.backUrl + `Owner`).then((response) => {
+            setOwner({ ...stateOwner, listOfOwners: response.data });
         });
     };
 
@@ -139,13 +150,13 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     }
 
     const AddContract = () => {
-        // axios.post(myConfig.backUrl + 'contracts', contract).then(() => {
-        //     handleClose();
-        //     ToastsStore.success('The contract was saved');
-        //     getAllContracts();
-        // }).catch(() => {
-        //     ToastsStore.error('The contract was not saved');
-        // })
+        axios.post(myConfig.backUrl + 'contract', contract).then(() => {
+            handleClose();
+            ToastsStore.success('The contract was saved');
+            getAllContracts();
+        }).catch(() => {
+            ToastsStore.error('The contract was not saved');
+        })
     }
 
     const UpdateContract = async () => {
@@ -159,11 +170,11 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     }
 
     const HandleChangeDevice = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setSelectedValue(event.target.value as string);
+        setSelectedDeviceValue(event.target.value as string);
     };
 
     const HandleChangeOwner = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setSelectedValue(event.target.value as string);
+        setSelectedOwnerValue(event.target.value as string);
     };
 
     const handleClose = () => {
@@ -191,7 +202,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                                     id='inputDevice'
                                     labelId="deviceNameLabel"
                                     name="device" inputRef={register}
-                                    value={"devices"}
+                                    value={selectedDeviceValue}
                                     onChange={HandleChangeDevice}
                                 >
                                     {stateDevice !== undefined &&
@@ -216,9 +227,20 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                                         id='inputName'
                                         labelId="ownerNameLabel"
                                         name="owner" inputRef={register}
-                                        value={"owners"}
+                                        value={selectedOwnerValue}
                                         onChange={HandleChangeOwner}
                                     >
+                                        {stateDevice !== undefined &&
+                                            stateDevice.listOfOwners !== undefined
+                                            ? stateDevice.listOfOwners.map((owner) => (
+                                                <MenuItem
+                                                    key={owner!.id!.toString()}
+                                                    value={owner!.id!.toString()}
+                                                >
+                                                    {owner!.name}
+                                                </MenuItem>
+                                            ))
+                                            : null}
                                     </Select>
                                     </div>
                                 </Tooltip>

@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import { Button, RadioGroup, FormControlLabel, Radio } from "@material-ui/core";
+import { Button} from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import {
@@ -10,13 +10,14 @@ import {
   ToastsContainerPosition,
 } from "react-toasts";
 import { myConfig } from "../../configurations";
+import { Owner } from "./owner";
 
 export interface OwnerFormModalProps {
   show: boolean;
   hideModal: Function;
   getAllOwners: Function;
   isEdit: boolean;
-  ownerId?: number | undefined;
+  owner: Owner | undefined;
 }
 
 function getModalStyle() {
@@ -58,15 +59,13 @@ const OwnerFormModal = ({
   hideModal,
   getAllOwners,
   isEdit,
-  ownerId,
+  owner
 }: OwnerFormModalProps) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
-  const [state, setState] = React.useState({
-    ownerName: "",
-  });
+  const [inputOwnerName, setInputOwnerName] = React.useState("");
 
   useEffect(() => {
     fillList();
@@ -97,16 +96,16 @@ const OwnerFormModal = ({
     //     ToastsStore.error('The owner adress already exists');
     //     return;
     // }
-    // let ownerData: Owner = {
-    //     ownerAdress: state.ownerAdress!
-    // };
-    // axios.post(myConfig.backUrl + 'owners', ownerData).then(() => {
-    //     handleClose();
-    //     ToastsStore.success('The owner was saved');
-    //     getAllOwners();
-    // }).catch(() => {
-    //     ToastsStore.error('The owner was not saved');
-    // })
+    let ownerData: Owner = {
+        name: inputOwnerName!
+    };
+    axios.post(myConfig.backUrl + 'owner', ownerData).then(() => {
+        handleClose();
+        ToastsStore.success('The owner was saved');
+        getAllOwners();
+    }).catch(() => {
+        ToastsStore.error('The owner was not saved');
+    })
   };
 
   const UpdateOwner = async () => {
@@ -114,21 +113,21 @@ const OwnerFormModal = ({
     //     ToastsStore.error('The owner adress already exists');
     //     return;
     // }
-    // let ownerData: Owner = {
-    //     ownerId : ownerId,
-    //     ownerAdress: state.ownerAdress!
-    // };
-    // await axios.put(myConfig.backUrl + 'owners/' + ownerId!.toString(), ownerData).then(() => {
-    //     handleClose();
-    //     ToastsStore.success('The owner was saved');
-    //     getAllOwners();
-    // }).catch(() => {
-    //     ToastsStore.error('The Owner was not saved');
-    // });
+    let ownerData: Owner = {
+      id : owner!.id!,
+      name : inputOwnerName!
+    };
+    await axios.put(myConfig.backUrl + 'owners/', ownerData).then(() => {
+        handleClose();
+        ToastsStore.success('The owner was saved');
+        getAllOwners();
+    }).catch(() => {
+        ToastsStore.error('The Owner was not saved');
+    });
   };
 
   const handleInputOwnerChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, ownerName: e.target.value });
+    setInputOwnerName(e.target.value);
   };
 
   const handleClose = () => {
@@ -156,7 +155,7 @@ const OwnerFormModal = ({
                 id="inputOwner"
                 name="inputOwner"
                 placeholder="input the owner name"
-                value={state.ownerName}
+                value={owner!.name!}
                 onChange={handleInputOwnerChange}
               />
               <br />

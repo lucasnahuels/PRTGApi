@@ -9,13 +9,13 @@ import {
   ToastsContainerPosition,
 } from "react-toasts";
 import { myConfig } from "../../configurations";
+import { Owner } from "./owner";
 
 export interface OwnerDeleteConfirmModalProps {
   show: boolean;
   hideModal: Function;
   getAllOwners: Function;
-  ownerId: number | undefined;
-  ownerAdress: string | undefined;
+  owner : Owner | undefined;
 }
 
 function getModalStyle() {
@@ -47,8 +47,7 @@ const OwnerDeleteConfirmModal = ({
   show,
   hideModal,
   getAllOwners,
-  ownerId,
-  ownerAdress,
+  owner
 }: OwnerDeleteConfirmModalProps) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
@@ -59,7 +58,7 @@ const OwnerDeleteConfirmModal = ({
 
   const DeleteOwner = async () => {
     await axios
-      .delete(myConfig.backUrl + "owners/" + ownerId!.toString())
+      .delete(myConfig.backUrl + "owners/" + owner!.id!.toString())
       .then(() => {
         handleClose();
         ToastsStore.success("The E-Mail was deleted");
@@ -88,7 +87,7 @@ const OwnerDeleteConfirmModal = ({
       >
         <div style={modalStyle} className={classes.paper}>
           <div style={{ textAlign: "center" }}>
-            <h3>Are you sure to delete the E-Mail "{ownerAdress}"</h3>
+            <h3>Are you sure to delete the owner "{owner!.name!}"</h3>
             <br />
             <br />
             <Button variant="contained" color="primary" onClick={DeleteOwner}>

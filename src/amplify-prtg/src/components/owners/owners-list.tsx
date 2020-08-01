@@ -18,6 +18,11 @@ import TablePaginationActions from '@material-ui/core/TablePagination/TablePagin
 import { Contract } from '../contracts/contract';
 import OwnerFormModal from './ownersFormModal';
 import OwnerDeleteConfirmModal from './owner-delete-confirm-modal';
+import { Owner } from './owner';
+
+export interface IOwnerList {
+    listOfOwners: Owner[]
+}
 
 const OwnersList = () => {
     const useStyles = makeStyles((theme: Theme) =>
@@ -48,38 +53,38 @@ const OwnersList = () => {
     );
     const classes = useStyles();
 
+    const [stateOwner, setOwner] = React.useState<IOwnerList>();
     const [showModal, setShowModal] = React.useState(false);
     const [showDeleteConfirmModal, setShowDeleteConfirmModal] = React.useState(false);
     const [formIsEdit, setFormIsEdit] = React.useState(false);
-    const [ownerIdToEdit, setOwnerIdToEdit] = React.useState(0);
-    const [ownerAdressToEdit, setOwnerAdressToEdit] = React.useState('');
-    const [ownerIdToDelete, setOwnerIdToDelete] = React.useState(0);
-    const [ownerAdressToDelete, setOwnerAdressToDelete] = React.useState('');
+    const [ownerToEdit, setOwnerToEdit] = React.useState<Owner>();
+    const [ownerToDelete, setOwnerToDelete] = React.useState<Owner>();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
     
     useEffect(() => { GetOwners() }, []);
 
     const GetOwners = async () => {
-        
+        await axios.get(myConfig.backUrl + `Owner`).then( (response) => {
+            console.log("owners", response.data);
+            setOwner({ ...stateOwner, listOfOwners: response.data });
+        });
     };
    
-    const ShowOwnersForm = (isEdit?: boolean, ownerToEdit? : string) => {
+    const ShowOwnersForm = (isEdit: boolean, ownerToEdit? : Owner) => {
         setShowModal(true);
         if (!isEdit) {
             setFormIsEdit(false);
         }
         else {
             setFormIsEdit(true);
-            // setOwnerIdToEdit();
-            // setOwnerAdressToEdit();
+            setOwnerToEdit(ownerToEdit!);
         }
     }
 
-    const ShowDeleteConfirm = async (ownerToDelete? : number) => {
+    const ShowDeleteConfirm = async (ownerToDelete : Owner) => {
         setShowDeleteConfirmModal(true);
-        // setOwnerIdToDelete();
-        // setOwnerAdressToDelete();
+        setOwnerToDelete(ownerToDelete);
     }
 
     const HideForm = () => {
@@ -115,16 +120,21 @@ const OwnersList = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            <TableRow >
-                                <TableCell className={classes.dataRow}></TableCell>
-                                <TableCell className={classes.dataRow}>
-                                    <Button variant='contained' color='default' onClick={() => ShowOwnersForm()}> <EditIcon /> </Button>
-                                </TableCell>
-                                <TableCell className={classes.dataRow}>
-                                    <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm()}><DeleteIcon /></Button>
-                                </TableCell>
-
-                            </TableRow>
+                                {stateOwner !== undefined && stateOwner.listOfOwners !== undefined ? stateOwner.listOfOwners.map((owner)=>
+                                (
+                                    <TableRow key={owner.id}>
+                                        <TableCell className={classes.dataRow}>{owner.name}</TableCell>
+                                        <TableCell className={classes.dataRow}>
+                                            <Button variant='contained' color='default' onClick={() => ShowOwnersForm(true, owner)}> <EditIcon /> </Button>
+                                        </TableCell>
+                                        <TableCell className={classes.dataRow}>
+                                            <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(owner)}><DeleteIcon /></Button>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                                ) 
+                                : 
+                                null}
                         </TableBody>
                         <TableFooter>
                             <TableRow>
@@ -153,8 +163,7 @@ const OwnersList = () => {
                         hideModal={HideForm}
                         getAllOwners={GetOwners}
                         isEdit={formIsEdit}
-                        // listOfOwners={}
-                        ownerId={ownerIdToEdit}
+                        owner={ownerToEdit}
                     />
                     : null
                 }
@@ -163,8 +172,8 @@ const OwnersList = () => {
                         show={showDeleteConfirmModal} 
                         hideModal={HideForm} 
                         getAllOwners={GetOwners} 
-                        ownerId={ownerIdToDelete} 
-                        ownerAdress={ownerAdressToDelete} />
+                        owner={ownerToDelete} 
+                    />
                     : null
                 }
             </Grid>

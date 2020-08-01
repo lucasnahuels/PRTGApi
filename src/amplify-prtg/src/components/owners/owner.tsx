@@ -1,6 +1,7 @@
 import { Person } from "../contracts/contract";
 
-export interface Company {
+export interface Owner {
+  id?: number;
   name: string;
   employees?: Person[];
 }

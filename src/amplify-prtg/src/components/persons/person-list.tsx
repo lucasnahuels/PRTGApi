@@ -12,14 +12,18 @@ import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import EmailFormModal from './emailsFormModal';
-import EmailDeleteConfirmModal from './email-delete-confirm-modal';
+import PersonFormModal from './personFormModal';
+import PersonDeleteConfirmModal from './person-delete-confirm-modal';
 import { Grid, TablePagination, TableFooter} from '@material-ui/core';
 import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
-import { Contract } from '../contracts/contract';
+import { Person } from '../contracts/contract';
 
-const EmailsList = () => {
+export interface IPersonList {
+    listOfPerson: Person[]
+}
+
+const PersonsList = () => {
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
             titlesRow :{
@@ -48,39 +52,38 @@ const EmailsList = () => {
     );
     const classes = useStyles();
 
-    const [stateMail, setMail] = React.useState<Contract>();
+    const [statePerson, setPerson] = React.useState<IPersonList>();
     const [showModal, setShowModal] = React.useState(false);
     const [showDeleteConfirmModal, setShowDeleteConfirmModal] = React.useState(false);
     const [formIsEdit, setFormIsEdit] = React.useState(false);
-    const [mailIdToEdit, setMailIdToEdit] = React.useState(0);
-    const [mailAdressToEdit, setMailAdressToEdit] = React.useState('');
-    const [mailIdToDelete, setMailIdToDelete] = React.useState(0);
-    const [mailAdressToDelete, setMailAdressToDelete] = React.useState('');
+    const [personToEdit, setPersonToEdit] = React.useState<Person>();
+    const [personToDelete, setPersonToDelete] = React.useState<Person>();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
     
-    useEffect(() => { GetMails() }, []);
+    useEffect(() => { GetPersons() }, []);
 
-    const GetMails = async () => {
-        
+    const GetPersons = async () => {
+        await axios.get(myConfig.backUrl + `Employee`).then((response) => {
+            console.log("employees", response.data);
+            setPerson({ ...statePerson, listOfPerson: response.data });
+        });
     };
    
-    const ShowEmailForm = (isEdit?: boolean, mailToEdit? : string) => {
+    const ShowPersonForm = (isEdit: boolean, personToEdit? : Person) => {
         setShowModal(true);
         if (!isEdit) {
             setFormIsEdit(false);
         }
         else {
             setFormIsEdit(true);
-            // setMailIdToEdit();
-            // setMailAdressToEdit();
+            setPersonToEdit(personToEdit!);
         }
     }
 
-    const ShowDeleteConfirm = async (mailToDelete? : number) => {
+    const ShowDeleteConfirm = async (personToDelete : Person) => {
         setShowDeleteConfirmModal(true);
-        // setMailIdToDelete();
-        // setMailAdressToDelete();
+        setPersonToDelete(personToDelete);
     }
 
     const HideForm = () => {
@@ -104,16 +107,16 @@ const EmailsList = () => {
         <Grid container xs={12} item>
             <Grid item xs={3}></Grid>
             <Grid item xs={6}>
-                <Button className={classes.buttonAdd} onClick={() => ShowEmailForm(false)}>
+                <Button className={classes.buttonAdd} onClick={() => ShowPersonForm(false)}>
                     Add new employee
                 </Button>
                 <TableContainer component={Paper}>
                     <Table size='medium'>
                         <TableHead aria-label="simple table">
                             <TableRow>
-                                <TableCell className={classes.titlesRow} size='medium'>E-mail adress</TableCell>
+                                <TableCell className={classes.titlesRow} size='medium'>E-person adress</TableCell>
                                 <TableCell className={classes.titlesRow} size='medium'>Send report?</TableCell>
-                                <TableCell className={classes.titlesRow} size='medium' colSpan={2}>Email actions</TableCell>
+                                <TableCell className={classes.titlesRow} size='medium' colSpan={2}>Person actions</TableCell>
                             </TableRow>
                         </TableHead>
 
@@ -123,36 +126,47 @@ const EmailsList = () => {
                                     It one employee
                                 </h6>
                             </TableRow>
-                            <TableRow >
-                                <TableCell className={classes.dataRow}></TableCell>
-                                <TableCell className={classes.dataRow}>
-                                    <input type="checkbox"/>
-                                </TableCell>
-                                <TableCell className={classes.dataRow}>
-                                    <Button variant='contained' color='default' onClick={() => ShowEmailForm()}> <EditIcon /> </Button>
-                                </TableCell>
-                                <TableCell className={classes.dataRow}>
-                                    <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm()}><DeleteIcon /></Button>
-                                </TableCell>
-                            </TableRow>
-
+                            {statePerson !== undefined && statePerson.listOfPerson !== undefined ? statePerson.listOfPerson.map((person) =>
+                            (
+                                <TableRow key={person.id}>
+                                    <TableCell className={classes.dataRow}>{person.email}</TableCell>
+                                    <TableCell className={classes.dataRow}>
+                                        <input type="checkbox"/>
+                                    </TableCell>
+                                    <TableCell className={classes.dataRow}>
+                                        <Button variant='contained' color='default' onClick={() => ShowPersonForm(true, person)}> <EditIcon /> </Button>
+                                    </TableCell>
+                                    <TableCell className={classes.dataRow}>
+                                        <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(person)}><DeleteIcon /></Button>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                            )
+                            : null
+                            }
                             <TableRow>
                                 <h6 style={{textAlign:'center', color:'#9400D3', fontWeight:'bold'}}>
                                     Device owner employee
                                 </h6>
                             </TableRow>
-                            <TableRow >
-                                <TableCell className={classes.dataRow}></TableCell>
-                                <TableCell className={classes.dataRow}>
-                                    <input type="checkbox"/>
-                                </TableCell>
-                                <TableCell className={classes.dataRow}>
-                                    <Button variant='contained' color='default' onClick={() => ShowEmailForm()}> <EditIcon /> </Button>
-                                </TableCell>
-                                <TableCell className={classes.dataRow}>
-                                    <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm()}><DeleteIcon /></Button>
-                                </TableCell>
-                            </TableRow>
+                            {statePerson !== undefined && statePerson.listOfPerson !== undefined ? statePerson.listOfPerson.map((person) =>
+                            (
+                                <TableRow key={person.id}>
+                                    <TableCell className={classes.dataRow}>{person.email}</TableCell>
+                                    <TableCell className={classes.dataRow}>
+                                        <input type="checkbox"/>
+                                    </TableCell>
+                                    <TableCell className={classes.dataRow}>
+                                        <Button variant='contained' color='default' onClick={() => ShowPersonForm(true, person)}> <EditIcon /> </Button>
+                                    </TableCell>
+                                    <TableCell className={classes.dataRow}>
+                                        <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(person)}><DeleteIcon /></Button>
+                                    </TableCell>
+                                 </TableRow>
+                            )
+                            )
+                            : null
+                            }
                         </TableBody>
 
                         <TableFooter>
@@ -160,7 +174,7 @@ const EmailsList = () => {
                                 {/* <TablePagination
                                     rowsPerPageOptions={[3, 6, 9, { label: 'All', value: -1 }]}
                                     colSpan={3}
-                                    count={stateMail !== undefined && stateMail.listOfMail !== undefined ? stateMail.listOfMail.length : 0}
+                                    count={statePerson !== undefined && statePerson.listOfPerson !== undefined ? statePerson.listOfPerson.length : 0}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
                                     SelectProps={{
@@ -177,23 +191,22 @@ const EmailsList = () => {
                 </TableContainer>
                 
                 {showModal ?
-                    <EmailFormModal
+                    <PersonFormModal
                         show={showModal}
                         hideModal={HideForm}
-                        getAllEmails={GetMails}
+                        getAllPersons={GetPersons}
                         isEdit={formIsEdit}
-                        // listOfEmails={}
-                        emailId={mailIdToEdit}
-                        adress={mailAdressToEdit} />
+                        person={personToEdit}
+                    />
                     : null
                 }
                 {showDeleteConfirmModal ?
-                    <EmailDeleteConfirmModal 
+                    <PersonDeleteConfirmModal 
                         show={showDeleteConfirmModal} 
                         hideModal={HideForm} 
-                        getAllEmails={GetMails} 
-                        emailId={mailIdToDelete} 
-                        emailAdress={mailAdressToDelete} />
+                        getAllPersons={GetPersons} 
+                        person={personToDelete} 
+                    />
                     : null
                 }
             </Grid>
@@ -203,4 +216,4 @@ const EmailsList = () => {
     )
 }
 
-export default EmailsList
+export default PersonsList

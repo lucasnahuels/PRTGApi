@@ -1,8 +1,7 @@
 export interface Device{
-    objId: Number,
-    device: string,
+    objId?: Number,
+    device?: string,
 }
-
 export interface DeviceData {
     objId: Number,
     device: string,
