@@ -163,7 +163,7 @@ namespace ApplicationCore.Services
             {
                 ColorCopies = int.Parse(contadores.Channels[1].LastValue) + int.Parse(contadores.Channels[6].LastValue),
                 BlackAndWhiteCopies = int.Parse(contadores.Channels[0].LastValue) + int.Parse(contadores.Channels[5].LastValue),
-                Device = new Device { ObjId = objId },
+                DeviceId = objId,
                 Date = localDate
             };
             return dailyDevice;
@@ -178,7 +178,7 @@ namespace ApplicationCore.Services
                 CyanTonersUsed = tonersUsed.CyanTonersUsed,
                 MagentaTonersUsed = tonersUsed.MagentaTonersUsed,
                 YellowTonersUsed = tonersUsed.YellowTonersUsed,
-                Device = new Device { ObjId = objId },
+                DeviceId = objId,
                 Date = localDate
             };
             return dailyDevice;

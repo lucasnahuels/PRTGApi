@@ -7,7 +7,7 @@ namespace ApplicationCore.Models
     public class Contract : BaseModel
     {
         public Owner Owner { get; set; }
-        public Device Device { get; set; }
+        public long DeviceId { get; set; }
         public int BlackAndWhiteLimitSet { get; set; }
         public int ColorLimitSet { get; set; }
         public int Month { get; set; }    
