@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext } from 'react';
 import axios from 'axios';
 import { Grid, makeStyles, Theme, createStyles, FormControl, InputLabel, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, TableFooter, TablePagination } from "@material-ui/core";
 import { myConfig } from '../../configurations';
@@ -11,11 +11,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TonersModal from '../toners/toners-modal';
 import PreviousMonthModal from './previous-month-modal';
- 
+
 
 export interface IDeviceList {
-    listOfDevices: Device[]
+  listOfDevices: Device[]
 }
+export const Context = createContext({});
 
 const SensorList = () => {
     const useStyles = makeStyles((theme: Theme) =>
@@ -52,6 +53,7 @@ const SensorList = () => {
         })
     );
     const classes = useStyles();
+
 
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
     const [deviceData, setDeviceData] = React.useState<DeviceData>();

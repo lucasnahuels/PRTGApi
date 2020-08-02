@@ -20,8 +20,11 @@ export interface ContractFormModalProps {
 }
 export interface IDeviceList {
     listOfDevices?: Device[],
-    listOfOwners?: Owner[]
 }
+export interface IOwnerList {
+    listOfOwners: Owner[]
+}
+
 
 function getModalStyle() {
     const top = 50;
@@ -63,12 +66,12 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     const [selectedDeviceValue, setSelectedDeviceValue] = React.useState("");
     const [selectedOwnerValue, setSelectedOwnerValue] = React.useState("");
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
-    const [stateOwner, setOwner] = React.useState<IDeviceList>();
+    const [stateOwner, setOwner] = React.useState<IOwnerList>();
     const [contract, setContract] = React.useState<Contract>();
 
     type FormData = {
-        owner : string,
-        device :string,
+        owner : number,
+        device :number,
         blackAndWhiteLimitSet:number,
         colorLimitSet:number,
         blackAndWhitePrice:number,
@@ -79,8 +82,8 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
 
     const { register, setValue, handleSubmit } = useForm<FormData>({
       defaultValues: {
-        owner: "",
-        device: "",
+        owner: 0,
+        device: 0,
         blackAndWhiteLimitSet: 0,
         colorLimitSet: 0,
         blackAndWhitePrice: 0,
@@ -99,11 +102,11 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         surplusBlackAndWhitePrice,
         surplusColorPrice,
     }) => {
-        let ownerName: Owner = { name: owner };
-        let deviceObjId: Device = { objId : parseInt(device)};
+        let ownerId: Owner = { id: owner };
+        let deviceObjId: Device = { objId : device};
         let contractData: Contract = {
-          device: deviceObjId,
-          owner : ownerName,
+          ownerId: parseInt(selectedOwnerValue),
+          deviceId: parseInt(selectedDeviceValue),
           blackAndWhiteLimitSet : blackAndWhiteLimitSet,
           colorLimitSet : colorLimitSet,
           blackAndWhitePrice : blackAndWhitePrice,
@@ -230,9 +233,9 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                                         value={selectedOwnerValue}
                                         onChange={HandleChangeOwner}
                                     >
-                                        {stateDevice !== undefined &&
-                                            stateDevice.listOfOwners !== undefined
-                                            ? stateDevice.listOfOwners.map((owner) => (
+                                        {stateOwner !== undefined &&
+                                            stateOwner.listOfOwners !== undefined
+                                            ? stateOwner.listOfOwners.map((owner) => (
                                                 <MenuItem
                                                     key={owner!.id!.toString()}
                                                     value={owner!.id!.toString()}

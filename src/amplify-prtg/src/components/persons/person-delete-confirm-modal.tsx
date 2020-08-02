@@ -49,7 +49,7 @@ const PersonDeleteConfirmModal = ({ show, hideModal, getAllPersons, person }: Pe
     useEffect(() => { }, []);
 
     const DeletePerson = async () => {
-        await axios.delete(myConfig.backUrl + 'persons/' + person!.id!.toString()).then( () => {
+        await axios.delete(myConfig.backUrl + 'employee/' + person!.id!.toString()).then( () => {
             handleClose();
             ToastsStore.success('The Person was deleted');
             getAllPersons();

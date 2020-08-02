@@ -58,7 +58,6 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
     const [modalStyle] = React.useState(getModalStyle);
 
     const [email, setEmail] = React.useState("");
-    const [radiobutton, setRadioButton] = React.useState("");
 
     useEffect(() => { fillList(); }, []);
     //when format is "useEffect(() => {}, []);" only render the first time instead of every time there´re changes
@@ -121,9 +120,6 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
     const handleInputPersonAdressChange = (e: ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
     }
-    const handleChangeRadioButton = (e: ChangeEvent<HTMLInputElement>) => {
-        setRadioButton(e.target.value);
-    };
 
     const handleClose = () => {
         hideModal();
@@ -140,21 +136,9 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
             >
                 <div style={modalStyle} className={classes.paper}>
                     <div style={{ textAlign: 'center' }}>
-                        <h2 id='personform-modal-title'>Add person</h2>
+                        <h2 id='personform-modal-title'>Add device owner person</h2>
                         <div id='personform-modal-description'>
                             <TextField label='person adress' id='inputPersonAdress' name='inputPersonAdress' placeholder='input the person adress' value={email} onChange={handleInputPersonAdressChange} />
-                            <br />
-                            <br />
-                            <RadioGroup 
-                                row 
-                                aria-label="person" 
-                                name="person" 
-                                style={{ marginLeft:'20%' }}
-                                value={radiobutton} 
-                                onChange={handleChangeRadioButton}>
-                                    <FormControlLabel value="It-one person" control={<Radio />} label="It-one person" />
-                                    <FormControlLabel value="Device owner person" control={<Radio />} label="Device owner person" />
-                            </RadioGroup>
                             <br/><br/><br/><br/>
                             {!isEdit ? (
                                 <Button variant='contained' color='default' onClick={() => AddPerson()} >Save new</Button>

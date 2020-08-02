@@ -76,25 +76,25 @@ const ContractList = () => {
     const [showFormModal, setShowFormModal] = React.useState(false);
     const [showDeleteConfirmModal, setShowDeleteConfirmModal] = React.useState(false);
     const [formIsEdit, setFormIsEdit] = React.useState(false);
-    const [contractHookToEdit, setContractHookToEdit] = React.useState<Contract>();
+    const [contractToEdit, setContractToEdit] = React.useState<Contract>();
     const [contractIdToDelete, setContractIdToDelete] = React.useState<Number>(0);
-    const [contractPrinterToDelete, setContractPrinterToDelete] = React.useState('');
+    const [contractDeviceNameToDelete, setContractDeviceNameToDelete] = React.useState('');
     const [searchTerm, setSearchTerm] = React.useState("");
     const [value, setValue] = React.useState<string | null>("");
     const [inputValue, setInputValue] = React.useState('');
 
     const GetContracts = async () => {
-        // await axios.get(myConfig.backUrl + `Contracts`).then( (response) => {
-        //     console.log("contracts", response.data);
-        //     setContract({ ...stateContract, listOfContract: response.data });
-        // });
+        await axios.get(myConfig.backUrl + `contract`).then( (response) => {
+            console.log("contracts", response.data);
+            setContract({ ...stateContract, listOfContract: response.data });
+        });
     };
 
     const GetContractsConst = async () => {
-        // await axios.get(myConfig.backUrl + `Contracts`).then((response) => {
-        //     console.log("contractsConst", response.data);
-        //     setContractConst({ ...stateContractConst, listOfContract: response.data });
-        // });
+        await axios.get(myConfig.backUrl + `contract`).then((response) => {
+            console.log("contractsConst", response.data);
+            setContractConst({ ...stateContractConst, listOfContract: response.data });
+        });
     };
 
     const ShowContractForm = (isEdit: boolean, contractToEdit?: Contract) => {
@@ -104,14 +104,14 @@ const ContractList = () => {
         }
         else{
             setFormIsEdit(true);
-            setContractHookToEdit(contractToEdit!);
+            setContractToEdit(contractToEdit!);
         }
     }
 
-    const ShowDeleteConfirm = async (idToDelete?: Number, printerNameToDelete?: string) => {
+    const ShowDeleteConfirm = async (idToDelete: Number, deviceNameToDelete: string) => {
         setShowDeleteConfirmModal(true);
-        // setContractIdToDelete(idToDelete);
-        // setContractPrinterToDelete(printerNameToDelete);
+        setContractIdToDelete(idToDelete!);
+        setContractDeviceNameToDelete(deviceNameToDelete!);
     }
 
     const HideForm = () => {
@@ -144,7 +144,7 @@ const ContractList = () => {
         let results : any = [];
         if( stateContractConst !== undefined && stateContractConst.listOfContract !== undefined) {
             results = stateContractConst!.listOfContract!.filter(contract =>
-                contract.device.device!.toLowerCase().includes(searchTerm)
+                contract.device!.device!.toLowerCase().includes(searchTerm)
             );
         }
         setContract({ ...stateContract, listOfContract: results });
@@ -155,7 +155,7 @@ const ContractList = () => {
         <Grid container xs={12} item>
             <Grid item xs={1}></Grid>
             <Grid item xs={10}>
-                <Autocomplete
+                {/* <Autocomplete
                     className={classes.searchField}
                     value={value}
                     onChange={(event: React.ChangeEvent<{}>, newValue: string|null) => {            
@@ -168,7 +168,7 @@ const ContractList = () => {
                         setInputValue(newInputValue);
                         event.preventDefault();
                     }}
-                    options={(stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract : []).map((contract) => contract.device.device!)}
+                    options={(stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract : []).map((contract) => contract.device!.device!)}
                     renderInput={(params) => (
                         <TextField {...params} 
                             label="Filter by device name" 
@@ -176,7 +176,7 @@ const ContractList = () => {
                             variant="outlined"
                         />
                     )}
-                />
+                /> */}
                 <Button className={classes.buttonAdd} onClick={() => ShowContractForm(false)}>
                     Add new contract
                 </Button>
@@ -196,26 +196,32 @@ const ContractList = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                                <TableRow> {/*do not forget key */}
-                                    <TableCell className={classes.dataRow}></TableCell>
-                                    <TableCell className={classes.dataRow}></TableCell>
-                                    <TableCell className={classes.dataRow}></TableCell>
-                                    <TableCell className={classes.dataRow}></TableCell>
-                                    <TableCell className={classes.dataRow}></TableCell>
-                                    <TableCell className={classes.dataRow}></TableCell>
-                                    <TableCell className={classes.dataRow}></TableCell>
+                            {stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract.map((contract) =>
+                                (
+                                <TableRow> {contract.id!}
+                                    {/* <TableCell className={classes.dataRow}>{contract.owner!.name!}</TableCell> */}
+                                    <TableCell className={classes.dataRow}>{contract.blackAndWhiteLimitSet}</TableCell>
+                                    <TableCell className={classes.dataRow}>{contract.colorLimitSet}</TableCell>
+                                    <TableCell className={classes.dataRow}>{contract.blackAndWhitePrice}</TableCell>
+                                    <TableCell className={classes.dataRow}>{contract.colorPrice}</TableCell>
+                                    <TableCell className={classes.dataRow}>{contract.surplusBlackAndWhitePrice}</TableCell>
+                                    <TableCell className={classes.dataRow}>{contract.surplusColorPrice}</TableCell>
                                     <TableCell className={classes.dataRow}>
-                                        <Link to="/emails/deviceObjId=" >
+                                        <Link to={`/persons/deviceObjId=${contract.deviceId}`}>
                                             <Button variant='contained' color='default'> <EditIcon /> </Button>
                                         </Link>
                                     </TableCell>
                                     <TableCell className={classes.dataRow}>
-                                        <Button variant='contained' color='default' onClick={() => ShowContractForm(true)}> <EditIcon /> </Button>
+                                        <Button variant='contained' color='default' onClick={() => ShowContractForm(true, contract)}> <EditIcon /> </Button>
                                     </TableCell>
                                     <TableCell className={classes.dataRow}>
-                                        <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm()}><DeleteIcon /></Button>
+                                        <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(contract.id!, contract.device!.device!)}><DeleteIcon /></Button>
                                     </TableCell>
                                 </TableRow>
+                                )
+                                )
+                                :
+                                null}
                         </TableBody>
                         <TableFooter>
                             <TableRow>
@@ -244,7 +250,7 @@ const ContractList = () => {
                         hideModal={HideForm} 
                         getAllContracts={GetContracts} 
                         isEdit={formIsEdit} 
-                        contractToEdit={contractHookToEdit} />
+                        contractToEdit={contractToEdit} />
                     : null
                 }
                 {showDeleteConfirmModal ?
@@ -253,7 +259,7 @@ const ContractList = () => {
                         hideModal={HideForm} 
                         getAllContracts={GetContracts} 
                         contractId={contractIdToDelete} 
-                        printerName={contractPrinterToDelete} />
+                        printerName={contractDeviceNameToDelete} />
                     : null
                 }
                 <br/>

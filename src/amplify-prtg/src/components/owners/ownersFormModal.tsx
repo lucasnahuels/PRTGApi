@@ -116,7 +116,7 @@ const OwnerFormModal = ({
       id : owner!.id!,
       name : inputOwnerName!
     };
-    await axios.put(myConfig.backUrl + 'owners/', ownerData).then(() => {
+    await axios.put(myConfig.backUrl + 'owner/', ownerData).then(() => {
         handleClose();
         ToastsStore.success('The owner was saved');
         getAllOwners();

@@ -14,7 +14,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import PersonFormModal from './personFormModal';
 import PersonDeleteConfirmModal from './person-delete-confirm-modal';
-import { Grid, TablePagination, TableFooter} from '@material-ui/core';
+import { Grid, TablePagination, TableFooter, Tooltip} from '@material-ui/core';
 import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import { Person } from '../contracts/contract';
@@ -108,7 +108,7 @@ const PersonsList = () => {
             <Grid item xs={3}></Grid>
             <Grid item xs={6}>
                 <Button className={classes.buttonAdd} onClick={() => ShowPersonForm(false)}>
-                    Add new employee
+                    Add new device owner person
                 </Button>
                 <TableContainer component={Paper}>
                     <Table size='medium'>
@@ -121,11 +121,13 @@ const PersonsList = () => {
                         </TableHead>
 
                         <TableBody>
+                            <Tooltip title="This is the list of users from IT-ONE who has registered in the prtg app">
                             <TableRow>
                                 <h6 style={{textAlign:'center', color:'#9400D3', fontWeight:'bold'}}>
                                     It one employee
                                 </h6>
                             </TableRow>
+                            </Tooltip>
                             {statePerson !== undefined && statePerson.listOfPerson !== undefined ? statePerson.listOfPerson.map((person) =>
                             (
                                 <TableRow key={person.id}>

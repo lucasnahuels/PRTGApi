@@ -3,8 +3,10 @@ import { Device} from "../sensors/device";
 
 export interface Contract {
         id? : number,
-        owner :Owner,
-        device :Device,
+        owner?: Owner,
+        ownerId?: number,
+        device? :Device,
+        deviceId: number,
         blackAndWhiteLimitSet:number,
         colorLimitSet:number,
         blackAndWhitePrice :number,
