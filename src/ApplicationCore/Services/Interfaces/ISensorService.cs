@@ -16,5 +16,6 @@ namespace ApplicationCore.Services.Interfaces
         Task<DeviceApiModel> GetDeviceData(int objId);
         Task<DailyContadoresDataDevices> GetDailyContadoresDevicesValues(int objId);
         Task<DailyTonersDataDevices> GetDailyTonersDevicesValues(int objId);
+        Task<List<DeviceApiModel>> GetChildDevices(int parentDeviceObjId);
     }
 }

@@ -36,7 +36,7 @@ namespace ApplicationCore.Services
         #endregion
 
         #region SensorDataNames
-        private const string Contadores = "Contadores";
+        public const string Contadores = "Contadores";
         private const string Toners = "Toners"; 
         #endregion
 
@@ -95,9 +95,7 @@ namespace ApplicationCore.Services
                 );
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
-            var sensorData = JsonConvert.DeserializeObject<SensorDetails>(jsonResponse);
-
-            return sensorData;
+            return JsonConvert.DeserializeObject<SensorDetails>(jsonResponse);
         }
 
         public async Task<SensorsData> GetContadoresData(int objId)
@@ -108,9 +106,7 @@ namespace ApplicationCore.Services
                 );
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
-            var contadoresData = JsonConvert.DeserializeObject<SensorsData>(jsonResponse);
-
-            return contadoresData;
+            return JsonConvert.DeserializeObject<SensorsData>(jsonResponse);
         }
 
         public async Task<SensorsData> GetTonersData(int objId)
@@ -121,9 +117,7 @@ namespace ApplicationCore.Services
                 );
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
-            var toners = JsonConvert.DeserializeObject<SensorsData>(jsonResponse);
-
-            return toners;
+            return JsonConvert.DeserializeObject<SensorsData>(jsonResponse);
         }
 
         public async Task<DevicesSensor> GetApiData()
@@ -180,7 +174,6 @@ namespace ApplicationCore.Services
         public async Task<DailyContadoresDataDevices> GetDailyContadoresDevicesValues(int objId)
         {
             var contadores = await GetContadoresData(objId);
-            DateTime localDate = DateTime.Now;
             //falta restarle el valor de ayer a los siguientes valores
 
             int blackAndWhiteCopies = 0;
@@ -198,29 +191,26 @@ namespace ApplicationCore.Services
             blackAndWhiteCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintBlackAndWhite).LastValue);
             //blackAndWhiteCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == Duplex).LastValue);
 
-            var dailyDevice = new DailyContadoresDataDevices
+            return new DailyContadoresDataDevices
             {
                 ColorCopies = colorCopies,
                 BlackAndWhiteCopies = blackAndWhiteCopies,
                 DeviceId = objId,
-                Date = localDate
+                Date = DateTime.Now
             };
-            return dailyDevice;
         }
         public async Task<DailyTonersDataDevices> GetDailyTonersDevicesValues(int objId)
         {
             var tonersUsed = await GetQuantityTonersToday(objId);
-            DateTime localDate = DateTime.Now;
-            var dailyDevice = new DailyTonersDataDevices
+            return new DailyTonersDataDevices
             {
                 BlackTonersUsed = tonersUsed.BlackTonersUsed,
                 CyanTonersUsed = tonersUsed.CyanTonersUsed,
                 MagentaTonersUsed = tonersUsed.MagentaTonersUsed,
                 YellowTonersUsed = tonersUsed.YellowTonersUsed,
                 DeviceId = objId,
-                Date = localDate
+                Date = DateTime.Now
             };
-            return dailyDevice;
         }
 
         public Task<DailyTonersDataDevices> GetQuantityTonersToday(int objId)

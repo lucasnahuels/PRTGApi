@@ -40,14 +40,25 @@ namespace ApplicationCore.Services
         {
             var devices = await _sensorService.GetAllDevices();
             var dailyDevices = new List<DailyContadoresDataDevices>();
-            foreach (var device in devices)
+
+            foreach(var device in devices)
             {
-                var dailyContadoresDataDevice = await _sensorService.GetDailyContadoresDevicesValues(device.ObjId);
-                if(dailyContadoresDataDevice != null)
+                var childDevices = await _sensorService.GetChildDevices(device.ObjId);
+                foreach(var childDevice in childDevices)
                 {
-                    dailyDevices.Add(dailyContadoresDataDevice);
+                    var sensorDetails = await _sensorService.GetSensorDetails(childDevice.ObjId);
+                    if (sensorDetails.SensorData.Name == "Contadores")
+                    { 
+                        var dailyContadoresDataDevice = await _sensorService.GetDailyContadoresDevicesValues(childDevice.ObjId);
+                        if (dailyContadoresDataDevice != null)
+                        {
+                            //Replace contadores ObjId with real device ObjId
+                            dailyContadoresDataDevice.Id = device.ObjId;
+                            dailyDevices.Add(dailyContadoresDataDevice);
+                        }
+                    }
                 }
-            } 
+            }
             await _context.DailyContadores.AddRangeAsync(dailyDevices);
             await _context.SaveChangesAsync();
         }
