@@ -35,7 +35,6 @@ namespace WebApi.Controllers
         {
             try
             {
-
                 await _dailyDeviceService.CreateDailyContadoresDeviceValues();
                 return Ok();
             }
