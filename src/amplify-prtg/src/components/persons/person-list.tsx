@@ -50,7 +50,20 @@ const PersonsList = () => {
                 '&:hover': {
                     backgroundColor: 'red',
                 }
-            }
+            },
+            buttonSave: {
+                position: 'absolute',
+                left: '45%',
+                right: '45%',
+                backgroundColor: 'blue',
+                borderRadius: '18px',
+                color: 'white',
+                fontSize: '10px',
+                fontWeight: 'bold',
+                '&:hover': {
+                    backgroundColor: 'lightblue',
+                }
+            },
         })
     );
     const classes = useStyles();
@@ -238,6 +251,10 @@ const PersonsList = () => {
                     />
                     : null
                 }
+
+                <br/>
+                <Button className={classes.buttonSave}>Save changes in reports</Button>
+
             </Grid>
             <Grid item xs={3}></Grid>
         </Grid>
