@@ -12,6 +12,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import MailIcon from '@material-ui/icons/Mail';
 import ContractFormModal from './ContractsFormModal';
 import ContractDeleteConfirmModal from './contract-delete-confirm-modal';
 import { Grid, TablePagination, TableFooter, TextField } from '@material-ui/core';
@@ -35,7 +36,7 @@ const ContractList = () => {
                 textAlign : 'center'
             },
             margins:{
-                paddingTop: '60px',
+                paddingTop: '30px',
                 paddingBottom: '60px',
             },
             buttonAdd:{
@@ -82,6 +83,8 @@ const ContractList = () => {
     const [searchTerm, setSearchTerm] = React.useState("");
     const [value, setValue] = React.useState<string | null>("");
     const [inputValue, setInputValue] = React.useState('');
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(3);
 
     const GetContracts = async () => {
         await axios.get(myConfig.backUrl + `contract`).then( (response) => {
@@ -119,16 +122,16 @@ const ContractList = () => {
         setShowDeleteConfirmModal(false);
     }
 
-    // const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    //     setPage(newPage);
-    // };
+    const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+        setPage(newPage);
+    };
 
-    // const handleChangeRowsPerPage = (
-    //     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    // ) => {
-    //     setRowsPerPage(parseInt(event.target.value, 10));
-    //     setPage(0);
-    // };
+    const handleChangeRowsPerPage = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     React.useEffect(() => { 
         console.log("renderGetContractsConst");
@@ -196,8 +199,12 @@ const ContractList = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract.map((contract) =>
-                                (
+                            {stateContract !== undefined && stateContract.listOfContract !== undefined ?
+                                (rowsPerPage > 0
+                                    ? stateContract.listOfContract.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    : stateContract.listOfContract
+                                )
+                                .map(contract => (
                                 <TableRow> {contract.id!}
                                     {/* <TableCell className={classes.dataRow}>{contract.owner!.name!}</TableCell> */}
                                     <TableCell className={classes.dataRow}>{contract.blackAndWhiteLimitSet}</TableCell>
@@ -208,7 +215,7 @@ const ContractList = () => {
                                     <TableCell className={classes.dataRow}>{contract.surplusColorPrice}</TableCell>
                                     <TableCell className={classes.dataRow}>
                                         <Link to={`/persons/deviceObjId=${contract.deviceId}`}>
-                                            <Button variant='contained' color='default'> <EditIcon /> </Button>
+                                            <Button variant='contained' color='default'> <MailIcon /> </Button>
                                         </Link>
                                     </TableCell>
                                     <TableCell className={classes.dataRow}>
@@ -225,9 +232,9 @@ const ContractList = () => {
                         </TableBody>
                         <TableFooter>
                             <TableRow>
-                                {/* <TablePagination
+                                <TablePagination
                                     rowsPerPageOptions={[3, 6, 9, { label: 'All', value: -1 }]}
-                                    colSpan={3}
+                                    colSpan={10}
                                     count={stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract.length : 0}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
@@ -238,7 +245,7 @@ const ContractList = () => {
                                     onChangePage={handleChangePage}
                                     onChangeRowsPerPage={handleChangeRowsPerPage}
                                     ActionsComponent={TablePaginationActions}
-                                /> */}
+                                />
                             </TableRow>
                         </TableFooter>
                     </Table>

@@ -18,6 +18,9 @@ import { Grid, TablePagination, TableFooter, Tooltip} from '@material-ui/core';
 import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import { Person } from '../contracts/contract';
+import Dropdown from 'reactstrap/lib/Dropdown';
+import DropdownToggle from 'reactstrap/lib/DropdownToggle';
+import DropdownMenu from 'reactstrap/lib/DropdownMenu';
 
 export interface IPersonList {
     listOfPerson: Person[]
@@ -58,6 +61,8 @@ const PersonsList = () => {
     const [formIsEdit, setFormIsEdit] = React.useState(false);
     const [personToEdit, setPersonToEdit] = React.useState<Person>();
     const [personToDelete, setPersonToDelete] = React.useState<Person>();
+    const [showItOne, setShowItOne] = React.useState(false);
+    const [showDeviceOwner, setShowDeviceOwner] = React.useState(false);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
     
@@ -91,6 +96,13 @@ const PersonsList = () => {
         setShowDeleteConfirmModal(false);
     }
 
+    const showItOneEmployees = () => {
+        setShowItOne(!showItOne)
+    }
+    const showDeviceOwnerEmployees = () => {
+        setShowDeviceOwner(!showDeviceOwner)
+    }
+
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
@@ -108,7 +120,7 @@ const PersonsList = () => {
             <Grid item xs={3}></Grid>
             <Grid item xs={6}>
                 <Button className={classes.buttonAdd} onClick={() => ShowPersonForm(false)}>
-                    Add new device owner person
+                    Add new device owner employee
                 </Button>
                 <TableContainer component={Paper}>
                     <Table size='medium'>
@@ -121,56 +133,71 @@ const PersonsList = () => {
                         </TableHead>
 
                         <TableBody>
-                            <Tooltip title="This is the list of users from IT-ONE who has registered in the prtg app">
                             <TableRow>
-                                <h6 style={{textAlign:'center', color:'#9400D3', fontWeight:'bold'}}>
-                                    It one employee
-                                </h6>
-                            </TableRow>
+                            <Tooltip title="This is the list of users from It-One who have already registered in the prtg app">
+                                <Dropdown onClick={showItOneEmployees}>
+                                    <DropdownToggle caret>
+                                        It-One employees
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                    </DropdownMenu>
+                                </Dropdown>
                             </Tooltip>
-                            {statePerson !== undefined && statePerson.listOfPerson !== undefined ? statePerson.listOfPerson.map((person) =>
-                            (
-                                <TableRow key={person.id}>
-                                    <TableCell className={classes.dataRow}>{person.email}</TableCell>
-                                    <TableCell className={classes.dataRow}>
-                                        <input type="checkbox"/>
-                                    </TableCell>
-                                    <TableCell className={classes.dataRow}>
-                                        <Button variant='contained' color='default' onClick={() => ShowPersonForm(true, person)}> <EditIcon /> </Button>
-                                    </TableCell>
-                                    <TableCell className={classes.dataRow}>
-                                        <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(person)}><DeleteIcon /></Button>
-                                    </TableCell>
-                                </TableRow>
-                            )
-                            )
-                            : null
-                            }
-                            <TableRow>
-                                <h6 style={{textAlign:'center', color:'#9400D3', fontWeight:'bold'}}>
-                                    Device owner employee
-                                </h6>
                             </TableRow>
                             {statePerson !== undefined && statePerson.listOfPerson !== undefined ? statePerson.listOfPerson.map((person) =>
                             (
-                                <TableRow key={person.id}>
-                                    <TableCell className={classes.dataRow}>{person.email}</TableCell>
-                                    <TableCell className={classes.dataRow}>
-                                        <input type="checkbox"/>
-                                    </TableCell>
-                                    <TableCell className={classes.dataRow}>
-                                        <Button variant='contained' color='default' onClick={() => ShowPersonForm(true, person)}> <EditIcon /> </Button>
-                                    </TableCell>
-                                    <TableCell className={classes.dataRow}>
-                                        <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(person)}><DeleteIcon /></Button>
-                                    </TableCell>
-                                 </TableRow>
+                                showItOne? (
+                                    <TableRow key={person.id}>
+                                        <TableCell className={classes.dataRow}>{person.email}</TableCell>
+                                        <TableCell className={classes.dataRow}>
+                                            <input type="checkbox"/>
+                                        </TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                    </TableRow>
+                                )
+                                :
+                                null
                             )
                             )
                             : null
                             }
+                    
+                            <br/>
+                            
+                            <TableRow>
+                                <Dropdown onClick={showDeviceOwnerEmployees}>
+                                    <DropdownToggle caret>
+                                        Device owner employees
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                    </DropdownMenu>
+                                </Dropdown>
+                            </TableRow>
+                            {statePerson !== undefined && statePerson.listOfPerson !== undefined ? statePerson.listOfPerson.map((person) =>
+                            (
+                                showDeviceOwner ? (
+                                    <TableRow key={person.id}>
+                                        <TableCell className={classes.dataRow}>{person.email}</TableCell>
+                                        <TableCell className={classes.dataRow}>
+                                            <input type="checkbox"/>
+                                        </TableCell>
+                                        <TableCell className={classes.dataRow}>
+                                            <Button variant='contained' color='default' onClick={() => ShowPersonForm(true, person)}> <EditIcon /> </Button>
+                                        </TableCell>
+                                        <TableCell className={classes.dataRow}>
+                                            <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(person)}><DeleteIcon /></Button>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                                :
+                                null
+                            )
+                            )
+                            : null
+                            }
+         
                         </TableBody>
-
                         <TableFooter>
                             <TableRow>
                                 {/* <TablePagination
