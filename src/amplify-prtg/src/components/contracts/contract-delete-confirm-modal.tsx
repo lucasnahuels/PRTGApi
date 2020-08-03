@@ -11,7 +11,7 @@ export interface ContractDeleteConfirmModalProps {
     hideModal: Function,
     getAllContracts: Function,
     contractId: Number | undefined,
-    printerName: string | undefined
+    deviceName: string | undefined
 }
 
 function getModalStyle() {
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const ContractDeleteConfirmModal = ({ show, hideModal, getAllContracts, contractId, printerName }: ContractDeleteConfirmModalProps) => {
+const ContractDeleteConfirmModal = ({ show, hideModal, getAllContracts, contractId, deviceName }: ContractDeleteConfirmModalProps) => {
 
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
@@ -73,7 +73,7 @@ const ContractDeleteConfirmModal = ({ show, hideModal, getAllContracts, contract
             >
                 <div style={modalStyle} className={classes.paper}>
                     <div style={{ textAlign: 'center' }}>
-                    <h3>Are you sure to delete the contract for the device "{printerName}"</h3>
+                    <h3>Are you sure to delete the contract for the device "{deviceName}"</h3>
                         <br /><br />
                         <Button variant='contained' color='primary' onClick={DeleteContract}>Yes</Button>
                         <Button variant='contained' color='secondary' onClick={handleClose}>No</Button>

@@ -70,8 +70,9 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     const [contract, setContract] = React.useState<Contract>();
 
     type FormData = {
-        owner : number,
-        device :number,
+        id? : number
+        owner : string,
+        device :string,
         blackAndWhiteLimitSet:number,
         colorLimitSet:number,
         blackAndWhitePrice:number,
@@ -82,14 +83,17 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
 
     const { register, setValue, handleSubmit } = useForm<FormData>({
       defaultValues: {
-        owner: 0,
-        device: 0,
-        blackAndWhiteLimitSet: 0,
-        colorLimitSet: 0,
-        blackAndWhitePrice: 0,
-        colorPrice: 0,
-        surplusBlackAndWhitePrice: 0,
-        surplusColorPrice: 0,
+        id: isEdit ? contractToEdit!.id! : 0,
+        // owner: isEdit? contractToEdit!.owner!.name! : "",
+        owner: "",
+        // device: isEdit? contractToEdit!.device!.device! : "",
+        device: "",
+        blackAndWhiteLimitSet: isEdit? contractToEdit!.blackAndWhiteLimitSet : 0,
+        colorLimitSet: isEdit? contractToEdit!.colorLimitSet : 0,
+        blackAndWhitePrice: isEdit? contractToEdit!.blackAndWhitePrice : 0,
+        colorPrice: isEdit? contractToEdit!.colorPrice : 0,
+        surplusBlackAndWhitePrice: isEdit? contractToEdit!.surplusBlackAndWhitePrice : 0,
+        surplusColorPrice: isEdit? contractToEdit!.surplusColorPrice : 0,
       },
     });
     const onSubmit = handleSubmit(({ 
@@ -102,22 +106,27 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         surplusBlackAndWhitePrice,
         surplusColorPrice,
     }) => {
-        let ownerId: Owner = { id: owner };
-        let deviceObjId: Device = { objId : device};
+        // let ownerId: Owner = { id: owner };
+        // let deviceObjId: Device = { objId : device};
         let contractData: Contract = {
-          ownerId: parseInt(selectedOwnerValue),
-          deviceId: parseInt(selectedDeviceValue),
-          blackAndWhiteLimitSet : blackAndWhiteLimitSet,
-          colorLimitSet : colorLimitSet,
-          blackAndWhitePrice : blackAndWhitePrice,
-          colorPrice : colorPrice,
-          surplusBlackAndWhitePrice : surplusBlackAndWhitePrice,
-          surplusColorPrice : surplusColorPrice,
+            ownerId: parseInt(selectedOwnerValue),
+            deviceId: parseInt(selectedDeviceValue),
+            blackAndWhiteLimitSet : blackAndWhiteLimitSet,
+            colorLimitSet : colorLimitSet,
+            blackAndWhitePrice : blackAndWhitePrice,
+            colorPrice : colorPrice,
+            surplusBlackAndWhitePrice : surplusBlackAndWhitePrice,
+            surplusColorPrice : surplusColorPrice,
         };
         setContract(contractData);
     }); 
-
-    useEffect(() => { fillList(); }, []); 
+    
+    // useEffect(() => { fillList(); }, []); 
+    // const fillList = () => {
+    //     if (isEdit) {
+    //     }
+    // };
+    
     React.useEffect(() => {
         console.log("renderGetDevices");
         GetDevices();
@@ -136,22 +145,6 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         });
     };
 
-    const fillList = () => {
-        if (isEdit) {
-            // setState({
-            //     nameOfCompany: contractToEdit!.nameOfCompany,
-            //     printer: contractToEdit!.printer,
-            //     blackAndWhiteSheets: contractToEdit!.blackAndWhiteSheets,
-            //     colorSheets: contractToEdit!.colorSheets,
-            //     blackToner: contractToEdit!.blackToner,
-            //     cyanToner: contractToEdit!.cyanToner,
-            //     yellowToner: contractToEdit!.yellowToner,
-            //     magentaToner: contractToEdit!.magentaToner,
-            //     month: contractToEdit!.month
-            // });
-        }
-    }
-
     const AddContract = () => {
         axios.post(myConfig.backUrl + 'contract', contract).then(() => {
             handleClose();
@@ -163,13 +156,13 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     }
 
     const UpdateContract = async () => {
-        // await axios.put(myConfig.backUrl + 'contracts/' + contractToEdit!.contractId!.toString(), contract).then(() => {
-        //     handleClose();
-        //     ToastsStore.success('The contract was saved');
-        //     getAllContracts();
-        // }).catch(() => {
-        //     ToastsStore.error('The contract was not saved');
-        // });
+        await axios.put(myConfig.backUrl + 'contract/', contract).then(() => {
+            handleClose();
+            ToastsStore.success('The contract was saved');
+            getAllContracts();
+        }).catch(() => {
+            ToastsStore.error('The contract was not saved');
+        });
     }
 
     const HandleChangeDevice = (event: React.ChangeEvent<{ value: unknown }>) => {

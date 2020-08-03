@@ -259,7 +259,7 @@ const ContractList = () => {
                         hideModal={HideForm} 
                         getAllContracts={GetContracts} 
                         contractId={contractIdToDelete} 
-                        printerName={contractDeviceNameToDelete} />
+                        deviceName={contractDeviceNameToDelete} />
                     : null
                 }
                 <br/>
