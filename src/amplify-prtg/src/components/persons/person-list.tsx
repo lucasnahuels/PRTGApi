@@ -17,13 +17,16 @@ import PersonDeleteConfirmModal from './person-delete-confirm-modal';
 import { Grid, TablePagination, TableFooter, Tooltip} from '@material-ui/core';
 import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
-import { Person } from '../contracts/contract';
+import { Person, CognitoUser } from '../contracts/contract';
 import Dropdown from 'reactstrap/lib/Dropdown';
 import DropdownToggle from 'reactstrap/lib/DropdownToggle';
 import DropdownMenu from 'reactstrap/lib/DropdownMenu';
 
 export interface IPersonList {
     listOfPerson: Person[]
+}
+export interface IUserList {
+    listOfUser: CognitoUser[]
 }
 
 const PersonsList = () => {
@@ -69,6 +72,7 @@ const PersonsList = () => {
     const classes = useStyles();
 
     const [statePerson, setPerson] = React.useState<IPersonList>();
+    const [stateUser, setUser] = React.useState<IUserList>();
     const [showModal, setShowModal] = React.useState(false);
     const [showDeleteConfirmModal, setShowDeleteConfirmModal] = React.useState(false);
     const [formIsEdit, setFormIsEdit] = React.useState(false);
@@ -79,12 +83,22 @@ const PersonsList = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
     
-    useEffect(() => { GetPersons() }, []);
+    useEffect(() => { 
+        GetPersons();
+        GetUsers(); 
+    }, []);
 
     const GetPersons = async () => {
         await axios.get(myConfig.backUrl + `Employee`).then((response) => {
             console.log("employees", response.data);
             setPerson({ ...statePerson, listOfPerson: response.data });
+        });
+    };
+
+    const GetUsers = async () => {
+        await axios.get(myConfig.backUrl + `User`).then((response) => {
+            console.log("user", response.data);
+            setUser({ ...stateUser, listOfUser: response.data });
         });
     };
    
@@ -139,6 +153,7 @@ const PersonsList = () => {
                     <Table size='medium'>
                         <TableHead aria-label="simple table">
                             <TableRow>
+                                <TableCell className={classes.titlesRow} size='medium'>Name</TableCell>
                                 <TableCell className={classes.titlesRow} size='medium'>E-person adress</TableCell>
                                 <TableCell className={classes.titlesRow} size='medium'>Send report?</TableCell>
                                 <TableCell className={classes.titlesRow} size='medium' colSpan={2}>Person actions</TableCell>
@@ -150,18 +165,19 @@ const PersonsList = () => {
                             <Tooltip title="This is the list of users from It-One who have already registered in the prtg app">
                                 <Dropdown onClick={showItOneEmployees}>
                                     <DropdownToggle caret>
-                                        It-One employees
+                                        It-One user
                                     </DropdownToggle>
                                     <DropdownMenu right>
                                     </DropdownMenu>
                                 </Dropdown>
                             </Tooltip>
                             </TableRow>
-                            {statePerson !== undefined && statePerson.listOfPerson !== undefined ? statePerson.listOfPerson.map((person) =>
+                            {stateUser !== undefined && stateUser.listOfUser !== undefined ? stateUser.listOfUser.map((user) =>
                             (
                                 showItOne? (
-                                    <TableRow key={person.id}>
-                                        <TableCell className={classes.dataRow}>{person.email}</TableCell>
+                                    <TableRow key={user.userId}>
+                                        <TableCell className={classes.dataRow}>{user.userName}</TableCell>
+                                        <TableCell className={classes.dataRow}>{user.attributes.email}</TableCell>
                                         <TableCell className={classes.dataRow}>
                                             <input type="checkbox"/>
                                         </TableCell>
@@ -191,6 +207,7 @@ const PersonsList = () => {
                             (
                                 showDeviceOwner ? (
                                     <TableRow key={person.id}>
+                                        <TableCell className={classes.dataRow}>{person.name}</TableCell>
                                         <TableCell className={classes.dataRow}>{person.email}</TableCell>
                                         <TableCell className={classes.dataRow}>
                                             <input type="checkbox"/>
