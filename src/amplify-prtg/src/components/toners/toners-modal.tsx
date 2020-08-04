@@ -7,7 +7,6 @@ import {Chart, BarSeries, Title, ArgumentAxis, ValueAxis} from '@devexpress/dx-r
 import { Animation } from '@devexpress/dx-react-chart';
 import { Toner } from './toner';
 
-
 export interface TonersModalProps {
     show: boolean,
     hideModal: Function,

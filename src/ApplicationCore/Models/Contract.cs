@@ -8,6 +8,7 @@ namespace ApplicationCore.Models
     {
         public Owner Owner { get; set; }
         public long OwnerId { get; set; }
+        //List of Devices
         public long DeviceId { get; set; }
         public int BlackAndWhiteLimitSet { get; set; }
         public int ColorLimitSet { get; set; }

@@ -3,9 +3,9 @@ import SearchAppBar from './toolbar';
 
 const MainScreen = () => {
     return (
-        <React.Fragment>
+        <div>
             <SearchAppBar/>
-        </React.Fragment>
+        </div>
     );
 }
 export default MainScreen;

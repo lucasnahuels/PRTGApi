@@ -7,7 +7,7 @@ import { Button } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { purple } from '@material-ui/core/colors';
 import { Link } from 'react-router-dom';
-
+import { AmplifySignOut } from '@aws-amplify/ui-react';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -64,10 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function SearchAppBar() {
     const classes = useStyles();
-    const [] = React.useState<null | HTMLElement>(null); 
-
-
-
+    
     return (
         <div className={classes.root}>
             <AppBar position='static'>
@@ -80,26 +77,29 @@ export default function SearchAppBar() {
                         </Grid>
                     </Grid>
                     <Grid container xs={8} spacing={1} item>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                             <Link to="/sensors" >
                                 <Button className={classes.colorButton}>
-                                    Open sensor views
+                                    Sensors
                                 </Button>
                             </Link>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                             <Link to="/contracts" >
                                 <Button className={classes.colorButton}>
-                                    Open contracts views
+                                    Contracts
                                 </Button>
                             </Link>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                             <Link to="/owners" >
                                 <Button className={classes.colorButton}>
-                                        Handle device owners
+                                    Owners
                                 </Button>
                             </Link>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <AmplifySignOut/>
                         </Grid>
                     </Grid>
                 </Toolbar>

@@ -39,12 +39,12 @@ namespace ApplicationCore.Services
 
         public async Task<IEnumerable<Contract>> GetAsync()
         {
-            return await _context.Contracts.ToListAsync();
+            return await _context.Contracts.Include(c => c.Owner).ToListAsync();
         }
 
         public async Task<Contract> GetAsync(int id)
         {
-            return await _context.Contracts.FirstOrDefaultAsync(contract => contract.Id == id);
+            return await _context.Contracts.Include(c => c.Owner).FirstOrDefaultAsync(contract => contract.Id == id);
         }
 
         public async Task<Contract> UpdateAsync(Contract contract)
