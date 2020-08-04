@@ -45,9 +45,6 @@ const PersonDeleteConfirmModal = ({ show, hideModal, getAllPersons, person }: Pe
     // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = React.useState(getModalStyle);
 
-    // tslint:disable-next-line: no-floating-promises
-    useEffect(() => { }, []);
-
     const DeletePerson = async () => {
         await axios.delete(myConfig.backUrl + 'employee/' + person!.id!.toString()).then( () => {
             handleClose();

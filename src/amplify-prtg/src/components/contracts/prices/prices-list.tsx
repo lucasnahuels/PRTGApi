@@ -1,6 +1,4 @@
 import React from 'react';
-import axios from 'axios';
-import { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -9,7 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
-import { Grid, Paper, TableFooter, InputLabel, Select } from '@material-ui/core';
+import { Grid, Paper, TableFooter, Select } from '@material-ui/core';
 import register from '../../../registerServiceWorker';
 import { Link } from 'react-router-dom';
 import MenuItem from '@material-ui/core/MenuItem';

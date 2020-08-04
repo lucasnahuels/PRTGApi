@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Button } from '@material-ui/core';
@@ -44,9 +44,6 @@ const ContractDeleteConfirmModal = ({ show, hideModal, getAllContracts, contract
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = React.useState(getModalStyle);
-
-    // tslint:disable-next-line: no-floating-promises
-    useEffect(() => { }, []);
 
     const DeleteContract = async () => {
         await axios.delete(myConfig.backUrl + 'contract/' + contractId!.toString()).then(() => {
