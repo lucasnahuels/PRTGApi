@@ -58,6 +58,7 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
     const [modalStyle] = React.useState(getModalStyle);
 
     const [email, setEmail] = React.useState("");
+    const [name, setName] = React.useState("");
 
     useEffect(() => { fillList(); }, []);
     //when format is "useEffect(() => {}, []);" only render the first time instead of every time there´re changes
@@ -65,6 +66,7 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
     const fillList = () =>{
         if(isEdit){
             setEmail(person!.email)
+            setName(person!.name!)
         }
     }
     
@@ -120,6 +122,9 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
     const handleInputPersonAdressChange = (e: ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
     }
+    const handleInputPersonNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setName(e.target.value);
+    }
 
     const handleClose = () => {
         hideModal();
@@ -138,8 +143,10 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
                     <div style={{ textAlign: 'center' }}>
                         <h2 id='personform-modal-title'>Add device owner person</h2>
                         <div id='personform-modal-description'>
+                            <TextField label='person name' id='inputPersonName' name='inputPersonName' placeholder='input the person name' value={name} onChange={handleInputPersonNameChange} />
+                            <br />
                             <TextField label='person adress' id='inputPersonAdress' name='inputPersonAdress' placeholder='input the person adress' value={email} onChange={handleInputPersonAdressChange} />
-                            <br/><br/><br/><br/>
+                            <br/><br/><br/>
                             {!isEdit ? (
                                 <Button variant='contained' color='default' onClick={() => AddPerson()} >Save new</Button>
                             ) : (

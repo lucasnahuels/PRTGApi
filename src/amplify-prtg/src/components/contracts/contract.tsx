@@ -1,5 +1,6 @@
 import { Owner } from "../owners/owner";
 import { Device} from "../sensors/device";
+import { Attributes } from "react";
 
 export interface Contract {
         id? : number,
@@ -19,7 +20,15 @@ export interface Contract {
 }
 
 export interface CognitoUser {
-        userId?: Number,
+        userId: string,
+        userName?: string,
+        attributes: CognitoUserAttributes,
+}
+export interface CognitoUserAttributes {
+        email: string,
+        email_verified?: boolean,
+        phone_number_verified?: boolean,
+        phone_number?: string,
 }
 
 export interface User {

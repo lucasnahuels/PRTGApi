@@ -120,7 +120,12 @@ const OwnersList = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                                {stateOwner !== undefined && stateOwner.listOfOwners !== undefined ? stateOwner.listOfOwners.map((owner)=>
+                            {stateOwner !== undefined && stateOwner.listOfOwners !== undefined ?
+                                (rowsPerPage > 0
+                                    ? stateOwner.listOfOwners.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    : stateOwner.listOfOwners
+                                )
+                                .map((owner) => 
                                 (
                                     <TableRow key={owner.id}>
                                         <TableCell className={classes.dataRow}>{owner.name}</TableCell>
@@ -138,10 +143,10 @@ const OwnersList = () => {
                         </TableBody>
                         <TableFooter>
                             <TableRow>
-                                {/* <TablePagination
+                                <TablePagination
                                     rowsPerPageOptions={[3, 6, 9, { label: 'All', value: -1 }]}
-                                    colSpan={3}
-                                    count={stateOwner !== undefined && stateOwner.listOfOwner !== undefined ? stateOwner.listOfOwner.length : 0}
+                                    colSpan={10}
+                                    count={stateOwner !== undefined && stateOwner.listOfOwners !== undefined ? stateOwner.listOfOwners.length : 0}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
                                     SelectProps={{
@@ -151,7 +156,7 @@ const OwnersList = () => {
                                     onChangePage={handleChangePage}
                                     onChangeRowsPerPage={handleChangeRowsPerPage}
                                     ActionsComponent={TablePaginationActions}
-                                /> */}
+                                />
                             </TableRow>
                         </TableFooter>
                     </Table>
