@@ -20,6 +20,7 @@ import { myConfig } from '../../configurations.js';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 export interface IContractList {
     listOfContract: Contract[]

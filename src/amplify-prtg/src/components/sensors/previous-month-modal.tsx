@@ -1,16 +1,12 @@
-import React, { ChangeEvent, useEffect } from "react";
+import React, { useEffect } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import { Button, RadioGroup, FormControlLabel, Radio, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import axios from "axios";
+import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@material-ui/core";
 import {
   ToastsStore,
   ToastsContainer,
   ToastsContainerPosition,
 } from "react-toasts";
-import { myConfig } from "../../configurations";
-import { Link } from "react-router-dom";
 import { DeviceDataViewModel } from "./device";
 
 export interface PreviousMonthModalProps {
