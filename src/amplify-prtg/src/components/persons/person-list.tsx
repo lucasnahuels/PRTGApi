@@ -14,7 +14,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import PersonFormModal from './personFormModal';
 import PersonDeleteConfirmModal from './person-delete-confirm-modal';
-import { Grid, TablePagination, TableFooter, Tooltip} from '@material-ui/core';
+import { Grid, TablePagination, TableFooter, Tooltip, Checkbox } from '@material-ui/core';
 import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import { Person, CognitoUser } from '../contracts/contract';
@@ -32,12 +32,12 @@ export interface IUserList {
 const PersonsList = () => {
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
-            titlesRow :{
-                fontWeight : 'bold',
-                textAlign : 'center'
+            titlesRow: {
+                fontWeight: 'bold',
+                textAlign: 'center'
             },
-            dataRow:{
-                textAlign : 'center'
+            dataRow: {
+                textAlign: 'center'
             },
             margins: {
                 paddingTop: '70px',
@@ -82,10 +82,11 @@ const PersonsList = () => {
     const [showDeviceOwner, setShowDeviceOwner] = React.useState(false);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
-    
-    useEffect(() => { 
+    const [checked, setChecked] = React.useState(true);
+
+    useEffect(() => {
         GetPersons();
-        GetUsers(); 
+        GetUsers();
     }, []);
 
     const GetPersons = async () => {
@@ -101,8 +102,8 @@ const PersonsList = () => {
             setUser({ ...stateUser, listOfUser: response.data });
         });
     };
-   
-    const ShowPersonForm = (isEdit: boolean, personToEdit? : Person) => {
+
+    const ShowPersonForm = (isEdit: boolean, personToEdit?: Person) => {
         setShowModal(true);
         if (!isEdit) {
             setFormIsEdit(false);
@@ -113,7 +114,7 @@ const PersonsList = () => {
         }
     }
 
-    const ShowDeleteConfirm = async (personToDelete : Person) => {
+    const ShowDeleteConfirm = async (personToDelete: Person) => {
         setShowDeleteConfirmModal(true);
         setPersonToDelete(personToDelete);
     }
@@ -141,96 +142,117 @@ const PersonsList = () => {
         setPage(0);
     };
 
+    const handleChangeCheckboxForDevicesOwners = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setChecked(event.target.checked);
+        let personList: Person[] = statePerson!.listOfPerson!;
+        for (let i: number = 0; i > personList.length; i++) {
+            if (personList[i].id!.toString() === event.target.name) {
+                personList[i].sendReport = event.target.checked ? true : false;
+            }
+        }
+        setPerson({ ...statePerson, listOfPerson: personList });
+    };
+    const handleChangeCheckboxForUsers = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setChecked(event.target.checked);
+        let userList: CognitoUser[] = stateUser!.listOfUser!;
+        for (let i: number = 0; i > userList.length; i++) {
+            if (userList[i].userId === event.target.name) {
+                userList[i].sendReport = event.target.checked ? true : false;
+            }
+        }
+        setUser({ ...statePerson, listOfUser: userList });
+    };
+
     return (
         <div className={classes.margins}>
-        <Grid container xs={12} item>
-            <Grid item xs={3}></Grid>
-            <Grid item xs={6}>
-                <Button className={classes.buttonAdd} onClick={() => ShowPersonForm(false)}>
-                    Add new device owner employee
+            <Grid container xs={12} item>
+                <Grid item xs={3}></Grid>
+                <Grid item xs={6}>
+                    <Button className={classes.buttonAdd} onClick={() => ShowPersonForm(false)}>
+                        Add new device owner employee
                 </Button>
-                <TableContainer component={Paper}>
-                    <Table size='medium'>
-                        <TableHead aria-label="simple table">
-                            <TableRow>
-                                <TableCell className={classes.titlesRow} size='medium'>Name</TableCell>
-                                <TableCell className={classes.titlesRow} size='medium'>E-person adress</TableCell>
-                                <TableCell className={classes.titlesRow} size='medium'>Send report?</TableCell>
-                                <TableCell className={classes.titlesRow} size='medium' colSpan={2}>Person actions</TableCell>
-                            </TableRow>
-                        </TableHead>
+                    <TableContainer component={Paper}>
+                        <Table size='medium'>
+                            <TableHead aria-label="simple table">
+                                <TableRow>
+                                    <TableCell className={classes.titlesRow} size='medium'>Name</TableCell>
+                                    <TableCell className={classes.titlesRow} size='medium'>E-person adress</TableCell>
+                                    <TableCell className={classes.titlesRow} size='medium'>Send report?</TableCell>
+                                    <TableCell className={classes.titlesRow} size='medium' colSpan={2}>Person actions</TableCell>
+                                </TableRow>
+                            </TableHead>
 
-                        <TableBody>
-                            <TableRow>
-                            <Tooltip title="This is the list of users from It-One who have already registered in the prtg app">
-                                <Dropdown onClick={showItOneEmployees}>
-                                    <DropdownToggle caret>
-                                        It-One user
+                            <TableBody>
+                                <TableRow>
+                                    <Tooltip title="This is the list of users from It-One who have already registered in the prtg app">
+                                        <Dropdown onClick={showItOneEmployees}>
+                                            <DropdownToggle caret>
+                                                It-One user
                                     </DropdownToggle>
-                                    <DropdownMenu right>
-                                    </DropdownMenu>
-                                </Dropdown>
-                            </Tooltip>
-                            </TableRow>
-                            {stateUser !== undefined && stateUser.listOfUser !== undefined ? stateUser.listOfUser.map((user) =>
-                            (
-                                showItOne? (
-                                    <TableRow key={user.userId}>
-                                        <TableCell className={classes.dataRow}>{user.userName}</TableCell>
-                                        <TableCell className={classes.dataRow}>{user.attributes.email}</TableCell>
-                                        <TableCell className={classes.dataRow}>
-                                            <input type="checkbox"/>
-                                        </TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                    </TableRow>
+                                            <DropdownMenu right>
+                                            </DropdownMenu>
+                                        </Dropdown>
+                                    </Tooltip>
+                                </TableRow>
+                                {stateUser !== undefined && stateUser.listOfUser !== undefined ? stateUser.listOfUser.map((user) =>
+                                    (
+                                        showItOne ? (
+                                            <TableRow key={user.userId}>
+                                                <TableCell className={classes.dataRow}>{user.userName}</TableCell>
+                                                <TableCell className={classes.dataRow}>{user.attributes.email}</TableCell>
+                                                <TableCell className={classes.dataRow}>
+                                                    <Checkbox checked={user.sendReport} onChange={handleChangeCheckboxForUsers} name={user.userId} />
+                                                </TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                            </TableRow>
+                                        )
+                                            :
+                                            null
+                                    )
                                 )
-                                :
-                                null
-                            )
-                            )
-                            : null
-                            }
-                    
-                            <br/>
-                            
-                            <TableRow>
-                                <Dropdown onClick={showDeviceOwnerEmployees}>
-                                    <DropdownToggle caret>
-                                        Device owner employees
+                                    : null
+                                }
+
+                                <br />
+
+                                <TableRow>
+                                    <Dropdown onClick={showDeviceOwnerEmployees}>
+                                        <DropdownToggle caret>
+                                            Device owner employees
                                     </DropdownToggle>
-                                    <DropdownMenu right>
-                                    </DropdownMenu>
-                                </Dropdown>
-                            </TableRow>
-                            {statePerson !== undefined && statePerson.listOfPerson !== undefined ? statePerson.listOfPerson.map((person) =>
-                            (
-                                showDeviceOwner ? (
-                                    <TableRow key={person.id}>
-                                        <TableCell className={classes.dataRow}>{person.name}</TableCell>
-                                        <TableCell className={classes.dataRow}>{person.email}</TableCell>
-                                        <TableCell className={classes.dataRow}>
-                                            <input type="checkbox"/>
-                                        </TableCell>
-                                        <TableCell className={classes.dataRow}>
-                                            <Button variant='contained' color='default' onClick={() => ShowPersonForm(true, person)}> <EditIcon /> </Button>
-                                        </TableCell>
-                                        <TableCell className={classes.dataRow}>
-                                            <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(person)}><DeleteIcon /></Button>
-                                        </TableCell>
-                                    </TableRow>
+                                        <DropdownMenu right>
+                                        </DropdownMenu>
+                                    </Dropdown>
+                                </TableRow>
+                                {statePerson !== undefined && statePerson.listOfPerson !== undefined ? statePerson.listOfPerson.map((person) =>
+                                    (
+                                        showDeviceOwner ? (
+                                            <TableRow key={person.id}>
+                                                <TableCell className={classes.dataRow}>{person.name}</TableCell>
+                                                <TableCell className={classes.dataRow}>{person.email}</TableCell>
+                                                <TableCell className={classes.dataRow}>
+                                                    <Checkbox checked={person.sendReport} onChange={handleChangeCheckboxForDevicesOwners} name={person.id!.toString()} />
+                                                </TableCell>
+                                                <TableCell className={classes.dataRow}>
+                                                    <Button variant='contained' color='default' onClick={() => ShowPersonForm(true, person)}> <EditIcon /> </Button>
+                                                </TableCell>
+                                                <TableCell className={classes.dataRow}>
+                                                    <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(person)}><DeleteIcon /></Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                            :
+                                            null
+                                    )
                                 )
-                                :
-                                null
-                            )
-                            )
-                            : null
-                            }
-         
-                        </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                {/* <TablePagination
+                                    : null
+                                }
+
+                            </TableBody>
+                            <TableFooter>
+                                <TableRow>
+                                    {/* <TablePagination
                                     rowsPerPageOptions={[3, 6, 9, { label: 'All', value: -1 }]}
                                     colSpan={3}
                                     count={statePerson !== undefined && statePerson.listOfPerson !== undefined ? statePerson.listOfPerson.length : 0}
@@ -244,37 +266,37 @@ const PersonsList = () => {
                                     onChangeRowsPerPage={handleChangeRowsPerPage}
                                     ActionsComponent={TablePaginationActions}
                                 /> */}
-                            </TableRow>
-                        </TableFooter>
-                    </Table>
-                </TableContainer>
-                
-                {showModal ?
-                    <PersonFormModal
-                        show={showModal}
-                        hideModal={HideForm}
-                        getAllPersons={GetPersons}
-                        isEdit={formIsEdit}
-                        person={personToEdit!}
-                    />
-                    : null
-                }
-                {showDeleteConfirmModal ?
-                    <PersonDeleteConfirmModal 
-                        show={showDeleteConfirmModal} 
-                        hideModal={HideForm} 
-                        getAllPersons={GetPersons} 
-                        person={personToDelete!} 
-                    />
-                    : null
-                }
+                                </TableRow>
+                            </TableFooter>
+                        </Table>
+                    </TableContainer>
 
-                <br/>
-                <Button className={classes.buttonSave}>Save changes in reports</Button>
+                    {showModal ?
+                        <PersonFormModal
+                            show={showModal}
+                            hideModal={HideForm}
+                            getAllPersons={GetPersons}
+                            isEdit={formIsEdit}
+                            person={personToEdit!}
+                        />
+                        : null
+                    }
+                    {showDeleteConfirmModal ?
+                        <PersonDeleteConfirmModal
+                            show={showDeleteConfirmModal}
+                            hideModal={HideForm}
+                            getAllPersons={GetPersons}
+                            person={personToDelete!}
+                        />
+                        : null
+                    }
 
+                    <br />
+                    <Button className={classes.buttonSave}>Save changes in reports</Button>
+
+                </Grid>
+                <Grid item xs={3}></Grid>
             </Grid>
-            <Grid item xs={3}></Grid>
-        </Grid>
         </div>
     )
 }

@@ -1,27 +1,29 @@
 import { Owner } from "../owners/owner";
-import { Device} from "../sensors/device";
+import { Device } from "../sensors/device";
+import { Attributes } from "react";
 
 export interface Contract {
-        id? : number,
+        id?: number,
         owner?: Owner,
         ownerId?: number,
-        device? :Device,
+        device?: Device,
         deviceId: number,
-        blackAndWhiteLimitSet:number,
-        colorLimitSet:number,
-        blackAndWhitePrice :number,
-        colorPrice  :number,
-        surplusBlackAndWhitePrice :number,
-        surplusColorPrice: number, 
-        users?: CognitoUser[], 
-        usersid?: User[], 
-        employees?: Person[], 
+        blackAndWhiteLimitSet: number,
+        colorLimitSet: number,
+        blackAndWhitePrice: number,
+        colorPrice: number,
+        surplusBlackAndWhitePrice: number,
+        surplusColorPrice: number,
+        users?: CognitoUser[],
+        usersid?: User[],
+        employees?: Person[],
 }
 
 export interface CognitoUser {
         userId: string,
         userName?: string,
         attributes: CognitoUserAttributes,
+        sendReport: boolean
 }
 export interface CognitoUserAttributes {
         email: string,
@@ -36,7 +38,8 @@ export interface User {
 
 export interface Person {
         id?: number,
-        company? : Owner,
+        company?: Owner,
         name?: string,
         email: string,
+        sendReport: boolean
 }
