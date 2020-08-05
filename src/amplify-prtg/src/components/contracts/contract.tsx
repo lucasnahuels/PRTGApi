@@ -23,6 +23,7 @@ export interface CognitoUser {
         userId: string,
         userName?: string,
         attributes: CognitoUserAttributes,
+        sendReport: boolean
 }
 export interface CognitoUserAttributes {
         email: string,
@@ -40,4 +41,5 @@ export interface Person {
         company? : Owner,
         name?: string,
         email: string,
+        sendReport: boolean
 }
