@@ -110,7 +110,6 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         // let deviceObjId: Device = { objId : device};
         let contractData: Contract = {
             ownerId: parseInt(selectedOwnerValue),
-            deviceId: parseInt(selectedDeviceValue),
             blackAndWhiteLimitSet : blackAndWhiteLimitSet,
             colorLimitSet : colorLimitSet,
             blackAndWhitePrice : blackAndWhitePrice,

@@ -6,24 +6,39 @@ export interface Contract {
         id?: number,
         owner?: Owner,
         ownerId?: number,
-        device?: Device,
-        deviceId: number,
         blackAndWhiteLimitSet: number,
         colorLimitSet: number,
         blackAndWhitePrice: number,
         colorPrice: number,
         surplusBlackAndWhitePrice: number,
         surplusColorPrice: number,
-        users?: CognitoUser[],
-        usersid?: User[],
-        employees?: Person[],
+        contractDevices?: ContractDevice[],
+        contractUsers?: ContractUser[],
+        contractEmployees?: ContractEmployee[],
 }
 
+export interface ContractDevice {
+        objId: string,
+        device: Device,
+        contractId: number,
+        contract: Contract
+}
+export interface ContractUser {
+        user: CognitoUser,
+        userId: string,
+        contractId: number,
+        contract: Contract
+}
+export interface ContractEmployee {
+        employeeId : number,
+        employee: Person,
+        contractId: number,
+        contract: Contract
+}
 export interface CognitoUser {
         userId: string,
         userName?: string,
         attributes: CognitoUserAttributes,
-        sendReport: boolean
 }
 export interface CognitoUserAttributes {
         email: string,
@@ -31,15 +46,10 @@ export interface CognitoUserAttributes {
         phone_number_verified?: boolean,
         phone_number?: string,
 }
-
-export interface User {
-        userId?: Number,
-}
-
 export interface Person {
         id?: number,
-        company?: Owner,
+        owner?: Owner,
         name?: string,
         email: string,
-        sendReport: boolean
+        contractEmployees?: ContractEmployee[]
 }

@@ -145,21 +145,19 @@ const PersonsList = () => {
     const handleChangeCheckboxForDevicesOwners = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
         let personList: Person[] = statePerson!.listOfPerson!;
-        for (let i: number = 0; i > personList.length; i++) {
-            if (personList[i].id!.toString() === event.target.name) {
-                personList[i].sendReport = event.target.checked ? true : false;
-            }
-        }
+        // for (let i: number = 0; i > personList.length; i++) {
+        //     if (personList[i].id!.toString() === event.target.name) {
+        //     }
+        // }
         setPerson({ ...statePerson, listOfPerson: personList });
     };
     const handleChangeCheckboxForUsers = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
         let userList: CognitoUser[] = stateUser!.listOfUser!;
-        for (let i: number = 0; i > userList.length; i++) {
-            if (userList[i].userId === event.target.name) {
-                userList[i].sendReport = event.target.checked ? true : false;
-            }
-        }
+        // for (let i: number = 0; i > userList.length; i++) {
+        //     if (userList[i].userId === event.target.name) {
+        //     }
+        // }
         setUser({ ...statePerson, listOfUser: userList });
     };
 
@@ -201,7 +199,7 @@ const PersonsList = () => {
                                                 <TableCell className={classes.dataRow}>{user.userName}</TableCell>
                                                 <TableCell className={classes.dataRow}>{user.attributes.email}</TableCell>
                                                 <TableCell className={classes.dataRow}>
-                                                    <Checkbox checked={user.sendReport} onChange={handleChangeCheckboxForUsers} name={user.userId} />
+                                                    <Checkbox checked={false} onChange={handleChangeCheckboxForUsers} name={user.userId} />
                                                 </TableCell>
                                                 <TableCell></TableCell>
                                                 <TableCell></TableCell>
@@ -232,7 +230,7 @@ const PersonsList = () => {
                                                 <TableCell className={classes.dataRow}>{person.name}</TableCell>
                                                 <TableCell className={classes.dataRow}>{person.email}</TableCell>
                                                 <TableCell className={classes.dataRow}>
-                                                    <Checkbox checked={person.sendReport} onChange={handleChangeCheckboxForDevicesOwners} name={person.id!.toString()} />
+                                                    <Checkbox checked={false} onChange={handleChangeCheckboxForDevicesOwners} name={person.id!.toString()} />
                                                 </TableCell>
                                                 <TableCell className={classes.dataRow}>
                                                     <Button variant='contained' color='default' onClick={() => ShowPersonForm(true, person)}> <EditIcon /> </Button>

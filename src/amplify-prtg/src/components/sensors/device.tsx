@@ -1,6 +1,9 @@
+import { ContractDevice } from "../contracts/contract";
+
 export interface Device{
     objId?: Number,
     device?: string,
+    contractDevices?: ContractDevice[],
 }
 export interface DeviceData {
     objId: Number,
