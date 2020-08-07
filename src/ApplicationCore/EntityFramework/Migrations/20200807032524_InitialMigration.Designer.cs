@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApplicationCore.EntityFramework.Migrations
 {
     [DbContext(typeof(PrtgDbContext))]
-    [Migration("20200806015525_AddedManyToManyRelations")]
-    partial class AddedManyToManyRelations
+    [Migration("20200807032524_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -111,7 +111,7 @@ namespace ApplicationCore.EntityFramework.Migrations
 
                     b.HasKey("ObjId");
 
-                    b.ToTable("Device");
+                    b.ToTable("Devices");
                 });
 
             modelBuilder.Entity("ApplicationCore.Models.Employee", b =>
