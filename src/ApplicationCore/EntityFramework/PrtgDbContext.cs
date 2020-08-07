@@ -32,6 +32,12 @@ namespace ApplicationCore.EntityFramework
                     d.ToTable("Device");
                 });
 
+                modelBuilder.Entity<User>(d =>
+                {
+                    d.HasKey(u => u.UserId);
+                    d.ToTable("User");
+                });
+
                 #region Many to many relations
                 // Code to set up many to many relationships
 

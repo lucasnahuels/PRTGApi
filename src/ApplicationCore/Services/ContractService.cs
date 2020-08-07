@@ -4,6 +4,8 @@ using ApplicationCore.Models;
 using ApplicationCore.Services.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Internal;
+using System.Linq;
 
 namespace ApplicationCore.Services
 {
@@ -18,6 +20,8 @@ namespace ApplicationCore.Services
 
         public async Task<Contract> CreateAsync(Contract contract)
         {
+            await CheckNewDevices(contract);
+
             await _context.Contracts.AddAsync(contract);
             await _context.SaveChangesAsync();
 
@@ -64,6 +68,19 @@ namespace ApplicationCore.Services
             await _context.SaveChangesAsync();
 
             return contract;
+        }
+
+        private async Task CheckNewDevices(Contract contract)
+        {
+            var deviceIds = await _context.Devices.Select(d => d.ObjId).ToListAsync();
+            contract.ContractDevices.ToList().ForEach(cd =>
+            {
+                if (!deviceIds.Any(deviceId => deviceId == cd.ObjId))
+                {
+                    cd.Device = new Device() { ObjId = cd.ObjId };
+                    cd.ObjId = null;
+                }
+            });
         }
     }
 }
