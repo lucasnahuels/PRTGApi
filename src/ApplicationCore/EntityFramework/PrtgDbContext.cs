@@ -29,13 +29,13 @@ namespace ApplicationCore.EntityFramework
                 modelBuilder.Entity<Device>(d =>
                 {
                     d.HasKey(d => d.ObjId);
-                    d.ToTable("Device");
+                    d.ToTable("Devices");
                 });
 
                 modelBuilder.Entity<User>(d =>
                 {
                     d.HasKey(u => u.UserId);
-                    d.ToTable("User");
+                    d.ToTable("Users");
                 });
 
                 #region Many to many relations
