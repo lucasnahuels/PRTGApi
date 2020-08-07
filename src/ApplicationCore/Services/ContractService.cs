@@ -21,6 +21,7 @@ namespace ApplicationCore.Services
         public async Task<Contract> CreateAsync(Contract contract)
         {
             await CheckNewDevices(contract);
+            await CheckNewUsers(contract);
 
             await _context.Contracts.AddAsync(contract);
             await _context.SaveChangesAsync();
@@ -63,6 +64,8 @@ namespace ApplicationCore.Services
 
         public async Task<Contract> UpdateAsync(Contract contract)
         {
+            await CheckNewDevices(contract);
+            await CheckNewUsers(contract);
             _context.Entry(contract).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
@@ -79,6 +82,19 @@ namespace ApplicationCore.Services
                 {
                     cd.Device = new Device() { ObjId = cd.ObjId };
                     cd.ObjId = null;
+                }
+            });
+        }
+
+        private async Task CheckNewUsers(Contract contract)
+        {
+            var userIds = await _context.Users.Select(d => d.UserId).ToListAsync();
+            contract.ContractUsers.ToList().ForEach(cu =>
+            {
+                if (!userIds.Any(userId => userId == cu.UserId))
+                {
+                    cu.User = new User() { UserId = cu.UserId };
+                    cu.UserId = null;
                 }
             });
         }
