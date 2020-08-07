@@ -88,16 +88,16 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
         //     return;
         // }
 
-        let personData: Person = {
-            email: email
-        };
-        axios.post(myConfig.backUrl + 'employee', personData).then(() => {
-            handleClose();
-            ToastsStore.success('The person was saved');
-            getAllPersons();
-        }).catch(() => {
-            ToastsStore.error('The person was not saved');
-        })
+        // let personData: Person = {
+        //     email: email
+        // };
+        // axios.post(myConfig.backUrl + 'employee', personData).then(() => {
+        //     handleClose();
+        //     ToastsStore.success('The person was saved');
+        //     getAllPersons();
+        // }).catch(() => {
+        //     ToastsStore.error('The person was not saved');
+        // })
     }
 
     const UpdatePerson = async () => {

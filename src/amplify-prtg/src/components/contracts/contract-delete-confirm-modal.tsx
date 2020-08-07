@@ -70,7 +70,7 @@ const ContractDeleteConfirmModal = ({ show, hideModal, getAllContracts, contract
             >
                 <div style={modalStyle} className={classes.paper}>
                     <div style={{ textAlign: 'center' }}>
-                    <h3>Are you sure to delete the contract for the device "{deviceName}"</h3>
+                    <h3>Are you sure to delete the contract</h3>
                         <br /><br />
                         <Button variant='contained' color='primary' onClick={DeleteContract}>Yes</Button>
                         <Button variant='contained' color='secondary' onClick={handleClose}>No</Button>
