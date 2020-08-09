@@ -47,7 +47,6 @@ namespace WebApi.Controllers
         public async Task<ActionResult<Contract>> PostContract(Contract contract)
         {
             await _contractService.CreateAsync(contract);
-
             return CreatedAtAction("GetContract", new { id = contract.Id }, contract);
         }
 

@@ -21,6 +21,7 @@ import { Person, CognitoUser } from '../contracts/contract';
 import Dropdown from 'reactstrap/lib/Dropdown';
 import DropdownToggle from 'reactstrap/lib/DropdownToggle';
 import DropdownMenu from 'reactstrap/lib/DropdownMenu';
+import { Link } from 'react-router-dom';
 
 export interface IPersonList {
     listOfPerson: Person[]
@@ -54,10 +55,9 @@ const PersonsList = () => {
                     backgroundColor: 'red',
                 }
             },
-            buttonSave: {
-                position: 'absolute',
-                left: '45%',
-                right: '45%',
+            button: {
+                left: '40%',
+                right: '40%',
                 backgroundColor: 'blue',
                 borderRadius: '18px',
                 color: 'white',
@@ -290,7 +290,10 @@ const PersonsList = () => {
                     }
 
                     <br />
-                    <Button className={classes.buttonSave}>Save changes in reports</Button>
+                    <Link to="/devices">
+                        <Button className={classes.button}> Back </Button>
+                    </Link>
+                    <Button className={classes.button}>Save changes in reports</Button>
 
                 </Grid>
                 <Grid item xs={3}></Grid>

@@ -150,7 +150,7 @@ const PricesList = (deviceObjId: number) => {
           </TableContainer>
           <br />
           <br />
-          <Link to="/contracts">
+          <Link to="/devices">
             <Button className={classes.buttonBack}>Back</Button>
           </Link>
         </Grid>

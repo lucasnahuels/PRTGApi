@@ -76,27 +76,34 @@ namespace ApplicationCore.Services
         private async Task CheckNewDevices(Contract contract)
         {
             var deviceIds = await _context.Devices.Select(d => d.ObjId).ToListAsync();
-            contract.ContractDevices.ToList().ForEach(cd =>
+            if (contract.ContractDevices != null)
             {
-                if (!deviceIds.Any(deviceId => deviceId == cd.ObjId))
-                {
-                    cd.Device = new Device() { ObjId = cd.ObjId };
-                    cd.ObjId = null;
-                }
-            });
+                 contract.ContractDevices.ToList().ForEach(cd =>
+                 {
+                    if (!deviceIds.Any(deviceId => deviceId == cd.ObjId))
+                    {
+                        cd.Device = new Device() { ObjId = cd.ObjId };
+                        cd.ObjId = null;
+                    }
+                 });
+            }
+          
         }
 
         private async Task CheckNewUsers(Contract contract)
         {
             var userIds = await _context.Users.Select(d => d.UserId).ToListAsync();
-            contract.ContractUsers.ToList().ForEach(cu =>
+            if (contract.ContractUsers != null)
             {
-                if (!userIds.Any(userId => userId == cu.UserId))
+                contract.ContractUsers.ToList().ForEach(cu =>
                 {
-                    cu.User = new User() { UserId = cu.UserId };
-                    cu.UserId = null;
-                }
-            });
+                    if (!userIds.Any(userId => userId == cu.UserId))
+                    {
+                        cu.User = new User() { UserId = cu.UserId };
+                        cu.UserId = null;
+                    }
+                });
+            }
         }
     }
 }

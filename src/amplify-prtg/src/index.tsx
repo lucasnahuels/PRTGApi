@@ -12,6 +12,7 @@ import PricesList from './components/contracts/prices/prices-list'
 import OwnersList from './components/owners/owners-list'
 import PersonsList from './components/persons/person-list'
 import configureStore from './store/store'
+import DevicesList from './components/devices/device-list'
 
 const history = createBrowserHistory();
 const store = configureStore(history);
@@ -26,6 +27,7 @@ ReactDOM.render(
         <Route path="/sensors" component={SensorList} />
         <Route path="/prices" component={PricesList} />
         <Route path="/persons" component={PersonsList} />
+        <Route path="/devices" component={DevicesList} />
       </div>        
     </ConnectedRouter>
   </Provider>,

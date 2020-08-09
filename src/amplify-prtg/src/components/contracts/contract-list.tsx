@@ -11,8 +11,8 @@ import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
+import DevicesIcon from '@material-ui/icons/Devices';
 import EditIcon from '@material-ui/icons/Edit';
-import MailIcon from '@material-ui/icons/Mail';
 import ContractFormModal from './ContractsFormModal';
 import ContractDeleteConfirmModal from './contract-delete-confirm-modal';
 import { Grid, TablePagination, TableFooter, TextField } from '@material-ui/core';
@@ -80,7 +80,6 @@ const ContractList = () => {
     const [formIsEdit, setFormIsEdit] = React.useState(false);
     const [contractToEdit, setContractToEdit] = React.useState<Contract>();
     const [contractIdToDelete, setContractIdToDelete] = React.useState<Number>(0);
-    const [contractDeviceNameToDelete, setContractDeviceNameToDelete] = React.useState('');
     const [searchTerm, setSearchTerm] = React.useState("");
     const [value, setValue] = React.useState<string | null>("");
     const [inputValue, setInputValue] = React.useState('');
@@ -112,10 +111,9 @@ const ContractList = () => {
         }
     }
 
-    const ShowDeleteConfirm = async (idToDelete: Number, deviceNameToDelete: string) => {
+    const ShowDeleteConfirm = async (idToDelete: Number) => {
         setShowDeleteConfirmModal(true);
         setContractIdToDelete(idToDelete!);
-        setContractDeviceNameToDelete(deviceNameToDelete!);
     }
 
     const HideForm = () => {
@@ -143,22 +141,22 @@ const ContractList = () => {
         GetContracts(); 
     }, []);
 
-    React.useEffect( () => {
-        console.log("renderSearchTerm");
-        let results : any = [];
-        if( stateContractConst !== undefined && stateContractConst.listOfContract !== undefined) {
-            results = stateContractConst!.listOfContract!.filter(contract =>
-                contract.device!.device!.toLowerCase().includes(searchTerm)
-            );
-        }
-        setContract({ ...stateContract, listOfContract: results });
-    }, [searchTerm]);
+    // React.useEffect( () => {
+    //     console.log("renderSearchTerm");
+    //     let results : any = [];
+    //     if( stateContractConst !== undefined && stateContractConst.listOfContract !== undefined) {
+    //         results = stateContractConst!.listOfContract!.filter(contract =>
+    //             contract.device!.device!.toLowerCase().includes(searchTerm)
+    //         );
+    //     }
+    //     setContract({ ...stateContract, listOfContract: results });
+    // }, [searchTerm]);
     
     return (
         <div className={classes.margins}>
         <Grid container xs={12} item>
             <Grid item xs={1}></Grid>
-            <Grid item xs={10}>
+            <Grid item xs={12}>
                 {/* <Autocomplete
                     className={classes.searchField}
                     value={value}
@@ -191,11 +189,11 @@ const ContractList = () => {
                                 <TableCell className={classes.titlesRow} size='medium'>Owner</TableCell>
                                 <TableCell className={classes.titlesRow} size='medium'>B&W limit set</TableCell>
                                 <TableCell className={classes.titlesRow} size='medium'>Color limit set</TableCell>
-                                <TableCell className={classes.titlesRow} size='medium'>B&W normal price per unit</TableCell>
-                                <TableCell className={classes.titlesRow} size='medium'>Color normal price per unit</TableCell>
-                                <TableCell className={classes.titlesRow} size='medium'>B&W surplus price per unit</TableCell>
-                                <TableCell className={classes.titlesRow} size='medium'>Color surplus price per unit</TableCell>
-                                <TableCell className={classes.titlesRow} size='medium'>E-mail reports</TableCell>
+                                <TableCell className={classes.titlesRow} size='medium'>B&W normal $/u</TableCell>
+                                <TableCell className={classes.titlesRow} size='medium'>Color normal $/u</TableCell>
+                                <TableCell className={classes.titlesRow} size='medium'>B&W surplus $/u</TableCell>
+                                <TableCell className={classes.titlesRow} size='medium'>Color surplus $/u</TableCell>
+                                <TableCell className={classes.titlesRow} size='medium'>Devices assigned</TableCell>
                                 <TableCell className={classes.titlesRow} size='medium' colSpan={2}>Contract actions</TableCell>
                             </TableRow>
                         </TableHead>
@@ -206,8 +204,8 @@ const ContractList = () => {
                                     : stateContract.listOfContract
                                 )
                                 .map(contract => (
-                                <TableRow> {contract.id!}
-                                    {/* <TableCell className={classes.dataRow}>{contract.owner!.name!}</TableCell> */}
+                                <TableRow key={contract.id!}>
+                                    <TableCell className={classes.dataRow}>{contract.owner!.name!}</TableCell>
                                     <TableCell className={classes.dataRow}>{contract.blackAndWhiteLimitSet}</TableCell>
                                     <TableCell className={classes.dataRow}>{contract.colorLimitSet}</TableCell>
                                     <TableCell className={classes.dataRow}>{contract.blackAndWhitePrice}</TableCell>
@@ -215,15 +213,15 @@ const ContractList = () => {
                                     <TableCell className={classes.dataRow}>{contract.surplusBlackAndWhitePrice}</TableCell>
                                     <TableCell className={classes.dataRow}>{contract.surplusColorPrice}</TableCell>
                                     <TableCell className={classes.dataRow}>
-                                        <Link to={`/persons/deviceObjId=${contract.deviceId}`}>
-                                            <Button variant='contained' color='default'> <MailIcon /> </Button>
+                                        <Link to={`/devices/contractId=${contract.id}`}>
+                                            <Button variant='contained' color='default'> <DevicesIcon /> </Button>
                                         </Link>
                                     </TableCell>
                                     <TableCell className={classes.dataRow}>
                                         <Button variant='contained' color='default' onClick={() => ShowContractForm(true, contract)}> <EditIcon /> </Button>
                                     </TableCell>
                                     <TableCell className={classes.dataRow}>
-                                        <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(contract.id!, contract.device!.device!)}><DeleteIcon /></Button>
+                                        <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(contract.id!)}><DeleteIcon /></Button>
                                     </TableCell>
                                 </TableRow>
                                 )
@@ -266,14 +264,11 @@ const ContractList = () => {
                         show={showDeleteConfirmModal} 
                         hideModal={HideForm} 
                         getAllContracts={GetContracts} 
-                        contractId={contractIdToDelete} 
-                        deviceName={contractDeviceNameToDelete} />
+                        contractId={contractIdToDelete}
+                    />
                     : null
                 }
                 <br/>
-                <Link to="/prices/deviceObjId=" >
-                    <Button className={classes.buttonCalculate}>Calculate prices from selected device</Button>
-                </Link>
             </Grid>
             <Grid item xs={1}></Grid>
         </Grid>

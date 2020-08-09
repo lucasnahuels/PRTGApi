@@ -70,9 +70,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     const [contract, setContract] = React.useState<Contract>();
 
     type FormData = {
-        id? : number
-        owner : string,
-        device :string,
+        id? : number,
         blackAndWhiteLimitSet:number,
         colorLimitSet:number,
         blackAndWhitePrice:number,
@@ -84,10 +82,6 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     const { register, setValue, handleSubmit } = useForm<FormData>({
       defaultValues: {
         id: isEdit ? contractToEdit!.id! : 0,
-        // owner: isEdit? contractToEdit!.owner!.name! : "",
-        owner: "",
-        // device: isEdit? contractToEdit!.device!.device! : "",
-        device: "",
         blackAndWhiteLimitSet: isEdit? contractToEdit!.blackAndWhiteLimitSet : 0,
         colorLimitSet: isEdit? contractToEdit!.colorLimitSet : 0,
         blackAndWhitePrice: isEdit? contractToEdit!.blackAndWhitePrice : 0,
@@ -96,9 +90,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         surplusColorPrice: isEdit? contractToEdit!.surplusColorPrice : 0,
       },
     });
-    const onSubmit = handleSubmit(({ 
-        device, 
-        owner,
+    const onSubmit = handleSubmit(({
         blackAndWhiteLimitSet,
         colorLimitSet,
         blackAndWhitePrice,
@@ -106,8 +98,6 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         surplusBlackAndWhitePrice,
         surplusColorPrice,
     }) => {
-        // let ownerId: Owner = { id: owner };
-        // let deviceObjId: Device = { objId : device};
         let contractData: Contract = {
             ownerId: parseInt(selectedOwnerValue),
             blackAndWhiteLimitSet : blackAndWhiteLimitSet,
@@ -117,14 +107,17 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
             surplusBlackAndWhitePrice : surplusBlackAndWhitePrice,
             surplusColorPrice : surplusColorPrice,
         };
+        console.log(selectedOwnerValue);
+        console.log(contractData);
         setContract(contractData);
     }); 
     
-    // useEffect(() => { fillList(); }, []); 
-    // const fillList = () => {
-    //     if (isEdit) {
-    //     }
-    // };
+    useEffect(() => { fillList(); }, []); 
+    const fillList = () => {
+        if (isEdit) {
+            setSelectedOwnerValue(contractToEdit!.owner!.name!);
+        }
+    };
     
     React.useEffect(() => {
         console.log("renderGetDevices");
@@ -190,8 +183,8 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                     <div style={{ textAlign: 'center' }}>
                         <h2 id='contractform-modal-title'>Add contract</h2>
                         <div id='contractform-modal-description'>
-                                <InputLabel id="deviceNameLabel">Device</InputLabel>
-                                <Select
+                                {/* <InputLabel id="deviceNameLabel">Device</InputLabel> */}
+                                {/* <Select
                                     className={classes.formRoot} 
                                     required
                                     id='inputDevice'
@@ -211,7 +204,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                                             </MenuItem>
                                         ))
                                         : null}
-                                </Select>
+                                </Select> */}
                                 <Tooltip title="If the owner you need is not in the list, 
                                 you will have to add it since the 'Handle owners view'">
                                     <div>
@@ -221,7 +214,6 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                                         required
                                         id='inputName'
                                         labelId="ownerNameLabel"
-                                        name="owner" inputRef={register}
                                         value={selectedOwnerValue}
                                         onChange={HandleChangeOwner}
                                     >
