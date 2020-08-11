@@ -98,7 +98,9 @@ export default function SearchAppBar() {
                                 </Button>
                             </Link>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={1}>
+                        </Grid>
+                        <Grid item xs={1}>
                             <AmplifySignOut/>
                         </Grid>
                     </Grid>

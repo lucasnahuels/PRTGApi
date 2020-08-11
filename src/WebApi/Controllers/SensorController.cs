@@ -35,6 +35,20 @@ namespace WebApi.Controllers
             return Ok(devices);
         }
 
+        [HttpGet("GetAssignedDevices/{contractId}")]
+        public async Task<ActionResult<List<DeviceApiModel>>> GetAssignedDevices(int contractId)
+        {
+            var devices = await _prtgService.GetAssignedDevices(contractId);
+            return Ok(devices);
+        }
+
+        [HttpGet("GetUnassignedDevices")]
+        public async Task<ActionResult<List<DeviceApiModel>>> GetUnassignedDevices()
+        {
+            var devices = await _prtgService.GetUnassignedDevices();
+            return Ok(devices);
+        }
+
         [HttpGet("{objId}")]
         [Route("GetSensorDetails")]
         public async Task<ActionResult<SensorDetails>> GetSensorDetails(int objId)

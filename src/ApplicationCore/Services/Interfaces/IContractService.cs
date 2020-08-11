@@ -12,5 +12,8 @@ namespace ApplicationCore.Services.Interfaces
         Task<Contract> UpdateAsync(Contract contract);
         Task<Contract> DeleteAsync(Contract contract);
         Task<bool> Exists(int id);
+        Task<Contract> AssignDevice(Contract contract);
+        Task<Contract> UnassignDevice(Contract contract);
+        Task<IEnumerable<ContractDevice>> GetContractDevicesRelations();
     }
 }

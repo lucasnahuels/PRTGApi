@@ -89,7 +89,7 @@ namespace WebApi
 
         private void SetupCorsPolicyAction(CorsOptions options)
         {
-            var domainsAllowed = "http://localhost:3000;https://dev.d115kdf62p0izj.amplifyapp.com/;https://prtg.it-one.com.ar";
+            var domainsAllowed = "http://localhost:3000;https://dev.d115kdf62p0izj.amplifyapp.com/;https://prtg.it-one.com.ar;https://localhost:3000";
 
             if (!string.IsNullOrEmpty(domainsAllowed))
             {

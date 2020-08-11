@@ -10,6 +10,7 @@ import {
 } from "react-toasts";
 import { myConfig } from "../../configurations";
 import { Device } from "../sensors/device";
+import { Contract, ContractDevice } from "../contracts/contract";
 
 export interface IDeviceList {
     listOfDevices: Device[]
@@ -68,8 +69,26 @@ const DevicesListFormModal = ({show, contractId, hideModal}: DevicesListFormModa
 
     const GetPossibleDevices = async () => {
         //the posible device cannot be one already assigned to another contract neither one already assigned to this contract
-        await axios.get(myConfig.backUrl + `sensor/GetAllDevices`).then((response) => {
+        await axios.get(myConfig.backUrl + `sensor/GetUnassignedDevices`).then((response) => {
             setDevice({ ...stateDevice, listOfDevices: response.data });
+        });
+    };
+
+    const HandleMenuItem = async (deviceObjId: string) => {
+        let devicesAssigned : ContractDevice[] = [];
+        let deviceAssigned : ContractDevice = {
+            objId : deviceObjId
+        };
+        devicesAssigned.push(deviceAssigned);
+        let contract : Contract = {
+            id : contractId,
+            contractDevices : devicesAssigned
+        };
+        await axios.put(myConfig.backUrl + 'contract/assignDevice', contract).then(() => {
+            hideModal();
+            ToastsStore.success('The device was assigned');
+        }).catch(() => {
+            ToastsStore.error('The device was not assigned');
         });
     };
 
@@ -100,6 +119,7 @@ const DevicesListFormModal = ({show, contractId, hideModal}: DevicesListFormModa
                                     <MenuItem
                                         key={device.objId!.toString()}
                                         value={device.objId!.toString()}
+                                        onClick={() => HandleMenuItem(device.objId!.toString())}
                                     >
                                         {device.device}
                                     </MenuItem>

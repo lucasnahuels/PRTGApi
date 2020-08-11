@@ -18,6 +18,9 @@ import { Link } from 'react-router-dom';
 import MailIcon from '@material-ui/icons/Mail';
 import DevicesListFormModal from './devicesListFormModal';
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';
+import { stringify } from 'querystring';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import DeviceUnassignConfirmModal from './device-unassign-confirm-modal';
 
 export interface IDeviceList {
     listOfDevices: Device[]
@@ -34,7 +37,7 @@ const DevicesList = () => {
                 textAlign: 'center'
             },
             margins: {
-                paddingTop: '70px',
+                paddingTop: '30px',
                 paddingBottom: '120px',
             },
             buttonBack: {
@@ -67,13 +70,36 @@ const DevicesList = () => {
 
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
     const [devicesListForm, setDevicesListForm] = React.useState(false);
+    const [contractId, setContractId] = React.useState("");
+    const [showUnassignConfirmModal, setShowUnassignConfirmModal] = React.useState(false);
+    const [contractIdToUnassign, setContractIdToUnassign] = React.useState<Number>(0);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
 
-    useEffect(() => { GetDevicesByContract() }, []);
+    useEffect(() => { 
+        setContractId(getQueryVariable("contractId")); 
+    }, [contractId]);
+
+    function getQueryVariable(variable: string) {
+        var query = window.location.search.substring(1);
+        console.log(query)//"app=article&act=news_content&aid=160990"
+        var vars = query.split("&");
+        console.log(vars) //[ 'app=article', 'act=news_content', 'aid=160990' ]
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            console.log(pair)//[ 'app', 'article' ][ 'act', 'news_content' ][ 'aid', '160990' ] 
+            if (pair[0] === variable) { return pair[1]; }
+        }
+        return "";
+    }
+
+    useEffect(() => { 
+        GetDevicesByContract()
+     }, []);
 
     const GetDevicesByContract = async () => {
-        await axios.get(myConfig.backUrl + `sensor/GetAllDevices`).then((response) => {
+        let id : string = getQueryVariable("contractId");
+        await axios.get(myConfig.backUrl + `sensor/GetAssignedDevices/` + id).then((response) => {
             setDevice({ ...stateDevice, listOfDevices: response.data });
         });
     };
@@ -84,6 +110,13 @@ const DevicesList = () => {
 
     const HideForm = () => {
         setDevicesListForm(false);
+        setShowUnassignConfirmModal(false);
+        GetDevicesByContract()
+    }
+
+    const ShowUnassignConfirm = async (objIdToUnassign: Number) => {
+        setShowUnassignConfirmModal(true);
+        setContractIdToUnassign(objIdToUnassign!);
     }
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -109,9 +142,10 @@ const DevicesList = () => {
                         <Table size='medium'>
                             <TableHead aria-label="simple table">
                                 <TableRow>
-                                    <TableCell className={classes.titlesRow} size='medium'>Device name</TableCell>
+                                    <TableCell className={classes.titlesRow} size='medium'>Device assigned</TableCell>
                                     <TableCell className={classes.titlesRow} size='medium'>E-mail reports</TableCell>
                                     <TableCell className={classes.titlesRow} size='medium'>Calculate prices</TableCell>
+                                    <TableCell className={classes.titlesRow} size='medium'>Unassign device</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -125,15 +159,29 @@ const DevicesList = () => {
                                                 <TableRow key={device.objId!.toString()}>
                                                     <TableCell className={classes.dataRow}>{device.device!}</TableCell>
                                                     <TableCell className={classes.dataRow}>
-                                                        <Link to={`/persons/deviceObjId=${device.objId!}`}>
+                                                        <Link to={`/persons?deviceObjId=${device.objId!}&contractId=${contractId!}`}>
                                                             <Button variant='contained' color='default'> <MailIcon /> </Button>
                                                         </Link>
                                                     </TableCell>
                                                     <TableCell className={classes.dataRow}>
-                                                        <Link to={`/prices/deviceObjId=${device.objId!}`} >
+                                                        <Link to={`/prices?deviceObjId=${device.objId!}&contractId=${contractId!}`} >
                                                             <Button variant='contained' color='default'> <LocalAtmIcon /> </Button>
                                                         </Link>
                                                     </TableCell>
+                                                    <TableCell className={classes.dataRow}>
+                                                        <Button variant='contained' color='primary' onClick={() => ShowUnassignConfirm(device.objId!)}><HighlightOffIcon /></Button>
+                                                    </TableCell>
+
+                                                    {showUnassignConfirmModal ?
+                                                        <DeviceUnassignConfirmModal
+                                                            show={showUnassignConfirmModal}
+                                                            hideModal={HideForm}
+                                                            contractId={parseInt(contractId!)}
+                                                            deviceObjId={device.objId!}
+                                                            deviceName={device.device!}
+                                                        />
+                                                    : null
+                                                    }
                                                 </TableRow>
                                             )
                                         )
@@ -164,7 +212,7 @@ const DevicesList = () => {
                     {devicesListForm ?
                         <DevicesListFormModal
                             show={devicesListForm}
-                            contractId={0}
+                            contractId={parseInt(contractId!)}
                             hideModal={HideForm}
                         />
                         : null

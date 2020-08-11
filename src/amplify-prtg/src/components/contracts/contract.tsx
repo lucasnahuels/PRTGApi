@@ -6,22 +6,22 @@ export interface Contract {
         id?: number,
         owner?: Owner,
         ownerId?: number,
-        blackAndWhiteLimitSet: number,
-        colorLimitSet: number,
-        blackAndWhitePrice: number,
-        colorPrice: number,
-        surplusBlackAndWhitePrice: number,
-        surplusColorPrice: number,
+        blackAndWhiteLimitSet?: number,
+        colorLimitSet?: number,
+        blackAndWhitePrice?: number,
+        colorPrice?: number,
+        surplusBlackAndWhitePrice?: number,
+        surplusColorPrice?: number,
         contractDevices?: ContractDevice[],
         contractUsers?: ContractUser[],
         contractEmployees?: ContractEmployee[],
 }
 
 export interface ContractDevice {
-        objId: string,
-        device: Device,
-        contractId: number,
-        contract: Contract
+        objId?: string,
+        device?: Device,
+        contractId?: number,
+        contract?: Contract
 }
 export interface ContractUser {
         user: CognitoUser,

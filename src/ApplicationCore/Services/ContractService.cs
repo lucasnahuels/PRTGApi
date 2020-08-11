@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Linq;
+using System;
 
 namespace ApplicationCore.Services
 {
@@ -62,6 +63,12 @@ namespace ApplicationCore.Services
                 .FirstOrDefaultAsync(contract => contract.Id == id);
         }
 
+        public async Task<IEnumerable<ContractDevice>> GetContractDevicesRelations()
+        {
+            return await _context.ContractDevices.ToListAsync();
+        }
+
+
         public async Task<Contract> UpdateAsync(Contract contract)
         {
             await CheckNewDevices(contract);
@@ -71,6 +78,46 @@ namespace ApplicationCore.Services
             await _context.SaveChangesAsync();
 
             return contract;
+        }
+
+        public async Task<Contract> AssignDevice(Contract contract)
+        {
+            var contractToPut = await GetAsync(Convert.ToInt32(contract.Id));
+
+            List<ContractDevice> contractDevicesList = contract.ContractDevices as List<ContractDevice>;
+            foreach (var contractDevice in contractDevicesList)
+            {
+                contractToPut.ContractDevices.Add(contractDevice);
+            }
+
+            await UpdateAsync(contractToPut);
+
+            return contractToPut;
+        }
+
+        public async Task<Contract> UnassignDevice(Contract contract)
+        {
+            List<ContractDevice> contractDevicesList = contract.ContractDevices as List<ContractDevice>;
+            var deviceToRemove = new ContractDevice();
+            
+            var contractToPut = await GetAsync(Convert.ToInt32(contract.Id));
+
+            foreach (var contractDevice in contractDevicesList)
+            {
+                foreach(var existingContractDevice in contractToPut.ContractDevices)
+                {
+                    if (contractDevice.ObjId == existingContractDevice.ObjId)
+                    {
+                        deviceToRemove = existingContractDevice;
+                    }
+                }
+            }
+
+            contractToPut.ContractDevices.Remove(deviceToRemove);
+
+            await UpdateAsync(contractToPut);
+
+            return contractToPut;
         }
 
         private async Task CheckNewDevices(Contract contract)

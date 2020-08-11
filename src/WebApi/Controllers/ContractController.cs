@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ApplicationCore.Models;
 using ApplicationCore.Services.Interfaces;
+using System;
+using System.Collections;
 
 namespace WebApi.Controllers
 {
@@ -41,6 +43,24 @@ namespace WebApi.Controllers
             await _contractService.UpdateAsync(contract);
 
             return contract;
+        }
+
+        [Route("assignDevice")]
+        [HttpPut]
+        public async Task<ActionResult<Contract>> AssignDevice(Contract contract)
+        {
+            var deviceAssigned = await _contractService.AssignDevice(contract);
+
+            return deviceAssigned;
+        }
+
+        [Route("unassignDevice")]
+        [HttpPut]
+        public async Task<ActionResult<Contract>> UnassignDevice(Contract contract)
+        {
+            var deviceAssigned = await _contractService.UnassignDevice(contract);
+
+            return deviceAssigned;
         }
 
         [HttpPost]

@@ -13,6 +13,7 @@ namespace ApplicationCore.Services
     public class SensorService : ISensorService
     {
         private readonly IHttpClientFactory _clientFactory;
+        private readonly IContractService _contractService;
 
         #region ApiData
         private const string username = "prtgadmin";
@@ -40,9 +41,10 @@ namespace ApplicationCore.Services
         private const string Toners = "Toners"; 
         #endregion
 
-        public SensorService(IHttpClientFactory clientFactory)
+        public SensorService(IHttpClientFactory clientFactory, IContractService contractService)
         {
             _clientFactory = clientFactory;
+            _contractService = contractService;
         }
 
         public async Task<SensorList> GetAllSensors()
@@ -67,6 +69,51 @@ namespace ApplicationCore.Services
 
             var devicesList = new List<DeviceApiModel>();
             devicesSensor.Devices.ForEach(device => devicesList.Add(device));
+
+            return devicesList;
+        }
+
+        public async Task<List<DeviceApiModel>> GetAssignedDevices(int contractId)
+        {
+            var devicesList = new List<DeviceApiModel>();
+            
+            var contract = _contractService.GetAsync(contractId);
+            var devices = await GetAllDevices();
+            foreach(var device in devices)
+            {
+                foreach(var contractDevice in contract.Result.ContractDevices)
+                {
+                    if(device.ObjId.ToString() == contractDevice.ObjId)
+                    {
+                        devicesList.Add(device);
+                    }
+                }
+            }
+
+            return devicesList;
+        }
+
+        public async Task<List<DeviceApiModel>> GetUnassignedDevices()
+        {
+            var devicesList = new List<DeviceApiModel>();
+
+            var devices = await GetAllDevices();
+            var contractDevicesRelations = _contractService.GetContractDevicesRelations().Result.ToList();
+            foreach (var device in devices)
+            {
+                var found = false;
+                foreach(var contractDeviceRelation in contractDevicesRelations)
+                {
+                    if(device.ObjId.ToString() == contractDeviceRelation.ObjId)
+                    {
+                        found = true;
+                    }
+                }
+                if (!found)
+                {
+                    devicesList.Add(device);
+                }
+            }
 
             return devicesList;
         }

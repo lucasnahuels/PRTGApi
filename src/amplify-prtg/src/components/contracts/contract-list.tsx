@@ -213,7 +213,7 @@ const ContractList = () => {
                                     <TableCell className={classes.dataRow}>{contract.surplusBlackAndWhitePrice}</TableCell>
                                     <TableCell className={classes.dataRow}>{contract.surplusColorPrice}</TableCell>
                                     <TableCell className={classes.dataRow}>
-                                        <Link to={`/devices/contractId=${contract.id}`}>
+                                        <Link to={`/devices?contractId=${contract.id}`}>
                                             <Button variant='contained' color='default'> <DevicesIcon /> </Button>
                                         </Link>
                                     </TableCell>

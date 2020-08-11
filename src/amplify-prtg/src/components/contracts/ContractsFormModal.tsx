@@ -138,6 +138,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     };
 
     const AddContract = () => {
+        debugger
         axios.post(myConfig.backUrl + 'contract', contract).then(() => {
             handleClose();
             ToastsStore.success('The contract was saved');
