@@ -162,11 +162,6 @@ const PersonsList = () => {
     const handleChangeCheckboxForDevicesOwners = (event: React.ChangeEvent<HTMLInputElement>) => {
         debugger
         let employeeList: Employee[] = stateEmployee!.listOfEmployee!;
-        // for (let i : number = 0; i > employeeList.length; i++) {
-        //     if (employeeList[i].id!.toString() === event.target.name) {
-        //         employeeList[i].sendReport = event.target.checked;
-        //     }
-        // }
         employeeList.forEach(employee => {
             if (employee.id!.toString() === event.target.name) {
                 employee.sendReport = event.target.checked;
@@ -221,8 +216,8 @@ const PersonsList = () => {
     return (
         <div className={classes.margins}>
             <Grid container xs={12} item>
-                <Grid item xs={3}></Grid>
-                <Grid item xs={6}>
+                <Grid item xs={2}></Grid>
+                <Grid item xs={8}>
                     <Button className={classes.buttonAdd} onClick={() => ShowPersonForm(false)}>
                         Add new device owner employee
                 </Button>
@@ -339,7 +334,7 @@ const PersonsList = () => {
                     <Button className={classes.button} onClick={SaveChanges}>Save changes in reports</Button>
 
                 </Grid>
-                <Grid item xs={3}></Grid>
+                <Grid item xs={2}></Grid>
             </Grid>
         </div>
     )
