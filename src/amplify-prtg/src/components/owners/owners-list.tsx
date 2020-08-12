@@ -15,7 +15,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import { Grid, TablePagination, TableFooter} from '@material-ui/core';
 import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
-import { Contract } from '../contracts/contract';
 import OwnerFormModal from './ownersFormModal';
 import OwnerDeleteConfirmModal from './owner-delete-confirm-modal';
 import { Owner } from './owner';
@@ -62,7 +61,7 @@ const OwnersList = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
     
-    useEffect(() => { GetOwners() }, []);
+    useEffect(() => { GetOwners() });
 
     const GetOwners = async () => {
         await axios.get(myConfig.backUrl + `Owner`).then( (response) => {

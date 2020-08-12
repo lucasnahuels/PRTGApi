@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import { Button, RadioGroup, FormControlLabel, Radio} from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
@@ -54,14 +54,12 @@ const useStyles = makeStyles((theme: Theme) =>
 const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: PersonFormModalProps) => {
 
     const classes = useStyles();
-    // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = React.useState(getModalStyle);
 
     const [email, setEmail] = React.useState("");
     const [name, setName] = React.useState("");
 
-    useEffect(() => { fillList(); }, []);
-    //when format is "useEffect(() => {}, []);" only render the first time instead of every time there´re changes
+    useEffect(() => { fillList(); });
 
     const fillList = () =>{
         if(isEdit){
@@ -69,43 +67,21 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
             setName(person!.name!)
         }
     }
-    
-    // const CheckPersonExistence = (): boolean =>{
-    //     // let notInTheList : boolean = true;
-    //     // listOfPersons!.forEach(person => {
-    //     //     if(person.personAdress === state.personAdress!) 
-    //     //         notInTheList = false;
-    //     // });
-    //     // return notInTheList;
-
-    //     const person = listOfPersons!.find(x => x.personAdress === state.personAdress);
-    //     return (person) ? true : false;
-    // }
 
     const AddPerson = () => {
-        // if(CheckPersonExistence()){
-        //     ToastsStore.error('The person adress already exists');
-        //     return;
-        // }
-
-        // let personData: Person = {
-        //     email: email
-        // };
-        // axios.post(myConfig.backUrl + 'employee', personData).then(() => {
-        //     handleClose();
-        //     ToastsStore.success('The person was saved');
-        //     getAllPersons();
-        // }).catch(() => {
-        //     ToastsStore.error('The person was not saved');
-        // })
+        let personData: Employee = {
+            email: email
+        };
+        axios.post(myConfig.backUrl + 'employee', personData).then(() => {
+            handleClose();
+            ToastsStore.success('The person was saved');
+            getAllPersons();
+        }).catch(() => {
+            ToastsStore.error('The person was not saved');
+        })
     }
 
     const UpdatePerson = async () => {
-        // if (CheckPersonExistence()) {
-        //     ToastsStore.error('The person adress already exists');
-        //     return;
-        // }
-
         let personData: Employee = {
             id : person!.id!,
             email: email
@@ -160,7 +136,6 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
                                 )
                             }
                             <Button variant='contained' color='default' onClick={handleClose} >Cancel</Button> 
-                            {/*en el momento del click y manda el elemento como parametro por defecto.. Si fuera handleClose(), el onClick estaria esperando lo que le retorna esa funcion (x ej. una llamada a aotra funcion)*/}
                         </div>
                     </div>
                 </div>

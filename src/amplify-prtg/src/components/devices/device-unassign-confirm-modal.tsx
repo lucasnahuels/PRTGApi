@@ -43,7 +43,6 @@ const useStyles = makeStyles((theme: Theme) =>
 const DeviceUnassignConfirmModal = ({ show, hideModal, contractId, deviceObjId, deviceName }: DeviceUnassignConfirmModalProps) => {
 
     const classes = useStyles();
-    // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = React.useState(getModalStyle);
 
     const UnassignDevice = async () => {

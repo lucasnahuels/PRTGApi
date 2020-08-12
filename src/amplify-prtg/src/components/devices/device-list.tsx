@@ -10,14 +10,13 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
-import { Grid, TablePagination, TableFooter, Checkbox } from '@material-ui/core';
+import { Grid, TablePagination, TableFooter } from '@material-ui/core';
 import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import { Device } from '../sensors/device';
 import { Link } from 'react-router-dom';
 import DevicesListFormModal from './devicesListFormModal';
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';
-import { stringify } from 'querystring';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import DeviceUnassignConfirmModal from './device-unassign-confirm-modal';
 
@@ -93,7 +92,7 @@ const DevicesList = () => {
 
     useEffect(() => { 
         GetDevicesByContract()
-     }, []);
+     });
 
     const GetDevicesByContract = async () => {
         let id : string = getQueryVariable("contractId");

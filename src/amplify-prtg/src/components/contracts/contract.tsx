@@ -1,6 +1,5 @@
 import { Owner } from "../owners/owner";
 import { Device } from "../sensors/device";
-import { Attributes } from "react";
 
 export interface Contract {
         id?: number,

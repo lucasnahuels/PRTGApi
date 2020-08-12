@@ -14,9 +14,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import PersonFormModal from './personFormModal';
 import PersonDeleteConfirmModal from './person-delete-confirm-modal';
-import { Grid, TablePagination, TableFooter, Tooltip, Checkbox } from '@material-ui/core';
+import { Grid, TableFooter, Tooltip, Checkbox } from '@material-ui/core';
 import { myConfig } from '../../configurations';
-import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import { Employee, CognitoUser, Contract, ContractEmployee, ContractUser } from '../contracts/contract';
 import Dropdown from 'reactstrap/lib/Dropdown';
 import DropdownToggle from 'reactstrap/lib/DropdownToggle';
@@ -82,7 +81,6 @@ const PersonsList = () => {
     const [showItOne, setShowItOne] = React.useState(false);
     const [showDeviceOwner, setShowDeviceOwner] = React.useState(false);
     const [contractId, setContractId] = React.useState("");
-    const [checked, setChecked] = React.useState(true);
 
     function getQueryVariable(variable: string) {
         var query = window.location.search.substring(1);
@@ -104,7 +102,7 @@ const PersonsList = () => {
     useEffect(() => {
         GetEmployees();
         GetUsers();
-    }, []);
+    });
 
     const GetEmployees = async () => {
         let id: string = getQueryVariable("contractId"); 
@@ -220,7 +218,7 @@ const PersonsList = () => {
             contractEmployees: employeesAssigned,
             contractUsers: usersAssigned
         };
-        
+
         //put
         await axios.put(myConfig.backUrl + 'contract/updateEmployeesAndUsers', contract).then(() => {
             ToastsStore.success('The update was successfully');

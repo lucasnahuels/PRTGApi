@@ -1,11 +1,10 @@
 import React, { createContext } from 'react';
 import axios from 'axios';
-import { Grid, makeStyles, Theme, createStyles, FormControl, InputLabel, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, TableFooter, TablePagination } from "@material-ui/core";
+import { Grid, makeStyles, Theme, createStyles, FormControl, InputLabel, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, TableFooter } from "@material-ui/core";
 import { myConfig } from '../../configurations';
 import { Device, DeviceData, DeviceDataViewModel } from './device';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import { Toner } from '../toners/toner';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -64,8 +63,6 @@ const SensorList = () => {
         thisMonthQuantityTotalSheets: ""
     });
     const [selectedValue, setSelectedValue] = React.useState("0");
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(3);
     const [showTonnerModal, setShowTonnerModal] = React.useState(false);
     const [showPreviousMonthModal, setShowPreviousMonthModal] = React.useState(false);
     const [infoForTonners, setInfoForTonners] = React.useState<Toner>({
@@ -74,6 +71,7 @@ const SensorList = () => {
         magentaToner : 0,
         yellowToner : 0
     });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [infoForPreviousMonth, setInfoForPreviousMonth] = React.useState<DeviceDataViewModel>({
       objId: 0,
       thisMonthQuantityColorSheets: "",
@@ -88,14 +86,16 @@ const SensorList = () => {
     React.useEffect(() => {
             console.log("renderGetDevices");
             GetDevices(); 
-        }, []);
+        });
     React.useEffect(() => { 
             if (selectedValue !== "0" && selectedValue !== undefined) {
               GetDeviceData();
             }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [selectedValue]);
     React.useEffect(() => {
       settingDeviceDataViewModel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [deviceData]);
 
     const GetDevices = async () => {
@@ -169,17 +169,6 @@ const SensorList = () => {
     const HideModal = () => {
         setShowTonnerModal(false);
         setShowPreviousMonthModal(false);
-    };
-
-    const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (
-        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    ) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
     };
 
     const handleInputStartDate = (date : Date) => {

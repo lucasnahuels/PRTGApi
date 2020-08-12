@@ -62,15 +62,13 @@ const OwnerFormModal = ({
   owner
 }: OwnerFormModalProps) => {
   const classes = useStyles();
-  // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
   const [inputOwnerName, setInputOwnerName] = React.useState("");
 
   useEffect(() => {
     fillList();
-  }, []);
-  //when format is "useEffect(() => {}, []);" only render the first time instead of every time there´re changes
+  });
 
   const fillList = () => {
     if (isEdit) {
@@ -78,23 +76,7 @@ const OwnerFormModal = ({
     }
   };
 
-  // const CheckOwnerExistence = (): boolean =>{
-  //     // let notInTheList : boolean = true;
-  //     // listOfOwners!.forEach(owner => {
-  //     //     if(owner.ownerAdress === state.ownerAdress!)
-  //     //         notInTheList = false;
-  //     // });
-  //     // return notInTheList;
-
-  //     const owner = listOfOwners!.find(x => x.ownerAdress === state.ownerAdress);
-  //     return (owner) ? true : false;
-  // }
-
   const AddOwner = () => {
-    // if(CheckOwnerExistence()){
-    //     ToastsStore.error('The owner adress already exists');
-    //     return;
-    // }
     let ownerData: Owner = {
         name: inputOwnerName!
     };
@@ -108,10 +90,6 @@ const OwnerFormModal = ({
   };
 
   const UpdateOwner = async () => {
-    // if (CheckOwnerExistence()) {
-    //     ToastsStore.error('The owner adress already exists');
-    //     return;
-    // }
     let ownerData: Owner = {
       id : owner!.id!,
       name : inputOwnerName!
@@ -186,7 +164,6 @@ const OwnerFormModal = ({
               <Button variant="contained" color="default" onClick={handleClose}>
                 Cancel
               </Button>
-              {/*en el momento del click y manda el elemento como parametro por defecto.. Si fuera handleClose(), el onClick estaria esperando lo que le retorna esa funcion (x ej. una llamada a aotra funcion)*/}
             </div>
           </div>
         </div>

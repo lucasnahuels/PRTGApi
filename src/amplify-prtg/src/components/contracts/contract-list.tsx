@@ -91,12 +91,6 @@ const ContractList = () => {
         await axios.get(myConfig.backUrl + `contract`).then( (response) => {
             console.log("contracts", response.data);
             setContract({ ...stateContract, listOfContract: response.data });
-        });
-    };
-
-    const GetContractsConst = async () => {
-        await axios.get(myConfig.backUrl + `contract`).then((response) => {
-            console.log("contractsConst", response.data);
             setContractConst({ ...stateContractConst, listOfContract: response.data });
         });
     };
@@ -134,13 +128,9 @@ const ContractList = () => {
     };
 
     React.useEffect(() => { 
-        console.log("renderGetContractsConst");
-        GetContractsConst(); 
-    }, []);
-    React.useEffect(() => { 
         console.log("renderGetContracts");
         GetContracts(); 
-    }, []);
+    });
 
     // React.useEffect( () => {
     //     console.log("renderSearchTerm");

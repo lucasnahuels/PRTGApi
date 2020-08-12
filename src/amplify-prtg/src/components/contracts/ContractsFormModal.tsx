@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import { Button, Step, Select, InputLabel, Tooltip, MenuItem } from '@material-ui/core';
+import { Button, Select, InputLabel, Tooltip, MenuItem } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
@@ -60,10 +60,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractToEdit }: ContractFormModalProps) => {
 
     const classes = useStyles();
-    // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = React.useState(getModalStyle);
 
-    const [selectedDeviceValue, setSelectedDeviceValue] = React.useState("");
     const [selectedOwnerValue, setSelectedOwnerValue] = React.useState("");
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
     const [stateOwner, setOwner] = React.useState<IOwnerList>();
@@ -79,6 +77,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         surplusColorPrice: number, 
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { register, setValue, handleSubmit } = useForm<FormData>({
       defaultValues: {
         id: isEdit ? contractToEdit!.id! : 0,
@@ -112,7 +111,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         setContract(contractData);
     }); 
     
-    useEffect(() => { fillList(); }, []); 
+    useEffect(() => { fillList(); }); 
     const fillList = () => {
         if (isEdit) {
             setSelectedOwnerValue(contractToEdit!.owner!.name!);
@@ -124,7 +123,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         GetDevices();
         console.log("renderGetOwners");
         GetOwners();
-    }, []);
+    });
 
     const GetDevices = async () => {
         await axios.get(myConfig.backUrl + `sensor/GetAllDevices`).then((response) => {
@@ -158,10 +157,6 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         });
     }
 
-    const HandleChangeDevice = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setSelectedDeviceValue(event.target.value as string);
-    };
-
     const HandleChangeOwner = (event: React.ChangeEvent<{ value: unknown }>) => {
         setSelectedOwnerValue(event.target.value as string);
     };
@@ -192,28 +187,6 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                         )}
 
                         <div id='contractform-modal-description'>
-                                {/* <InputLabel id="deviceNameLabel">Device</InputLabel> */}
-                                {/* <Select
-                                    className={classes.formRoot} 
-                                    required
-                                    id='inputDevice'
-                                    labelId="deviceNameLabel"
-                                    name="device" inputRef={register}
-                                    value={selectedDeviceValue}
-                                    onChange={HandleChangeDevice}
-                                >
-                                    {stateDevice !== undefined &&
-                                        stateDevice.listOfDevices !== undefined
-                                        ? stateDevice.listOfDevices.map((device) => (
-                                            <MenuItem
-                                                key={device.objId!.toString()}
-                                                value={device.objId!.toString()}
-                                            >
-                                                {device.device}
-                                            </MenuItem>
-                                        ))
-                                        : null}
-                                </Select> */}
                                 <Tooltip title="If the owner you need is not in the list, 
                                 you will have to add it since the 'Handle owners view'">
                                     <div>

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect } from "react";
+import React, { useEffect } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { Button, MenuItem } from "@material-ui/core";
@@ -58,16 +58,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const DevicesListFormModal = ({show, contractId, hideModal}: DevicesListFormModalProps) => {
     const classes = useStyles();
-    // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = React.useState(getModalStyle);
+    
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
 
     useEffect(() => {
         GetPossibleDevices()
-    }, []);
+    });
 
     const GetPossibleDevices = async () => {
-        //the posible device cannot be one already assigned to another contract neither one already assigned to this contract
         await axios.get(myConfig.backUrl + `sensor/GetUnassignedDevices`).then((response) => {
             setDevice({ ...stateDevice, listOfDevices: response.data });
         });
@@ -129,7 +128,6 @@ const DevicesListFormModal = ({show, contractId, hideModal}: DevicesListFormModa
                             <Button variant="contained" color="default" onClick={handleClose}>
                                 Cancel
                             </Button>
-                            {/*en el momento del click y manda el elemento como parametro por defecto.. Si fuera handleClose(), el onClick estaria esperando lo que le retorna esa funcion (x ej. una llamada a aotra funcion)*/}
                         </div>
                     </div>
                 </div>
