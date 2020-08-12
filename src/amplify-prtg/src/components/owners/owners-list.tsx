@@ -65,7 +65,6 @@ const OwnersList = () => {
 
     const GetOwners = async () => {
         await axios.get(myConfig.backUrl + `Owner`).then( (response) => {
-            console.log("owners", response.data);
             setOwner({ ...stateOwner, listOfOwners: response.data });
         });
     };

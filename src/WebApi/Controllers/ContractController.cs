@@ -25,7 +25,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<IEnumerable<Contract>>> GetContracts()
         {
             var result = await _contractService.GetAsync();
-
+            //order by contract.ownerName
             return Ok(result);
         }
 

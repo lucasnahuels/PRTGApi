@@ -84,7 +84,6 @@ const SensorList = () => {
     });
 
     React.useEffect(() => {
-            console.log("renderGetDevices");
             GetDevices(); 
         });
     React.useEffect(() => { 
@@ -107,7 +106,6 @@ const SensorList = () => {
     const GetDeviceData = async () => {
         await axios.get(myConfig.backUrl + `sensor/GetDeviceData/` + selectedValue).then((response) => {
             if(response.data){
-                console.log("response data", response.data);
                 setDeviceData( response.data );
             }
         });
@@ -115,7 +113,6 @@ const SensorList = () => {
 
     const settingDeviceDataViewModel = () => {
         if (deviceData !== undefined) {
-            console.log("deviceData", deviceData);
             let color: number = 0;
             let blackAndWhite: number = 0;
             if (
@@ -144,7 +141,6 @@ const SensorList = () => {
                 thisMonthQuantityBandWSheets: blackAndWhite.toString(),
                 thisMonthQuantityTotalSheets: (blackAndWhite + color).toString(),
             });
-            console.log("deviceDataViewModel", deviceDataViewModel);
             setInfoForTonners({
               blackToner: parseInt(deviceData.toners.channels[0].lastValue.split(" ")[0]), 
               cyanToner: parseInt(deviceData.toners.channels[1].lastValue.split(" ")[0]),

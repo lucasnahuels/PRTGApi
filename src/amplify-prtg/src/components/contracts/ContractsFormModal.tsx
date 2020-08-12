@@ -106,8 +106,6 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
             surplusBlackAndWhitePrice : surplusBlackAndWhitePrice,
             surplusColorPrice : surplusColorPrice,
         };
-        console.log(selectedOwnerValue);
-        console.log(contractData);
         setContract(contractData);
     }); 
     
@@ -119,9 +117,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     };
     
     React.useEffect(() => {
-        console.log("renderGetDevices");
         GetDevices();
-        console.log("renderGetOwners");
         GetOwners();
     });
 

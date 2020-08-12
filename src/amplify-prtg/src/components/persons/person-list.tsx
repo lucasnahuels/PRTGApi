@@ -83,13 +83,10 @@ const PersonsList = () => {
     const [contractId, setContractId] = React.useState("");
 
     function getQueryVariable(variable: string) {
-        var query = window.location.search.substring(1);
-        console.log(query)//"app=article&act=news_content&aid=160990"
-        var vars = query.split("&");
-        console.log(vars) //[ 'app=article', 'act=news_content', 'aid=160990' ]
+        var query = window.location.search.substring(1);//"app=article&act=news_content&aid=160990"
+        var vars = query.split("&");//[ 'app=article', 'act=news_content', 'aid=160990' ]
         for (var i = 0; i < vars.length; i++) {
-            var pair = vars[i].split("=");
-            console.log(pair)//[ 'app', 'article' ][ 'act', 'news_content' ][ 'aid', '160990' ] 
+            var pair = vars[i].split("=");//[ 'app', 'article' ][ 'act', 'news_content' ][ 'aid', '160990' ] 
             if (pair[0] === variable) { return pair[1]; }
         }
         return "";
@@ -107,7 +104,6 @@ const PersonsList = () => {
     const GetEmployees = async () => {
         let id: string = getQueryVariable("contractId"); 
         await axios.get<Employee[]>(myConfig.backUrl + `Employee`).then(async (response) => {
-            console.log("employees", response.data);
             setEmployee({ ...stateEmployee, listOfEmployee: response.data });
             await axios.get<ContractEmployee[]>(myConfig.backUrl + `contract/getContractEmployeesRelations/` + id).then((innerResponse) => {
                 response.data.forEach(employee => {
@@ -125,7 +121,6 @@ const PersonsList = () => {
     const GetUsers = async () => {
         let id: string = getQueryVariable("contractId"); 
         await axios.get<CognitoUser[]>(myConfig.backUrl + `User`).then(async (response) => {
-            console.log("user", response.data);
             setUser({ ...stateUser, listOfUser: response.data });
             await axios.get<ContractUser[]>(myConfig.backUrl + `contract/getContractUsersRelations/` + id).then((innerResponse) => {
                 response.data.forEach(user => {

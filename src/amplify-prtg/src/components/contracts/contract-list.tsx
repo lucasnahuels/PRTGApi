@@ -21,7 +21,6 @@ import { myConfig } from '../../configurations.js';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 export interface IContractList {
     listOfContract: Contract[]
@@ -89,8 +88,12 @@ const ContractList = () => {
 
     const GetContracts = async () => {
         await axios.get(myConfig.backUrl + `contract`).then( (response) => {
-            console.log("contracts", response.data);
             setContract({ ...stateContract, listOfContract: response.data });
+        });
+    };
+    
+    const GetContractsConst = async () => {
+        await axios.get(myConfig.backUrl + `contract`).then((response) => {
             setContractConst({ ...stateContractConst, listOfContract: response.data });
         });
     };
@@ -128,7 +131,9 @@ const ContractList = () => {
     };
 
     React.useEffect(() => { 
-        console.log("renderGetContracts");
+        GetContractsConst(); 
+    });
+    React.useEffect(() => { 
         GetContracts(); 
     });
 
