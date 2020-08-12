@@ -182,7 +182,15 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                 <form onSubmit={onSubmit}>
                     <div style={modalStyle} className={classes.paper}>
                     <div style={{ textAlign: 'center' }}>
-                        <h2 id='contractform-modal-title'>Add contract</h2>
+                        {
+                        !isEdit ? (
+                            <h2 id='contractform-modal-title'>Add contract</h2>
+                        )
+                        :
+                        (
+                            <h2 id='contractform-modal-title'>Update contract</h2>
+                        )}
+
                         <div id='contractform-modal-description'>
                                 {/* <InputLabel id="deviceNameLabel">Device</InputLabel> */}
                                 {/* <Select

@@ -10,6 +10,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
+import MailIcon from '@material-ui/icons/Mail';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DevicesIcon from '@material-ui/icons/Devices';
 import EditIcon from '@material-ui/icons/Edit';
@@ -193,6 +194,7 @@ const ContractList = () => {
                                 <TableCell className={classes.titlesRow} size='medium'>Color normal $/u</TableCell>
                                 <TableCell className={classes.titlesRow} size='medium'>B&W surplus $/u</TableCell>
                                 <TableCell className={classes.titlesRow} size='medium'>Color surplus $/u</TableCell>
+                                <TableCell className={classes.titlesRow} size='medium'>E-mail reports</TableCell>
                                 <TableCell className={classes.titlesRow} size='medium'>Devices assigned</TableCell>
                                 <TableCell className={classes.titlesRow} size='medium' colSpan={2}>Contract actions</TableCell>
                             </TableRow>
@@ -212,6 +214,11 @@ const ContractList = () => {
                                     <TableCell className={classes.dataRow}>{contract.colorPrice}</TableCell>
                                     <TableCell className={classes.dataRow}>{contract.surplusBlackAndWhitePrice}</TableCell>
                                     <TableCell className={classes.dataRow}>{contract.surplusColorPrice}</TableCell>
+                                    <TableCell className={classes.dataRow}>
+                                        <Link to={`/persons?contractId=${contract.id}`}>
+                                            <Button variant='contained' color='default'> <MailIcon /> </Button>
+                                        </Link>
+                                    </TableCell>
                                     <TableCell className={classes.dataRow}>
                                         <Link to={`/devices?contractId=${contract.id}`}>
                                             <Button variant='contained' color='default'> <DevicesIcon /> </Button>

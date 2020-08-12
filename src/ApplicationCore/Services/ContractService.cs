@@ -67,7 +67,16 @@ namespace ApplicationCore.Services
         {
             return await _context.ContractDevices.ToListAsync();
         }
+        public async Task<IEnumerable<ContractEmployee>> GetContractEmployeesRelations()
+        {
+            return await _context.ContractEmployees.ToListAsync();
+        }
 
+        public async Task<IEnumerable<ContractEmployee>> GetContractEmployeesRelationsByContractId(int contractiD)
+        {
+            var contractEmployeesRelations= await GetContractEmployeesRelations();
+            return contractEmployeesRelations.Where(x => x.ContractId == contractiD);
+        }
 
         public async Task<Contract> UpdateAsync(Contract contract)
         {
@@ -79,6 +88,28 @@ namespace ApplicationCore.Services
 
             return contract;
         }
+
+        public async Task<Contract> UpdateEmployeesAndUsers(Contract contract)
+        {
+            var contractToPut = await GetAsync(Convert.ToInt32(contract.Id));
+            
+            List<ContractEmployee> contractEmployeesList = contract.ContractEmployees as List<ContractEmployee>;
+            foreach (var contractEmployee in contractEmployeesList)
+            {
+                contractToPut.ContractEmployees.Add(contractEmployee);
+            }
+
+            //List<ContractUser> contractUsersList = contract.ContractUsers as List<ContractUser>;
+            //foreach (var contractUser in contractUsersList)
+            //{
+            //    contractToPut.ContractUsers.Add(contractUser);
+            //}
+
+            await UpdateAsync(contractToPut);
+
+            return contractToPut;
+        }
+
 
         public async Task<Contract> AssignDevice(Contract contract)
         {

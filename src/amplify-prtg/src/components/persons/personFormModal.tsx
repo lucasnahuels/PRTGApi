@@ -6,14 +6,14 @@ import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import { myConfig } from '../../configurations';
-import { Person } from '../contracts/contract';
+import { Employee } from '../contracts/contract';
 
 export interface PersonFormModalProps {
     show: boolean,
     hideModal: Function,
     getAllPersons: Function,
     isEdit: boolean,
-    person?: Person | undefined
+    person?: Employee | undefined
 }
 
 
@@ -106,7 +106,7 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
         //     return;
         // }
 
-        let personData: Person = {
+        let personData: Employee = {
             id : person!.id!,
             email: email
         };
@@ -141,7 +141,13 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
             >
                 <div style={modalStyle} className={classes.paper}>
                     <div style={{ textAlign: 'center' }}>
-                        <h2 id='personform-modal-title'>Add device owner person</h2>
+                        {!isEdit ? (
+                            <h2 id='personform-modal-title'>Add device owner person</h2>
+                        )
+                        :
+                        (
+                            <h2 id='personform-modal-title'>Update device owner person</h2>
+                        )}
                         <div id='personform-modal-description'>
                             <TextField label='person name' id='inputPersonName' name='inputPersonName' placeholder='input the person name' value={name} onChange={handleInputPersonNameChange} />
                             <br />

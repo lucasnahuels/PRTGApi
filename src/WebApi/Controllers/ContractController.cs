@@ -37,21 +37,31 @@ namespace WebApi.Controllers
             return contract == null ? NotFound() : (ActionResult<Contract>)contract;
         }
 
+        [HttpGet("getContractEmployeesRelations/{id}")]
+        public async Task<ActionResult<IEnumerable<ContractEmployee>>> GetContractEmployeesRelationsByContractId(int id)
+        {
+            return Ok(await _contractService.GetContractEmployeesRelationsByContractId(id));
+        }
+
         [HttpPut]
         public async Task<ActionResult<Contract>> PutContract(Contract contract)
         {
             await _contractService.UpdateAsync(contract);
-
             return contract;
+        }
+
+        [Route("updateEmployeesAndUsers")]
+        [HttpPut]
+        public async Task<ActionResult<Contract>> UpdateEmployeesAndUsers(Contract contract)
+        {
+            return Ok(await _contractService.UpdateEmployeesAndUsers(contract));
         }
 
         [Route("assignDevice")]
         [HttpPut]
         public async Task<ActionResult<Contract>> AssignDevice(Contract contract)
         {
-            var deviceAssigned = await _contractService.AssignDevice(contract);
-
-            return deviceAssigned;
+            return Ok(await _contractService.AssignDevice(contract));
         }
 
         [Route("unassignDevice")]

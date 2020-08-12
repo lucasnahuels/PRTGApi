@@ -15,7 +15,6 @@ import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import { Device } from '../sensors/device';
 import { Link } from 'react-router-dom';
-import MailIcon from '@material-ui/icons/Mail';
 import DevicesListFormModal from './devicesListFormModal';
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 import { stringify } from 'querystring';
@@ -72,7 +71,6 @@ const DevicesList = () => {
     const [devicesListForm, setDevicesListForm] = React.useState(false);
     const [contractId, setContractId] = React.useState("");
     const [showUnassignConfirmModal, setShowUnassignConfirmModal] = React.useState(false);
-    const [contractIdToUnassign, setContractIdToUnassign] = React.useState<Number>(0);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
 
@@ -114,9 +112,8 @@ const DevicesList = () => {
         GetDevicesByContract()
     }
 
-    const ShowUnassignConfirm = async (objIdToUnassign: Number) => {
+    const ShowUnassignConfirm = async () => {
         setShowUnassignConfirmModal(true);
-        setContractIdToUnassign(objIdToUnassign!);
     }
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -143,7 +140,6 @@ const DevicesList = () => {
                             <TableHead aria-label="simple table">
                                 <TableRow>
                                     <TableCell className={classes.titlesRow} size='medium'>Device assigned</TableCell>
-                                    <TableCell className={classes.titlesRow} size='medium'>E-mail reports</TableCell>
                                     <TableCell className={classes.titlesRow} size='medium'>Calculate prices</TableCell>
                                     <TableCell className={classes.titlesRow} size='medium'>Unassign device</TableCell>
                                 </TableRow>
@@ -159,17 +155,12 @@ const DevicesList = () => {
                                                 <TableRow key={device.objId!.toString()}>
                                                     <TableCell className={classes.dataRow}>{device.device!}</TableCell>
                                                     <TableCell className={classes.dataRow}>
-                                                        <Link to={`/persons?deviceObjId=${device.objId!}&contractId=${contractId!}`}>
-                                                            <Button variant='contained' color='default'> <MailIcon /> </Button>
-                                                        </Link>
-                                                    </TableCell>
-                                                    <TableCell className={classes.dataRow}>
                                                         <Link to={`/prices?deviceObjId=${device.objId!}&contractId=${contractId!}`} >
                                                             <Button variant='contained' color='default'> <LocalAtmIcon /> </Button>
                                                         </Link>
                                                     </TableCell>
                                                     <TableCell className={classes.dataRow}>
-                                                        <Button variant='contained' color='primary' onClick={() => ShowUnassignConfirm(device.objId!)}><HighlightOffIcon /></Button>
+                                                        <Button variant='contained' color='primary' onClick={ShowUnassignConfirm}><HighlightOffIcon /></Button>
                                                     </TableCell>
 
                                                     {showUnassignConfirmModal ?

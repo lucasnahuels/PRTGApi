@@ -15,5 +15,9 @@ namespace ApplicationCore.Services.Interfaces
         Task<Contract> AssignDevice(Contract contract);
         Task<Contract> UnassignDevice(Contract contract);
         Task<IEnumerable<ContractDevice>> GetContractDevicesRelations();
+        Task<IEnumerable<ContractEmployee>> GetContractEmployeesRelations();
+        Task<IEnumerable<ContractEmployee>> GetContractEmployeesRelationsByContractId(int contractiD);
+        Task<Contract> UpdateEmployeesAndUsers(Contract contract);
+
     }
 }

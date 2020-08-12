@@ -147,7 +147,12 @@ const OwnerFormModal = ({
       >
         <div style={modalStyle} className={classes.paper}>
           <div style={{ textAlign: "center" }}>
-            <h2 id="ownerform-modal-title">Add owner</h2>
+            {!isEdit ? (
+              <h2 id="ownerform-modal-title">Add owner</h2>
+            )
+            :
+              <h2 id="ownerform-modal-title">Update owner</h2>
+            }
             <div id="ownerform-modal-description">
               <TextField
                 label="owner name"

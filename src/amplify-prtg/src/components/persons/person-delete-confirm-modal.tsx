@@ -5,13 +5,13 @@ import { Button } from '@material-ui/core';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import { myConfig } from '../../configurations';
-import { Person } from '../contracts/contract';
+import { Employee } from '../contracts/contract';
 
 export interface PersonDeleteConfirmModalProps {
     show: boolean,
     hideModal: Function,
     getAllPersons: Function,
-    person: Person | undefined
+    person: Employee | undefined
 }
 
 function getModalStyle() {

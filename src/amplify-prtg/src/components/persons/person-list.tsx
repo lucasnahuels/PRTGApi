@@ -17,14 +17,15 @@ import PersonDeleteConfirmModal from './person-delete-confirm-modal';
 import { Grid, TablePagination, TableFooter, Tooltip, Checkbox } from '@material-ui/core';
 import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
-import { Person, CognitoUser } from '../contracts/contract';
+import { Employee, CognitoUser, Contract, ContractEmployee, ContractUser } from '../contracts/contract';
 import Dropdown from 'reactstrap/lib/Dropdown';
 import DropdownToggle from 'reactstrap/lib/DropdownToggle';
 import DropdownMenu from 'reactstrap/lib/DropdownMenu';
 import { Link } from 'react-router-dom';
+import { ToastsStore } from 'react-toasts';
 
-export interface IPersonList {
-    listOfPerson: Person[]
+export interface IEmployeeList {
+    listOfEmployee: Employee[]
 }
 export interface IUserList {
     listOfUser: CognitoUser[]
@@ -71,28 +72,55 @@ const PersonsList = () => {
     );
     const classes = useStyles();
 
-    const [statePerson, setPerson] = React.useState<IPersonList>();
+    const [stateEmployee, setEmployee] = React.useState<IEmployeeList>();
     const [stateUser, setUser] = React.useState<IUserList>();
     const [showModal, setShowModal] = React.useState(false);
     const [showDeleteConfirmModal, setShowDeleteConfirmModal] = React.useState(false);
     const [formIsEdit, setFormIsEdit] = React.useState(false);
-    const [personToEdit, setPersonToEdit] = React.useState<Person>();
-    const [personToDelete, setPersonToDelete] = React.useState<Person>();
+    const [personToEdit, setPersonToEdit] = React.useState<Employee>();
+    const [personToDelete, setPersonToDelete] = React.useState<Employee>();
     const [showItOne, setShowItOne] = React.useState(false);
     const [showDeviceOwner, setShowDeviceOwner] = React.useState(false);
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(3);
+    const [contractId, setContractId] = React.useState("");
     const [checked, setChecked] = React.useState(true);
 
+    function getQueryVariable(variable: string) {
+        var query = window.location.search.substring(1);
+        console.log(query)//"app=article&act=news_content&aid=160990"
+        var vars = query.split("&");
+        console.log(vars) //[ 'app=article', 'act=news_content', 'aid=160990' ]
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            console.log(pair)//[ 'app', 'article' ][ 'act', 'news_content' ][ 'aid', '160990' ] 
+            if (pair[0] === variable) { return pair[1]; }
+        }
+        return "";
+    }
+
     useEffect(() => {
-        GetPersons();
+        setContractId(getQueryVariable("contractId"));
+    }, [contractId]);
+
+    useEffect(() => {
+        GetEmployees();
         GetUsers();
     }, []);
 
-    const GetPersons = async () => {
-        await axios.get(myConfig.backUrl + `Employee`).then((response) => {
+    const GetEmployees = async () => {
+        let id: string = getQueryVariable("contractId"); 
+        await axios.get<Employee[]>(myConfig.backUrl + `Employee`).then(async (response) => {
             console.log("employees", response.data);
-            setPerson({ ...statePerson, listOfPerson: response.data });
+            setEmployee({ ...stateEmployee, listOfEmployee: response.data });
+            await axios.get<ContractEmployee[]>(myConfig.backUrl + `contract/getContractEmployeesRelations/` + id).then((innerResponse) => {
+                response.data.forEach(employee => {
+                    employee.sendReport = false;
+                    innerResponse.data.forEach(contractEmployee => {
+                        if(employee.id! === contractEmployee.employeeId!){
+                            employee.sendReport! = true
+                        }
+                    });
+                });
+            });
         });
     };
 
@@ -103,7 +131,7 @@ const PersonsList = () => {
         });
     };
 
-    const ShowPersonForm = (isEdit: boolean, personToEdit?: Person) => {
+    const ShowPersonForm = (isEdit: boolean, personToEdit?: Employee) => {
         setShowModal(true);
         if (!isEdit) {
             setFormIsEdit(false);
@@ -114,7 +142,7 @@ const PersonsList = () => {
         }
     }
 
-    const ShowDeleteConfirm = async (personToDelete: Person) => {
+    const ShowDeleteConfirm = async (personToDelete: Employee) => {
         setShowDeleteConfirmModal(true);
         setPersonToDelete(personToDelete);
     }
@@ -131,35 +159,64 @@ const PersonsList = () => {
         setShowDeviceOwner(!showDeviceOwner)
     }
 
-    const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (
-        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    ) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
     const handleChangeCheckboxForDevicesOwners = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked(event.target.checked);
-        let personList: Person[] = statePerson!.listOfPerson!;
-        // for (let i: number = 0; i > personList.length; i++) {
-        //     if (personList[i].id!.toString() === event.target.name) {
+        debugger
+        let employeeList: Employee[] = stateEmployee!.listOfEmployee!;
+        // for (let i : number = 0; i > employeeList.length; i++) {
+        //     if (employeeList[i].id!.toString() === event.target.name) {
+        //         employeeList[i].sendReport = event.target.checked;
         //     }
         // }
-        setPerson({ ...statePerson, listOfPerson: personList });
+        employeeList.forEach(employee => {
+            if (employee.id!.toString() === event.target.name) {
+                employee.sendReport = event.target.checked;
+            }
+        });
+        setEmployee({ ...stateEmployee, listOfEmployee: employeeList });
     };
     const handleChangeCheckboxForUsers = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked(event.target.checked);
         let userList: CognitoUser[] = stateUser!.listOfUser!;
         // for (let i: number = 0; i > userList.length; i++) {
         //     if (userList[i].userId === event.target.name) {
         //     }
         // }
-        setUser({ ...statePerson, listOfUser: userList });
+        setUser({ ...stateEmployee, listOfUser: userList });
     };
+
+    const SaveChanges = async () => {
+        //employees
+        let employeesAssigned: ContractEmployee[] = [];
+
+        stateEmployee!.listOfEmployee!.forEach(employee => {
+            if (employee.sendReport){
+                let employeeAssigned: ContractEmployee = {
+                    employeeId: employee.id!
+                };
+                employeesAssigned.push(employeeAssigned);
+            }
+        });;
+
+        // //users
+        // let usersAssigned: ContractUser[] = [];
+        // let userAssigned: ContractUser = {
+        //     userId : "2b"
+        // };
+        // usersAssigned.push(userAssigned);
+
+        //contract
+        let contract: Contract = {
+            id: parseInt(contractId!),
+            contractEmployees: employeesAssigned,
+            // contractUsers: usersAssigned
+        };
+        debugger
+        //put
+        await axios.put(myConfig.backUrl + 'contract/updateEmployeesAndUsers', contract).then(() => {
+            ToastsStore.success('The update was successfully');
+        }).catch(() => {
+            ToastsStore.error('The update was not successfully');
+        });
+    }
 
     return (
         <div className={classes.margins}>
@@ -199,7 +256,7 @@ const PersonsList = () => {
                                                 <TableCell className={classes.dataRow}>{user.userName}</TableCell>
                                                 <TableCell className={classes.dataRow}>{user.attributes.email}</TableCell>
                                                 <TableCell className={classes.dataRow}>
-                                                    <Checkbox checked={false} onChange={handleChangeCheckboxForUsers} name={user.userId} />
+                                                    <Checkbox checked={checked} onChange={handleChangeCheckboxForUsers} name={user.userId} />
                                                 </TableCell>
                                                 <TableCell></TableCell>
                                                 <TableCell></TableCell>
@@ -223,20 +280,20 @@ const PersonsList = () => {
                                         </DropdownMenu>
                                     </Dropdown>
                                 </TableRow>
-                                {statePerson !== undefined && statePerson.listOfPerson !== undefined ? statePerson.listOfPerson.map((person) =>
+                                {stateEmployee !== undefined && stateEmployee.listOfEmployee !== undefined ? stateEmployee.listOfEmployee.map((employee) =>
                                     (
                                         showDeviceOwner ? (
-                                            <TableRow key={person.id}>
-                                                <TableCell className={classes.dataRow}>{person.name}</TableCell>
-                                                <TableCell className={classes.dataRow}>{person.email}</TableCell>
+                                            <TableRow key={employee.id}>
+                                                <TableCell className={classes.dataRow}>{employee.name}</TableCell>
+                                                <TableCell className={classes.dataRow}>{employee.email}</TableCell>
                                                 <TableCell className={classes.dataRow}>
-                                                    <Checkbox checked={false} onChange={handleChangeCheckboxForDevicesOwners} name={person.id!.toString()} />
+                                                    <Checkbox checked={employee.sendReport!} onChange={handleChangeCheckboxForDevicesOwners} name={employee.id!.toString()} />
                                                 </TableCell>
                                                 <TableCell className={classes.dataRow}>
-                                                    <Button variant='contained' color='default' onClick={() => ShowPersonForm(true, person)}> <EditIcon /> </Button>
+                                                    <Button variant='contained' color='default' onClick={() => ShowPersonForm(true, employee)}> <EditIcon /> </Button>
                                                 </TableCell>
                                                 <TableCell className={classes.dataRow}>
-                                                    <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(person)}><DeleteIcon /></Button>
+                                                    <Button variant='contained' color='secondary' onClick={() => ShowDeleteConfirm(employee)}><DeleteIcon /></Button>
                                                 </TableCell>
                                             </TableRow>
                                         )
@@ -250,20 +307,6 @@ const PersonsList = () => {
                             </TableBody>
                             <TableFooter>
                                 <TableRow>
-                                    {/* <TablePagination
-                                    rowsPerPageOptions={[3, 6, 9, { label: 'All', value: -1 }]}
-                                    colSpan={3}
-                                    count={statePerson !== undefined && statePerson.listOfPerson !== undefined ? statePerson.listOfPerson.length : 0}
-                                    rowsPerPage={rowsPerPage}
-                                    page={page}
-                                    SelectProps={{
-                                        inputProps: { 'aria-label': 'rows per page' },
-                                        native: true,
-                                    }}
-                                    onChangePage={handleChangePage}
-                                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                                    ActionsComponent={TablePaginationActions}
-                                /> */}
                                 </TableRow>
                             </TableFooter>
                         </Table>
@@ -273,7 +316,7 @@ const PersonsList = () => {
                         <PersonFormModal
                             show={showModal}
                             hideModal={HideForm}
-                            getAllPersons={GetPersons}
+                            getAllPersons={GetEmployees}
                             isEdit={formIsEdit}
                             person={personToEdit!}
                         />
@@ -283,7 +326,7 @@ const PersonsList = () => {
                         <PersonDeleteConfirmModal
                             show={showDeleteConfirmModal}
                             hideModal={HideForm}
-                            getAllPersons={GetPersons}
+                            getAllPersons={GetEmployees}
                             person={personToDelete!}
                         />
                         : null
@@ -293,7 +336,7 @@ const PersonsList = () => {
                     <Link to="/devices">
                         <Button className={classes.button}> Back </Button>
                     </Link>
-                    <Button className={classes.button}>Save changes in reports</Button>
+                    <Button className={classes.button} onClick={SaveChanges}>Save changes in reports</Button>
 
                 </Grid>
                 <Grid item xs={3}></Grid>

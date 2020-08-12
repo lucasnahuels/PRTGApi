@@ -24,16 +24,16 @@ export interface ContractDevice {
         contract?: Contract
 }
 export interface ContractUser {
-        user: CognitoUser,
-        userId: string,
-        contractId: number,
-        contract: Contract
+        user?: CognitoUser,
+        userId?: string,
+        contractId?: number,
+        contract?: Contract
 }
 export interface ContractEmployee {
-        employeeId : number,
-        employee: Person,
-        contractId: number,
-        contract: Contract
+        employeeId? : number,
+        employee?: Employee,
+        contractId?: number,
+        contract?: Contract
 }
 export interface CognitoUser {
         userId: string,
@@ -46,10 +46,11 @@ export interface CognitoUserAttributes {
         phone_number_verified?: boolean,
         phone_number?: string,
 }
-export interface Person {
+export interface Employee {
         id?: number,
         owner?: Owner,
         name?: string,
         email: string,
-        contractEmployees?: ContractEmployee[]
+        contractEmployees?: ContractEmployee[],
+        sendReport? : boolean
 }
