@@ -125,9 +125,20 @@ const PersonsList = () => {
     };
 
     const GetUsers = async () => {
-        await axios.get(myConfig.backUrl + `User`).then((response) => {
+        let id: string = getQueryVariable("contractId"); 
+        await axios.get<CognitoUser[]>(myConfig.backUrl + `User`).then(async (response) => {
             console.log("user", response.data);
             setUser({ ...stateUser, listOfUser: response.data });
+            await axios.get<ContractUser[]>(myConfig.backUrl + `contract/getContractUsersRelations/` + id).then((innerResponse) => {
+                response.data.forEach(user => {
+                    user.sendReport = false;
+                    innerResponse.data.forEach(contractUser => {
+                        if (user.userID! === contractUser.userId!) {
+                            user.sendReport! = true
+                        }
+                    });
+                });
+            });
         });
     };
 
@@ -152,7 +163,7 @@ const PersonsList = () => {
         setShowDeleteConfirmModal(false);
     }
 
-    const showItOneEmployees = () => {
+    const showItOneUsers = () => {
         setShowItOne(!showItOne)
     }
     const showDeviceOwnerEmployees = () => {
@@ -160,7 +171,6 @@ const PersonsList = () => {
     }
 
     const handleChangeCheckboxForDevicesOwners = (event: React.ChangeEvent<HTMLInputElement>) => {
-        debugger
         let employeeList: Employee[] = stateEmployee!.listOfEmployee!;
         employeeList.forEach(employee => {
             if (employee.id!.toString() === event.target.name) {
@@ -171,11 +181,12 @@ const PersonsList = () => {
     };
     const handleChangeCheckboxForUsers = (event: React.ChangeEvent<HTMLInputElement>) => {
         let userList: CognitoUser[] = stateUser!.listOfUser!;
-        // for (let i: number = 0; i > userList.length; i++) {
-        //     if (userList[i].userId === event.target.name) {
-        //     }
-        // }
-        setUser({ ...stateEmployee, listOfUser: userList });
+        userList.forEach(user => {
+            if (user.userID! === event.target.name) {
+                user.sendReport = event.target.checked;
+            }
+        });
+        setUser({ ...stateUser, listOfUser: userList });
     };
 
     const SaveChanges = async () => {
@@ -192,22 +203,28 @@ const PersonsList = () => {
         });;
 
         // //users
-        // let usersAssigned: ContractUser[] = [];
-        // let userAssigned: ContractUser = {
-        //     userId : "2b"
-        // };
-        // usersAssigned.push(userAssigned);
+        let usersAssigned: ContractUser[] = [];
+
+        stateUser!.listOfUser!.forEach(user => {
+            if (user.sendReport) {
+                let userAssigned: ContractUser = {
+                    userId : user.userID!
+                };
+                usersAssigned.push(userAssigned);
+            }
+        });;
 
         //contract
         let contract: Contract = {
             id: parseInt(contractId!),
             contractEmployees: employeesAssigned,
-            // contractUsers: usersAssigned
+            contractUsers: usersAssigned
         };
-        debugger
+        
         //put
         await axios.put(myConfig.backUrl + 'contract/updateEmployeesAndUsers', contract).then(() => {
             ToastsStore.success('The update was successfully');
+            window.location.href =  "contracts";
         }).catch(() => {
             ToastsStore.error('The update was not successfully');
         });
@@ -235,7 +252,7 @@ const PersonsList = () => {
                             <TableBody>
                                 <TableRow>
                                     <Tooltip title="This is the list of users from It-One who have already registered in the prtg app">
-                                        <Dropdown onClick={showItOneEmployees}>
+                                        <Dropdown onClick={showItOneUsers}>
                                             <DropdownToggle caret>
                                                 It-One user
                                     </DropdownToggle>
@@ -247,11 +264,11 @@ const PersonsList = () => {
                                 {stateUser !== undefined && stateUser.listOfUser !== undefined ? stateUser.listOfUser.map((user) =>
                                     (
                                         showItOne ? (
-                                            <TableRow key={user.userId}>
+                                            <TableRow key={user.userID!}>
                                                 <TableCell className={classes.dataRow}>{user.userName}</TableCell>
                                                 <TableCell className={classes.dataRow}>{user.attributes.email}</TableCell>
                                                 <TableCell className={classes.dataRow}>
-                                                    <Checkbox checked={checked} onChange={handleChangeCheckboxForUsers} name={user.userId} />
+                                                    <Checkbox checked={user.sendReport!} onChange={handleChangeCheckboxForUsers} name={user.userID!} />
                                                 </TableCell>
                                                 <TableCell></TableCell>
                                                 <TableCell></TableCell>
@@ -278,7 +295,7 @@ const PersonsList = () => {
                                 {stateEmployee !== undefined && stateEmployee.listOfEmployee !== undefined ? stateEmployee.listOfEmployee.map((employee) =>
                                     (
                                         showDeviceOwner ? (
-                                            <TableRow key={employee.id}>
+                                            <TableRow key={employee.id!.toString()}>
                                                 <TableCell className={classes.dataRow}>{employee.name}</TableCell>
                                                 <TableCell className={classes.dataRow}>{employee.email}</TableCell>
                                                 <TableCell className={classes.dataRow}>

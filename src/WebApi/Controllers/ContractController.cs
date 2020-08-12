@@ -43,6 +43,12 @@ namespace WebApi.Controllers
             return Ok(await _contractService.GetContractEmployeesRelationsByContractId(id));
         }
 
+        [HttpGet("getContractUsersRelations/{id}")]
+        public async Task<ActionResult<IEnumerable<ContractUser>>> GetContractUsersRelationsByContractId(int id)
+        {
+            return Ok(await _contractService.GetContractUsersRelationsByContractId(id));
+        }
+
         [HttpPut]
         public async Task<ActionResult<Contract>> PutContract(Contract contract)
         {
@@ -54,7 +60,7 @@ namespace WebApi.Controllers
         [HttpPut]
         public async Task<ActionResult<Contract>> UpdateEmployeesAndUsers(Contract contract)
         {
-            return Ok(await _contractService.UpdateEmployeesAndUsers(contract));
+            return Ok(await _contractService.UpdateEmployeesAndUsersRelations(contract));
         }
 
         [Route("assignDevice")]

@@ -77,6 +77,16 @@ namespace ApplicationCore.Services
             var contractEmployeesRelations= await GetContractEmployeesRelations();
             return contractEmployeesRelations.Where(x => x.ContractId == contractiD);
         }
+        public async Task<IEnumerable<ContractUser>> GetContractUsersRelations()
+        {
+            return await _context.ContractUsers.ToListAsync();
+        }
+
+        public async Task<IEnumerable<ContractUser>> GetContractUsersRelationsByContractId(int contractiD)
+        {
+            var contractUsersRelations = await GetContractUsersRelations();
+            return contractUsersRelations.Where(x => x.ContractId == contractiD);
+        }
 
         public async Task<Contract> UpdateAsync(Contract contract)
         {
@@ -89,27 +99,89 @@ namespace ApplicationCore.Services
             return contract;
         }
 
-        public async Task<Contract> UpdateEmployeesAndUsers(Contract contract)
+        public async Task<Contract> UpdateEmployeesAndUsersRelations(Contract contract)
         {
             var contractToPut = await GetAsync(Convert.ToInt32(contract.Id));
-            
-            List<ContractEmployee> contractEmployeesList = contract.ContractEmployees as List<ContractEmployee>;
-            foreach (var contractEmployee in contractEmployeesList)
-            {
-                contractToPut.ContractEmployees.Add(contractEmployee);
-            }
 
-            //List<ContractUser> contractUsersList = contract.ContractUsers as List<ContractUser>;
-            //foreach (var contractUser in contractUsersList)
-            //{
-            //    contractToPut.ContractUsers.Add(contractUser);
-            //}
+            contractToPut = UpdateEmployeesContractRelations(contract, contractToPut);
+            contractToPut = UpdateUsersContractRelations(contract, contractToPut);
 
             await UpdateAsync(contractToPut);
 
             return contractToPut;
         }
 
+        private static Contract UpdateEmployeesContractRelations(Contract contract, Contract contractToPut)
+        {
+            //add new relations
+            foreach (var contractEmployee in contract.ContractEmployees)
+            {
+                var found = false;
+                foreach (var previouscontractEmployee in contractToPut.ContractEmployees)
+                {
+                    if (contractEmployee.EmployeeId == previouscontractEmployee.EmployeeId)
+                        found = true;
+                }
+                if (!found)
+                    contractToPut.ContractEmployees.Add(contractEmployee);
+            }
+
+            //remove obsolete relations
+            var contractEmployeeRelationsToRemove = new List<ContractEmployee>();
+            foreach (var previouscontractEmployee in contractToPut.ContractEmployees)
+            {
+                var found = false;
+                foreach (var contractEmployee in contract.ContractEmployees)
+                {
+                    if (previouscontractEmployee.EmployeeId == contractEmployee.EmployeeId)
+                        found = true;
+                }
+                if (!found)
+                    contractEmployeeRelationsToRemove.Add(previouscontractEmployee);
+            }
+            foreach (var itemToRemove in contractEmployeeRelationsToRemove)
+            {
+                contractToPut.ContractEmployees.Remove(itemToRemove);
+            }
+
+            return contractToPut;
+        }
+
+        private static Contract UpdateUsersContractRelations(Contract contract, Contract contractToPut)
+        {
+            //add new relations
+            foreach (var contractUser in contract.ContractUsers)
+            {
+                var found = false;
+                foreach (var previouscontractUser in contractToPut.ContractUsers)
+                {
+                    if (contractUser.UserId == previouscontractUser.UserId)
+                        found = true;
+                }
+                if(!found)
+                    contractToPut.ContractUsers.Add(contractUser);
+            }
+
+            //remove obsolete relations
+            var contractUserRelationsToRemove = new List<ContractUser>();
+            foreach (var previouscontractUser in contractToPut.ContractUsers)
+            {
+                var found = false;
+                foreach (var contractUser in contract.ContractUsers)
+                {
+                    if (previouscontractUser.UserId == contractUser.UserId)
+                        found = true;
+                }
+                if (!found)
+                    contractUserRelationsToRemove.Add(previouscontractUser);
+            }
+            foreach (var itemToRemove in contractUserRelationsToRemove)
+            {
+                contractToPut.ContractUsers.Remove(itemToRemove);
+            }
+
+            return contractToPut;
+        }
 
         public async Task<Contract> AssignDevice(Contract contract)
         {

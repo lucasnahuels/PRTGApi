@@ -36,9 +36,10 @@ export interface ContractEmployee {
         contract?: Contract
 }
 export interface CognitoUser {
-        userId: string,
+        userID?: string,
         userName?: string,
         attributes: CognitoUserAttributes,
+        sendReport?: boolean
 }
 export interface CognitoUserAttributes {
         email: string,

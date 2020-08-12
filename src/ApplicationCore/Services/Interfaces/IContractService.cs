@@ -17,7 +17,9 @@ namespace ApplicationCore.Services.Interfaces
         Task<IEnumerable<ContractDevice>> GetContractDevicesRelations();
         Task<IEnumerable<ContractEmployee>> GetContractEmployeesRelations();
         Task<IEnumerable<ContractEmployee>> GetContractEmployeesRelationsByContractId(int contractiD);
-        Task<Contract> UpdateEmployeesAndUsers(Contract contract);
+        Task<IEnumerable<ContractUser>> GetContractUsersRelations();
+        Task<IEnumerable<ContractUser>> GetContractUsersRelationsByContractId(int contractiD);
+        Task<Contract> UpdateEmployeesAndUsersRelations(Contract contract);
 
     }
 }
