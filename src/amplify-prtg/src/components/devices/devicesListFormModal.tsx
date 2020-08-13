@@ -64,7 +64,8 @@ const DevicesListFormModal = ({show, contractId, hideModal}: DevicesListFormModa
 
     useEffect(() => {
         GetPossibleDevices()
-    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const GetPossibleDevices = async () => {
         await axios.get(myConfig.backUrl + `sensor/GetUnassignedDevices`).then((response) => {

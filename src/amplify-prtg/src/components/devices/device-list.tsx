@@ -89,7 +89,8 @@ const DevicesList = () => {
 
     useEffect(() => { 
         GetDevicesByContract()
-     });
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, []);
 
     const GetDevicesByContract = async () => {
         let id : string = getQueryVariable("contractId");

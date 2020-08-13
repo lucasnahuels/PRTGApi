@@ -68,7 +68,8 @@ const OwnerFormModal = ({
 
   useEffect(() => {
     fillList();
-  });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fillList = () => {
     if (isEdit) {

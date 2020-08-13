@@ -85,7 +85,8 @@ const SensorList = () => {
 
     React.useEffect(() => {
             GetDevices(); 
-        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
     React.useEffect(() => { 
             if (selectedValue !== '' && selectedValue !== undefined) {
               GetDeviceData();

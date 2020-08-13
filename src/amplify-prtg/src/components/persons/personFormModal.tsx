@@ -59,7 +59,10 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
     const [email, setEmail] = React.useState("");
     const [name, setName] = React.useState("");
 
-    useEffect(() => { fillList(); });
+    useEffect(() => { 
+        fillList();
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, []);
 
     const fillList = () =>{
         if(isEdit){

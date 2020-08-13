@@ -61,7 +61,10 @@ const OwnersList = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
     
-    useEffect(() => { GetOwners() });
+    useEffect(() => { 
+        GetOwners() 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const GetOwners = async () => {
         await axios.get(myConfig.backUrl + `Owner`).then( (response) => {

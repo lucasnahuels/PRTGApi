@@ -62,7 +62,7 @@ const PreviousMonthModal = ({show, hideModal, info }: PreviousMonthModalProps) =
 
   useEffect(() => {
     fillList();
-  });
+  }, []);
 
   const fillList = () => {
   };
