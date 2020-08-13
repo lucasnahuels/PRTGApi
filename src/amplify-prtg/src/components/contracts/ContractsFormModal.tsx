@@ -25,7 +25,6 @@ export interface IOwnerList {
     listOfOwners: Owner[]
 }
 
-
 function getModalStyle() {
     const top = 50;
     const left = 50;
@@ -65,7 +64,6 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     const [selectedOwnerValue, setSelectedOwnerValue] = React.useState("");
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
     const [stateOwner, setOwner] = React.useState<IOwnerList>();
-    const [contract, setContract] = React.useState<Contract>();
 
     type FormData = {
         id? : number,
@@ -106,9 +104,12 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
             surplusBlackAndWhitePrice : surplusBlackAndWhitePrice,
             surplusColorPrice : surplusColorPrice,
         };
-        setContract(contractData);
+        if(!isEdit)
+            AddContract(contractData);
+        else
+            UpdateContract(contractData);
     }); 
-    
+
     useEffect(() => { fillList(); }); 
     const fillList = () => {
         if (isEdit) {
@@ -119,7 +120,8 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     React.useEffect(() => {
         GetDevices();
         GetOwners();
-    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const GetDevices = async () => {
         await axios.get(myConfig.backUrl + `sensor/GetAllDevices`).then((response) => {
@@ -132,22 +134,21 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         });
     };
 
-    const AddContract = () => {
-        debugger
+    const AddContract = (contract : Contract) => {
         axios.post(myConfig.backUrl + 'contract', contract).then(() => {
-            handleClose();
             ToastsStore.success('The contract was saved');
             getAllContracts();
+            handleClose();
         }).catch(() => {
             ToastsStore.error('The contract was not saved');
         })
     }
 
-    const UpdateContract = async () => {
+    const UpdateContract = async (contract: Contract) => {
         await axios.put(myConfig.backUrl + 'contract/', contract).then(() => {
-            handleClose();
             ToastsStore.success('The contract was saved');
             getAllContracts();
+            handleClose();
         }).catch(() => {
             ToastsStore.error('The contract was not saved');
         });
@@ -238,9 +239,9 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                                 />
                             <br /><br />
                             {!isEdit ? (
-                                <Button type="submit" variant='contained' color='default' onClick={() => AddContract()}>Save new</Button>
+                                <Button type="submit" variant='contained' color='default'>Save new</Button>
                             ) : (
-                                    <Button variant='contained' color='default' onClick={() => UpdateContract()} >Save update</Button>
+                                    <Button type="submit" variant='contained' color='default'>Save update</Button>
                                 )
                             }
                             <Button variant='contained' color='default' onClick={handleClose} >Cancel</Button> {/*en el momento del click y manda el elemento como parametro por defecto.. Si fuera handleClose(), el onClick estaria esperando lo que le retorna esa funcion (x ej. una llamada a aotra funcion)*/}

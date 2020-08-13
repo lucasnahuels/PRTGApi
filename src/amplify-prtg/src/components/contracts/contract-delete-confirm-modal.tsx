@@ -46,9 +46,9 @@ const ContractDeleteConfirmModal = ({ show, hideModal, getAllContracts, contract
 
     const DeleteContract = async () => {
         await axios.delete(myConfig.backUrl + 'contract/' + contractId!.toString()).then(() => {
-            handleClose();
             ToastsStore.success('The contract was deleted');
             getAllContracts();
+            handleClose();
         }).catch(() => {
             ToastsStore.error('The contract was not deleted');
         });

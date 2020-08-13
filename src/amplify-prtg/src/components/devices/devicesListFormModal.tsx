@@ -83,8 +83,8 @@ const DevicesListFormModal = ({show, contractId, hideModal}: DevicesListFormModa
             contractDevices : devicesAssigned
         };
         await axios.put(myConfig.backUrl + 'contract/assignDevice', contract).then(() => {
-            hideModal();
             ToastsStore.success('The device was assigned');
+            hideModal();
         }).catch(() => {
             ToastsStore.error('The device was not assigned');
         });

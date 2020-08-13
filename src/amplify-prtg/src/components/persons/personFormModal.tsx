@@ -73,9 +73,9 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
             email: email
         };
         axios.post(myConfig.backUrl + 'employee', personData).then(() => {
-            handleClose();
             ToastsStore.success('The person was saved');
             getAllPersons();
+            handleClose();
         }).catch(() => {
             ToastsStore.error('The person was not saved');
         })
@@ -87,9 +87,9 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
             email: email
         };
         await axios.put(myConfig.backUrl + 'employee/', personData).then(() => {
-            handleClose();
             ToastsStore.success('The person was saved');
             getAllPersons();
+            handleClose();
         }).catch(() => {
             ToastsStore.error('The Person was not saved');
         });

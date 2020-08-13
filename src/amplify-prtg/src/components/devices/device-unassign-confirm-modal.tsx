@@ -56,8 +56,8 @@ const DeviceUnassignConfirmModal = ({ show, hideModal, contractId, deviceObjId, 
             contractDevices: devicesAssigned
         };
         await axios.put(myConfig.backUrl + 'contract/unassignDevice', contract).then(() => {
-            hideModal();
             ToastsStore.success('The device was unassigned');
+            hideModal();
         }).catch(() => {
             ToastsStore.error('The device was not unassigned');
         });

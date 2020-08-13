@@ -81,9 +81,9 @@ const OwnerFormModal = ({
         name: inputOwnerName!
     };
     axios.post(myConfig.backUrl + 'owner', ownerData).then(() => {
-        handleClose();
-        ToastsStore.success('The owner was saved');
-        getAllOwners();
+      ToastsStore.success('The owner was saved');
+      getAllOwners();
+      handleClose();
     }).catch(() => {
         ToastsStore.error('The owner was not saved');
     })
@@ -95,9 +95,9 @@ const OwnerFormModal = ({
       name : inputOwnerName!
     };
     await axios.put(myConfig.backUrl + 'owner/', ownerData).then(() => {
-        handleClose();
-        ToastsStore.success('The owner was saved');
-        getAllOwners();
+      ToastsStore.success('The owner was saved');
+      getAllOwners();
+      handleClose();
     }).catch(() => {
         ToastsStore.error('The Owner was not saved');
     });

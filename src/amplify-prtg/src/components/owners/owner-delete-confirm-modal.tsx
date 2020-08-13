@@ -57,9 +57,9 @@ const OwnerDeleteConfirmModal = ({
     await axios
       .delete(myConfig.backUrl + "owner/" + owner!.id!.toString())
       .then(() => {
-        handleClose();
         ToastsStore.success("The owner was deleted");
         getAllOwners();
+        handleClose();
       })
       .catch(() => {
         ToastsStore.error("The owner was not deleted");
