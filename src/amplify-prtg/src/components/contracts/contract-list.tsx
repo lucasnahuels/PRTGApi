@@ -140,16 +140,13 @@ const ContractList = () => {
     }, []);
 
     React.useEffect( () => {
-            console.log("renderSearchTerm", searchTerm);
-            let results : any = [];
-            debugger;
-            if( stateContractConst !== undefined && stateContractConst.listOfContract !== undefined) {
-                results = stateContractConst!.listOfContract!.filter(contract =>
-                    contract.owner!.name!.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-            }
-            console.log(results);
-            setContract({ ...stateContract, listOfContract: results });
+        let results : any = [];
+        if( stateContractConst !== undefined && stateContractConst.listOfContract !== undefined) {
+            results = stateContractConst!.listOfContract!.filter(contract =>
+                contract.owner!.name!.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+        setContract({ ...stateContract, listOfContract: results });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm]);
     
