@@ -80,8 +80,8 @@ const ContractList = () => {
     const [formIsEdit, setFormIsEdit] = React.useState(false);
     const [contractToEdit, setContractToEdit] = React.useState<Contract>();
     const [contractIdToDelete, setContractIdToDelete] = React.useState<Number>(0);
-    const [searchTerm, setSearchTerm] = React.useState("");
-    const [value, setValue] = React.useState<string | null>("");
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [value, setValue] = React.useState<string | null>('');
     const [inputValue, setInputValue] = React.useState('');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
@@ -131,29 +131,34 @@ const ContractList = () => {
     };
 
     React.useEffect(() => { 
-        GetContractsConst(); 
-    });
-    React.useEffect(() => { 
         GetContracts(); 
-    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    React.useEffect(() => { 
+        GetContractsConst(); 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    // React.useEffect( () => {
-    //     console.log("renderSearchTerm");
-    //     let results : any = [];
-    //     if( stateContractConst !== undefined && stateContractConst.listOfContract !== undefined) {
-    //         results = stateContractConst!.listOfContract!.filter(contract =>
-    //             contract.device!.device!.toLowerCase().includes(searchTerm)
-    //         );
-    //     }
-    //     setContract({ ...stateContract, listOfContract: results });
-    // }, [searchTerm]);
+    React.useEffect( () => {
+            console.log("renderSearchTerm", searchTerm);
+            let results : any = [];
+            debugger;
+            if( stateContractConst !== undefined && stateContractConst.listOfContract !== undefined) {
+                results = stateContractConst!.listOfContract!.filter(contract =>
+                    contract.owner!.name!.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+            console.log(results);
+            setContract({ ...stateContract, listOfContract: results });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchTerm]);
     
     return (
         <div className={classes.margins}>
         <Grid container xs={12} item>
             <Grid item xs={1}></Grid>
             <Grid item xs={12}>
-                {/* <Autocomplete
+                <Autocomplete
                     className={classes.searchField}
                     value={value}
                     onChange={(event: React.ChangeEvent<{}>, newValue: string|null) => {            
@@ -166,15 +171,15 @@ const ContractList = () => {
                         setInputValue(newInputValue);
                         event.preventDefault();
                     }}
-                    options={(stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract : []).map((contract) => contract.device!.device!)}
+                    options={(stateContract !== undefined && stateContract.listOfContract !== undefined ? stateContract.listOfContract : []).map((contract) => contract.owner!.name!)}
                     renderInput={(params) => (
                         <TextField {...params} 
-                            label="Filter by device name" 
+                            label="Filter by owner name" 
                             margin="normal" 
                             variant="outlined"
                         />
                     )}
-                /> */}
+                />
                 <Button className={classes.buttonAdd} onClick={() => ShowContractForm(false)}>
                     Add new contract
                 </Button>

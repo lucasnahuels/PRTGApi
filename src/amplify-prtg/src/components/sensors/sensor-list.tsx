@@ -62,7 +62,7 @@ const SensorList = () => {
         thisMonthQuantityBandWSheets: "",
         thisMonthQuantityTotalSheets: ""
     });
-    const [selectedValue, setSelectedValue] = React.useState("0");
+    const [selectedValue, setSelectedValue] = React.useState('');
     const [showTonnerModal, setShowTonnerModal] = React.useState(false);
     const [showPreviousMonthModal, setShowPreviousMonthModal] = React.useState(false);
     const [infoForTonners, setInfoForTonners] = React.useState<Toner>({
@@ -87,7 +87,7 @@ const SensorList = () => {
             GetDevices(); 
         });
     React.useEffect(() => { 
-            if (selectedValue !== "0" && selectedValue !== undefined) {
+            if (selectedValue !== '' && selectedValue !== undefined) {
               GetDeviceData();
             }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -206,7 +206,7 @@ const SensorList = () => {
                 </Select>
               </FormControl>
 
-          {selectedValue !== "0" ? (
+          {selectedValue !== '' ? (
             <div>
 
               <TableContainer component={Paper}>
