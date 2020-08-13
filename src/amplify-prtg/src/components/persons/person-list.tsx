@@ -17,11 +17,9 @@ import PersonDeleteConfirmModal from './person-delete-confirm-modal';
 import { Grid, TableFooter, Tooltip, Checkbox } from '@material-ui/core';
 import { myConfig } from '../../configurations';
 import { Employee, CognitoUser, Contract, ContractEmployee, ContractUser } from '../contracts/contract';
-import Dropdown from 'reactstrap/lib/Dropdown';
-import DropdownToggle from 'reactstrap/lib/DropdownToggle';
-import DropdownMenu from 'reactstrap/lib/DropdownMenu';
 import { Link } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
+import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 
 export interface IEmployeeList {
     listOfEmployee: Employee[]
@@ -67,6 +65,18 @@ const PersonsList = () => {
                     backgroundColor: 'lightblue',
                 }
             },
+            greyButton: {
+                left: '40%',
+                right: '40%',
+                backgroundColor: 'grey',
+                borderRadius: '18px',
+                color: 'white',
+                fontSize: '10px',
+                fontWeight: 'bold',
+                '&:hover': {
+                    backgroundColor: 'black',
+                }
+            },
         })
     );
     const classes = useStyles();
@@ -99,7 +109,8 @@ const PersonsList = () => {
     useEffect(() => {
         GetEmployees();
         GetUsers();
-    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const GetEmployees = async () => {
         let id: string = getQueryVariable("contractId"); 
@@ -243,16 +254,14 @@ const PersonsList = () => {
                             </TableHead>
 
                             <TableBody>
-                                <TableRow>
-                                    <Tooltip title="This is the list of users from It-One who have already registered in the prtg app">
-                                        <Dropdown onClick={showItOneUsers}>
-                                            <DropdownToggle caret>
-                                                It-One user
-                                    </DropdownToggle>
-                                            <DropdownMenu right>
-                                            </DropdownMenu>
-                                        </Dropdown>
-                                    </Tooltip>
+                                <TableRow style={{ backgroundColor: '#f0f0f0' }}>
+                                    <TableCell colSpan={5}>
+                                        <Tooltip title="This is the list of users from It-One who have already registered in the prtg app">
+                                            <Button onClick={showItOneUsers} className={classes.greyButton}>
+                                                It-One user <ArrowDropDownCircleIcon /> 
+                                            </Button>
+                                        </Tooltip>
+                                    </TableCell>
                                 </TableRow>
                                 {stateUser !== undefined && stateUser.listOfUser !== undefined ? stateUser.listOfUser.map((user) =>
                                     (
@@ -274,16 +283,20 @@ const PersonsList = () => {
                                     : null
                                 }
 
-                                <br />
-
                                 <TableRow>
-                                    <Dropdown onClick={showDeviceOwnerEmployees}>
-                                        <DropdownToggle caret>
-                                            Device owner employees
-                                    </DropdownToggle>
-                                        <DropdownMenu right>
-                                        </DropdownMenu>
-                                    </Dropdown>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                </TableRow>
+
+                                <TableRow style={{ backgroundColor: '#f0f0f0' }}>
+                                    <TableCell colSpan={5}>
+                                        <Button onClick={showDeviceOwnerEmployees} className={classes.greyButton}>
+                                            Device owner employees <ArrowDropDownCircleIcon />
+                                        </Button>
+                                    </TableCell>
                                 </TableRow>
                                 {stateEmployee !== undefined && stateEmployee.listOfEmployee !== undefined ? stateEmployee.listOfEmployee.map((employee) =>
                                     (
@@ -308,6 +321,14 @@ const PersonsList = () => {
                                 )
                                     : null
                                 }
+
+                                <TableRow>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                </TableRow>
 
                             </TableBody>
                             <TableFooter>
@@ -338,7 +359,7 @@ const PersonsList = () => {
                     }
 
                     <br />
-                    <Link to="/devices">
+                    <Link to="/contracts">
                         <Button className={classes.button}> Back </Button>
                     </Link>
                     <Button className={classes.button} onClick={SaveChanges}>Save changes in reports</Button>
