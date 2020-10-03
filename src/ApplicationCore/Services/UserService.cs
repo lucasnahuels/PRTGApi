@@ -10,20 +10,20 @@ namespace ApplicationCore.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<CognitoUser> userManager;
+        //private readonly UserManager<CognitoUser> userManager;
 
-        public UserService(UserManager<CognitoUser> userManager)
-        {
-            this.userManager = userManager;
-        }
-        public async Task<IEnumerable<CognitoUser>> GetAsync()
-        {
-            return await (userManager as CognitoUserManager<CognitoUser>).GetUsersAsync();
-        }
-        public async Task<CognitoUser> GetAsync(string id)
-        {
-            var users = await (userManager as CognitoUserManager<CognitoUser>).GetUsersAsync();
-            return users.FirstOrDefault(u => u.UserID == id);
-        }
+        //public UserService(UserManager<CognitoUser> userManager)
+        //{
+        //    this.userManager = userManager;
+        //}
+        //public async Task<IEnumerable<CognitoUser>> GetAsync()
+        //{
+        //    return await (userManager as CognitoUserManager<CognitoUser>).GetUsersAsync();
+        //}
+        //public async Task<CognitoUser> GetAsync(string id)
+        //{
+        //    var users = await (userManager as CognitoUserManager<CognitoUser>).GetUsersAsync();
+        //    return users.FirstOrDefault(u => u.UserID == id);
+        //}
     }
 }

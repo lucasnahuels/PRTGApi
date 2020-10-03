@@ -33,7 +33,6 @@ namespace WebApi.Controllers
         public async Task<ActionResult<Contract>> GetContract(int id)
         {
             var contract = await _contractService.GetAsync(id);
-
             return contract == null ? NotFound() : (ActionResult<Contract>)contract;
         }
 

@@ -27,22 +27,6 @@ namespace WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCognitoIdentity();
-
-            var region = Configuration["AWS:Region"];
-            var userPoolId = Configuration["AWS:UserPoolId"];
-            var appClientId = Configuration["AWS:AppClientId"];
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(o =>
-            {
-                o.Audience = appClientId;
-                o.Authority = $"https://cognito-idp.{region}.amazonaws.com/{userPoolId}";
-                o.RequireHttpsMetadata = false;
-            });
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -57,7 +41,6 @@ namespace WebApi
                 ClientCertificateOptions = ClientCertificateOption.Manual,
                 ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
             });
-            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddDatabaseContext(Configuration.GetConnectionString("prtg"));
             services.AddPRTGServices();
         }
@@ -73,13 +56,12 @@ namespace WebApi
             {
                 app.UseExceptionHandler("/error");
             }
-            loggerFactory.AddLambdaLogger();            
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseCors(PrtgCorsPolicy);
-            app.UseAuthentication();
-            app.UseAuthorization();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

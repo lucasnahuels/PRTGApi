@@ -7,7 +7,6 @@ import { Button } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { purple } from '@material-ui/core/colors';
 import { Link } from 'react-router-dom';
-import { AmplifySignOut } from '@aws-amplify/ui-react';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -101,7 +100,6 @@ export default function SearchAppBar() {
                         <Grid item xs={1}>
                         </Grid>
                         <Grid item xs={1}>
-                            <AmplifySignOut/>
                         </Grid>
                     </Grid>
                 </Toolbar>

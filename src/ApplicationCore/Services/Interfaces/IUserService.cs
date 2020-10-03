@@ -6,7 +6,7 @@ namespace ApplicationCore.Services.Interfaces
 {
     public interface IUserService
     {
-        public Task<IEnumerable<CognitoUser>> GetAsync();
-        public Task<CognitoUser> GetAsync(string id);
+        //public Task<IEnumerable<CognitoUser>> GetAsync();
+        //public Task<CognitoUser> GetAsync(string id);
     }
 }
