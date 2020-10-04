@@ -1,21 +1,25 @@
 import React, { ChangeEvent, useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import { Button } from '@material-ui/core';
+import { Button, InputLabel, MenuItem, Select, Tooltip } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import { myConfig } from '../../configurations';
 import { Employee } from '../contracts/contract';
+import { Owner } from '../owners/owner';
 
 export interface PersonFormModalProps {
     show: boolean,
     hideModal: Function,
     getAllPersons: Function,
     isEdit: boolean,
-    person?: Employee | undefined
+    personToEdit?: Employee | undefined
 }
 
+export interface IOwnerList {
+    listOfOwners: Owner[]
+}
 
 function getModalStyle() {
     const top = 50;
@@ -47,35 +51,44 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         selectEmpty: {
             marginTop: theme.spacing(2)
-        }
+        },
+        formRoot: {
+            margin: theme.spacing(1),
+            width: '25ch',
+        },
     })
 );
 
-const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: PersonFormModalProps) => {
+const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, personToEdit}: PersonFormModalProps) => {
 
     const classes = useStyles();
     const [modalStyle] = React.useState(getModalStyle);
 
     const [email, setEmail] = React.useState("");
     const [name, setName] = React.useState("");
+    const [stateOwner, setOwner] = React.useState<IOwnerList>();
+    const [selectedOwnerValue, setSelectedOwnerValue] = React.useState("");
 
     useEffect(() => { 
+        GetOwners();
         fillList();
      // eslint-disable-next-line react-hooks/exhaustive-deps
      }, []);
 
     const fillList = () =>{
         if(isEdit){
-            setEmail(person!.email)
-            setName(person!.name!)
+            setEmail(personToEdit!.email)
+            setName(personToEdit!.name!)
         }
     }
 
     const AddPerson = () => {
         let personData: Employee = {
-            email: email
+            name: name,
+            email: email,
+            ownerId : parseInt(selectedOwnerValue)
         };
-        axios.post(myConfig.backUrl + 'employee', personData).then(() => {
+        axios.post(myConfig.backUrl + 'Employee', personData).then(() => {
             ToastsStore.success('The person was saved');
             getAllPersons();
             handleClose();
@@ -85,11 +98,14 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
     }
 
     const UpdatePerson = async () => {
+        console.log(personToEdit);
         let personData: Employee = {
-            id : person!.id!,
-            email: email
+            id : personToEdit!.id!,
+            name: name,
+            email: email,
+            ownerId: parseInt(selectedOwnerValue)
         };
-        await axios.put(myConfig.backUrl + 'employee/', personData).then(() => {
+        await axios.put(myConfig.backUrl + 'Employee/', personData).then(() => {
             ToastsStore.success('The person was saved');
             getAllPersons();
             handleClose();
@@ -97,6 +113,16 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
             ToastsStore.error('The Person was not saved');
         });
     }
+
+    const GetOwners = async () => {
+        await axios.get(myConfig.backUrl + `Owner`).then((response) => {
+            setOwner({ ...stateOwner, listOfOwners: response.data });
+        });
+    };
+
+    const HandleChangeOwner = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setSelectedOwnerValue(event.target.value as string);
+    };
 
     const handleInputPersonAdressChange = (e: ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -128,6 +154,33 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
                             <h2 id='personform-modal-title'>Update device owner person</h2>
                         )}
                         <div id='personform-modal-description'>
+                            <Tooltip title="If the owner you need is not in the list, 
+                                you will have to add it since the 'Handle owners view'">
+                                <div>
+                                    <InputLabel id="ownerNameLabel">Owner</InputLabel>
+                                    <Select
+                                        className={classes.formRoot}
+                                        required
+                                        id='inputName'
+                                        labelId="ownerNameLabel"
+                                        value={selectedOwnerValue}
+                                        onChange={HandleChangeOwner}
+                                    >
+                                        {stateOwner !== undefined &&
+                                            stateOwner.listOfOwners !== undefined
+                                            ? stateOwner.listOfOwners.sort().map((owner) => (
+                                                <MenuItem
+                                                    key={owner!.id!.toString()}
+                                                    value={owner!.id!.toString()}
+                                                >
+                                                    {owner!.name}
+                                                </MenuItem>
+                                            ))
+                                            : null}
+                                    </Select>
+                                </div>
+                            </Tooltip>
+                            <br /><br />
                             <TextField label='person name' id='inputPersonName' name='inputPersonName' placeholder='input the person name' value={name} onChange={handleInputPersonNameChange} />
                             <br />
                             <TextField label='person adress' id='inputPersonAdress' name='inputPersonAdress' placeholder='input the person adress' value={email} onChange={handleInputPersonAdressChange} />

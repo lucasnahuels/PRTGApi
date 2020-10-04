@@ -20,7 +20,7 @@ namespace ApplicationCore.Services
         {
             await _context.Employees.AddAsync(employee);
             await _context.SaveChangesAsync();
-
+      
             return employee;
         }
 
@@ -39,12 +39,12 @@ namespace ApplicationCore.Services
 
         public async Task<IEnumerable<Employee>> GetAsync()
         {
-            return await _context.Employees.ToListAsync();
+            return await _context.Employees.Include(employee => employee.Owner).ToListAsync();
         }
 
         public async Task<Employee> GetAsync(int id)
         {
-            return await _context.Employees.FirstOrDefaultAsync(employee => employee.Id == id);
+            return await _context.Employees.Include(employee => employee.Owner).FirstOrDefaultAsync(employee => employee.Id == id);
         }
 
         public async Task<Employee> UpdateAsync(Employee employee)

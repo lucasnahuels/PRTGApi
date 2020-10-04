@@ -108,7 +108,7 @@ const PersonsList = () => {
 
     useEffect(() => {
         GetEmployees();
-        GetUsers();
+        // GetUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -129,22 +129,22 @@ const PersonsList = () => {
         });
     };
 
-    const GetUsers = async () => {
-        let id: string = getQueryVariable("contractId"); 
-        await axios.get<CognitoUser[]>(myConfig.backUrl + `User`).then(async (response) => {
-            setUser({ ...stateUser, listOfUser: response.data });
-            await axios.get<ContractUser[]>(myConfig.backUrl + `contract/getContractUsersRelations/` + id).then((innerResponse) => {
-                response.data.forEach(user => {
-                    user.sendReport = false;
-                    innerResponse.data.forEach(contractUser => {
-                        if (user.userID! === contractUser.userId!) {
-                            user.sendReport! = true
-                        }
-                    });
-                });
-            });
-        });
-    };
+    // const GetUsers = async () => {
+    //     let id: string = getQueryVariable("contractId"); 
+    //     await axios.get<CognitoUser[]>(myConfig.backUrl + `User`).then(async (response) => {
+    //         setUser({ ...stateUser, listOfUser: response.data });
+    //         await axios.get<ContractUser[]>(myConfig.backUrl + `contract/getContractUsersRelations/` + id).then((innerResponse) => {
+    //             response.data.forEach(user => {
+    //                 user.sendReport = false;
+    //                 innerResponse.data.forEach(contractUser => {
+    //                     if (user.userID! === contractUser.userId!) {
+    //                         user.sendReport! = true
+    //                     }
+    //                 });
+    //             });
+    //         });
+    //     });
+    // };
 
     const ShowPersonForm = (isEdit: boolean, personToEdit?: Employee) => {
         setShowModal(true);
@@ -207,22 +207,22 @@ const PersonsList = () => {
         });;
 
         // //users
-        let usersAssigned: ContractUser[] = [];
+        // let usersAssigned: ContractUser[] = [];
 
-        stateUser!.listOfUser!.forEach(user => {
-            if (user.sendReport) {
-                let userAssigned: ContractUser = {
-                    userId : user.userID!
-                };
-                usersAssigned.push(userAssigned);
-            }
-        });;
+        // stateUser!.listOfUser!.forEach(user => {
+        //     if (user.sendReport) {
+        //         let userAssigned: ContractUser = {
+        //             userId : user.userID!
+        //         };
+        //         usersAssigned.push(userAssigned);
+        //     }
+        // });;
 
         //contract
         let contract: Contract = {
             id: parseInt(contractId!),
             contractEmployees: employeesAssigned,
-            contractUsers: usersAssigned
+            // contractUsers: usersAssigned
         };
 
         //put
@@ -247,6 +247,7 @@ const PersonsList = () => {
                             <TableHead aria-label="simple table">
                                 <TableRow>
                                     <TableCell className={classes.titlesRow} size='medium'>Name</TableCell>
+                                    <TableCell className={classes.titlesRow} size='medium'>Owner name</TableCell>
                                     <TableCell className={classes.titlesRow} size='medium'>E-person adress</TableCell>
                                     <TableCell className={classes.titlesRow} size='medium'>Send report?</TableCell>
                                     <TableCell className={classes.titlesRow} size='medium' colSpan={2}>Person actions</TableCell>
@@ -268,6 +269,7 @@ const PersonsList = () => {
                                         showItOne ? (
                                             <TableRow key={user.userID!}>
                                                 <TableCell className={classes.dataRow}>{user.userName}</TableCell>
+                                                <TableCell className={classes.dataRow}></TableCell>
                                                 <TableCell className={classes.dataRow}>{user.attributes.email}</TableCell>
                                                 <TableCell className={classes.dataRow}>
                                                     <Checkbox checked={user.sendReport!} onChange={handleChangeCheckboxForUsers} name={user.userID!} />
@@ -303,6 +305,7 @@ const PersonsList = () => {
                                         showDeviceOwner ? (
                                             <TableRow key={employee.id!.toString()}>
                                                 <TableCell className={classes.dataRow}>{employee.name}</TableCell>
+                                                <TableCell className={classes.dataRow}>{employee.owner!.name!}</TableCell>
                                                 <TableCell className={classes.dataRow}>{employee.email}</TableCell>
                                                 <TableCell className={classes.dataRow}>
                                                     <Checkbox checked={employee.sendReport!} onChange={handleChangeCheckboxForDevicesOwners} name={employee.id!.toString()} />
@@ -344,7 +347,7 @@ const PersonsList = () => {
                             hideModal={HideForm}
                             getAllPersons={GetEmployees}
                             isEdit={formIsEdit}
-                            person={personToEdit!}
+                            personToEdit={personToEdit!}
                         />
                         : null
                     }

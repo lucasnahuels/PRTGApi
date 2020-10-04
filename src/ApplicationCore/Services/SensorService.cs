@@ -243,7 +243,7 @@ namespace ApplicationCore.Services
                 ColorCopies = colorCopies,
                 BlackAndWhiteCopies = blackAndWhiteCopies,
                 DeviceId = objId,
-                Date = DateTime.Now
+                DateToday = DateTime.Now
             };
         }
         public async Task<DailyTonersDataDevices> GetDailyTonersDevicesValues(int objId)
@@ -256,7 +256,7 @@ namespace ApplicationCore.Services
                 MagentaTonersUsed = tonersUsed.MagentaTonersUsed,
                 YellowTonersUsed = tonersUsed.YellowTonersUsed,
                 DeviceId = objId,
-                Date = DateTime.Now
+                DateToday = DateTime.Now
             };
         }
 
