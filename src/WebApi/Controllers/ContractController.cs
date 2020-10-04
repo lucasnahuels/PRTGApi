@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ApplicationCore.Models;
 using ApplicationCore.Services.Interfaces;
-using System;
-using System.Collections;
 
 namespace WebApi.Controllers
 {

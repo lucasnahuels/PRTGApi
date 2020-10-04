@@ -17,12 +17,6 @@
     <None Remove="Helpers\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Amazon.AspNetCore.Identity.Cognito" Version="1.0.5" />
-    <PackageReference Include="Amazon.Extensions.CognitoAuthentication" Version="1.0.4" />
-    <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.3.111.4" />
-    <PackageReference Include="AWSSDK.S3" Version="3.3.110.58" />
-    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.100.1" />
-    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
 	<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.1" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.1">
