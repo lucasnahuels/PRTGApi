@@ -1,4 +1,4 @@
-﻿using Amazon.Extensions.CognitoAuthentication;
+﻿using ApplicationCore.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,7 +6,7 @@ namespace ApplicationCore.Services.Interfaces
 {
     public interface IUserService
     {
-        //public Task<IEnumerable<CognitoUser>> GetAsync();
-        //public Task<CognitoUser> GetAsync(string id);
+        public Task<IEnumerable<Auth0User>> GetAsync();
+        public Task<Auth0User> GetAsync(string id);
     }
 }

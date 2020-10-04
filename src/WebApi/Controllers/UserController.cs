@@ -1,10 +1,10 @@
-﻿using Amazon.Extensions.CognitoAuthentication;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ApplicationCore.Services.Interfaces;
+using ApplicationCore.Models;
 
 namespace WebApi.Controllers
 {
@@ -20,17 +20,17 @@ namespace WebApi.Controllers
             _userService = userService;
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<CognitoUser>>> GetUsers()
-        //{
-        //    try
-        //    {
-        //        return Ok(await _userService.GetAsync());
-        //    }
-        //    catch(Exception e)
-        //    {
-        //        return BadRequest(e);
-        //    }            
-        //}
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Auth0User>>> GetUsers()
+        {
+            try
+            {
+                return Ok(await _userService.GetAsync());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
     }
 }

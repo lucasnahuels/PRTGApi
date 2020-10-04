@@ -27,6 +27,15 @@ namespace WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = Configuration["Auth0:Authority"];
+                options.Audience = Configuration["Auth0:Audience"];
+            });
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -40,6 +49,10 @@ namespace WebApi
             {
                 ClientCertificateOptions = ClientCertificateOption.Manual,
                 ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+            });
+            services.AddHttpClient("auth0", c =>
+            {
+                c.BaseAddress = new Uri(Configuration["Auth0Url"]);
             });
             services.AddDatabaseContext(Configuration.GetConnectionString("prtg"));
             services.AddPRTGServices();
@@ -60,8 +73,8 @@ namespace WebApi
             app.UseStaticFiles();
             app.UseRouting();
             app.UseCors(PrtgCorsPolicy);
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -71,7 +84,7 @@ namespace WebApi
 
         private void SetupCorsPolicyAction(CorsOptions options)
         {
-            var domainsAllowed = "http://localhost:3000;https://dev.d115kdf62p0izj.amplifyapp.com/;https://prtg.it-one.com.ar;https://localhost:3000";
+            var domainsAllowed = "http://localhost:3000;https://prtg.it-one.com.ar;https://localhost:3000";
 
             if (!string.IsNullOrEmpty(domainsAllowed))
             {
