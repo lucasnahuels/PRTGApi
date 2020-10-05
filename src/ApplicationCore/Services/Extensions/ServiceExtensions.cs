@@ -31,6 +31,7 @@ namespace ApplicationCore.Services.Extensions
             services.AddTransient<IContractService, ContractService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IDailyDeviceService, DailyDeviceService>();
+            services.AddTransient<IDailyRecordsTaskService, DailyRecordsTaskService>();
         }
     }
 }

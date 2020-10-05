@@ -11,6 +11,8 @@ using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using ApplicationCore.Services.Extensions;
+using Coravel;
+using ApplicationCore.Services;
 
 namespace WebApi
 {
@@ -56,6 +58,8 @@ namespace WebApi
             });
             services.AddDatabaseContext(Configuration.GetConnectionString("prtg"));
             services.AddPRTGServices();
+
+            services.AddScheduler();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -80,6 +84,16 @@ namespace WebApi
                 endpoints.MapControllers();
             });
             app.UpdateDatabase();
+
+            var provider = app.ApplicationServices;
+            provider.UseScheduler(scheduler =>
+            {
+                scheduler.Schedule(
+                    () => (new DailyRecordsTaskService()).CreateDailyReport()
+                )
+                .DailyAt(19, 44)
+                .Zoned(TimeZoneInfo.Local);
+            });
         }
 
         private void SetupCorsPolicyAction(CorsOptions options)
