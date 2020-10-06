@@ -39,6 +39,10 @@ namespace ApplicationCore.Services
         private const string PrintFullColor = "Print Full Color";
         private const string PrintSingleColor = "Print Single Color";
         private const string PrintTwoColor = "Print Two-color";
+        private const string Black = "Black";
+        private const string Cyan = "Cyan";
+        private const string Magenta = "Magenta";
+        private const string Yellow = "Yellow";
 
         private const string Duplex = "Duplex";
         #endregion
@@ -59,57 +63,9 @@ namespace ApplicationCore.Services
             return await _context.DailyContadores.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.Id == id);
         }
 
-        public async Task CreateDailyContadoresDeviceValues()
-        {
-            var devices = await _sensorService.GetAllDevices(); //can´t be getAllSensors??
-            var dailyDevices = new List<DailyContadoresDataDevices>();
-
-            foreach(var device in devices)
-            {
-                var childDevices = await _sensorService.GetChildDevices(device.ObjId);
-                foreach(var childDevice in childDevices)
-                {
-                    var sensorDetails = await _sensorService.GetSensorDetails(childDevice.ObjId);
-                    if (sensorDetails.SensorData.Name == "Contadores")
-                    { 
-                        var dailyContadoresDataDevice = await GetCurrentContadoresDevicesValues(childDevice.ObjId);
-                        if (dailyContadoresDataDevice != null)
-                        {
-                            //Replace contadores ObjId with real device ObjId
-                            dailyContadoresDataDevice.Id = device.ObjId;
-                            dailyDevices.Add(dailyContadoresDataDevice);
-                        }
-                    }
-                }
-            }
-            await _context.DailyContadores.AddRangeAsync(dailyDevices);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<DailyTonersDataDevices> CreateDailyTonersDeviceValues(int objId)
-        {
-            var dailyPrinter = await GetCurrentTonersDevicesValues(objId);
-            //crear tabla para daily toners devices
-            //await _context.DailyPrinters.AddAsync(dailyPrinter);
-            await _context.SaveChangesAsync();
-
-            return dailyPrinter;
-        }
-
-        public async Task<DailyTonersDataDevices> CreateFifteenMinutesTonersDeviceValues(int objId)
-        {
-            var dailyPrinter = await GetCurrentTonersDevicesValues(objId);
-            //crear tabla para fifteen minutes toners devices
-            //await _context.DailyPrinters.AddAsync(dailyPrinter);
-            await _context.SaveChangesAsync();
-
-            return dailyPrinter;
-        }
-
         public async Task<DailyContadoresDataDevices> GetCurrentContadoresDevicesValues(int objId)
         {
             var contadores = await _sensorService.GetContadoresData(objId);
-            //falta restarle el valor de ayer a los siguientes valores
 
             int blackAndWhiteCopies = 0;
 
@@ -134,25 +90,20 @@ namespace ApplicationCore.Services
                 DateToday = DateTime.Now
             };
         }
+
         public async Task<DailyTonersDataDevices> GetCurrentTonersDevicesValues(int objId)
         {
-            var tonersUsed = await GetQuantityTonersToday(objId);
+            var toners = await _sensorService.GetTonersData(objId);
+
             return new DailyTonersDataDevices
             {
-                BlackTonersUsed = tonersUsed.BlackTonersUsed,
-                CyanTonersUsed = tonersUsed.CyanTonersUsed,
-                MagentaTonersUsed = tonersUsed.MagentaTonersUsed,
-                YellowTonersUsed = tonersUsed.YellowTonersUsed,
+                BlackTonersUsed = int.Parse(toners.Channels.FirstOrDefault(c => c.Name == Black).LastValue),
+                CyanTonersUsed = int.Parse(toners.Channels.FirstOrDefault(c => c.Name == Cyan).LastValue),
+                MagentaTonersUsed = int.Parse(toners.Channels.FirstOrDefault(c => c.Name == Magenta).LastValue),
+                YellowTonersUsed = int.Parse(toners.Channels.FirstOrDefault(c => c.Name == Yellow).LastValue),
                 DeviceId = objId,
                 DateToday = DateTime.Now
             };
-        }
-
-        public Task<DailyTonersDataDevices> GetQuantityTonersToday(int objId)
-        {
-            //get from database the values from toners used today
-            var tonersUsedToday = new DailyTonersDataDevices();
-            return Task.FromResult(tonersUsedToday);
         }
 
         public Task<DailyContadoresDataDevices> GetContadoresDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2)
@@ -171,11 +122,11 @@ namespace ApplicationCore.Services
             return Task.FromResult(contadoresValuesToReturn);
         }
 
-        public Task<DailyContadoresDataDevices> GetContadoresDataFromActualMonth(int deviceId)
+        public Task<DailyContadoresDataDevices> GetContadoresDataFromActualOrPreviousMonth(int deviceId, bool actualMonth)
         {
             bool afterSix = DateTime.Now.Hour < 18 ? false : true;
             var dateToday = afterSix ? DateTime.Now : DateTime.Now.AddDays(-1);
-            var firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var firstDayOfMonth = actualMonth? new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1) : new DateTime(DateTime.Now.Year, DateTime.Now.Month -1, 1);
 
             var deviceLastContadoresValues = _context.DailyContadores.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.DateToday == dateToday &&
                                                                         dailyPrinter.DeviceId == deviceId).Result;
@@ -207,11 +158,11 @@ namespace ApplicationCore.Services
             return Task.FromResult(tonersValuesToReturn);
         }
 
-        public Task<DailyTonersDataDevices> GetTonersDataFromActualMonth(int deviceId)
+        public Task<DailyTonersDataDevices> GetTonersDataFromActualOrPreviousMonth(int deviceId, bool actualMonth)
         {
             bool afterSix = DateTime.Now.Hour < 18 ? false : true;
             var dateToday = afterSix ? DateTime.Now : DateTime.Now.AddDays(-1);
-            var firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var firstDayOfMonth = actualMonth ? new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1) : new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1);
 
             var deviceLastTonersValues = _context.DailyToners.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.DateToday == dateToday &&
                                                                         dailyPrinter.DeviceId == deviceId).Result;

@@ -18,14 +18,13 @@ using System.Threading.Tasks;
 
 namespace ApplicationCore.Services
 {
-    public class DailyRecordsTaskService : IDailyRecordsTaskService, IInvocable
+    public class DailyRecordsScheduleService : IDailyRecordsTaskService, IInvocable
     {
         private readonly IDailyDeviceService _dailyDeviceService;
         private readonly ISensorService _sensorService;
         private readonly PrtgDbContext _context;
-        private const string PrintBlackAndWhite = "Print Black & White";
 
-        public DailyRecordsTaskService(IDailyDeviceService dailyDeviceService, ISensorService sensorService, PrtgDbContext prtgDbContext)
+        public DailyRecordsScheduleService(IDailyDeviceService dailyDeviceService, ISensorService sensorService, PrtgDbContext prtgDbContext)
         {
             _dailyDeviceService = dailyDeviceService;
             _sensorService = sensorService;

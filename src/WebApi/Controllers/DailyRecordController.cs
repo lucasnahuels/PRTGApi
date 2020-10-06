@@ -28,10 +28,10 @@ namespace WebApi.Controllers
             return Ok(await _dailyDeviceService.GetContadoresDataFromSelectedRangeDate(deviceId, date1, date2));
         }
 
-        [HttpGet("GetContadoresDataFromActualMonth/{deviceId}")]
-        public async Task<ActionResult<DailyContadoresDataDevices>> GetContadoresDataFromActualMonth(int deviceId)
+        [HttpGet("GetContadoresDataFromActualMonth/{deviceId}/{actualMonth}")]
+        public async Task<ActionResult<DailyContadoresDataDevices>> GetContadoresDataFromActualMonth(int deviceId, bool actualMonth)//fromQuery??
         {
-            return Ok(await _dailyDeviceService.GetContadoresDataFromActualMonth(deviceId));
+            return Ok(await _dailyDeviceService.GetContadoresDataFromActualOrPreviousMonth(deviceId, actualMonth));
         }
 
         [HttpGet("GetTonersDataFromSelectedRangeDate/{deviceId}/{date1}/{date2}")]
@@ -40,10 +40,10 @@ namespace WebApi.Controllers
             return Ok(await _dailyDeviceService.GetTonersDataFromSelectedRangeDate(deviceId, date1, date2));
         }
 
-        [HttpGet("GetTonersDataFromActualMonth/{deviceId}")]
-        public async Task<ActionResult<DailyContadoresDataDevices>> GetTonersDataFromActualMonth(int deviceId)
+        [HttpGet("GetTonersDataFromActualMonth/{deviceId}/{actualMonth}")]
+        public async Task<ActionResult<DailyContadoresDataDevices>> GetTonersDataFromActualMonth(int deviceId, bool actualMonth)//fromQuery??
         {
-            return Ok(await _dailyDeviceService.GetTonersDataFromActualMonth(deviceId));
+            return Ok(await _dailyDeviceService.GetTonersDataFromActualOrPreviousMonth(deviceId, actualMonth));
         }
     }
 }

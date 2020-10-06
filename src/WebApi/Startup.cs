@@ -88,7 +88,7 @@ namespace WebApi
             var provider = app.ApplicationServices;
             provider.UseScheduler(scheduler =>
             {
-                scheduler.Schedule<DailyRecordsTaskService>()
+                scheduler.Schedule<DailyRecordsScheduleService>()
                 .DailyAt(18, 00)
                 .Zoned(TimeZoneInfo.Local);
             });
