@@ -14,8 +14,6 @@ namespace ApplicationCore.Services.Interfaces
         Task<SensorsData> GetTonersData(int objId);
         Task<DevicesSensor> GetApiData();
         Task<DeviceApiModel> GetDeviceData(int objId);
-        Task<DailyContadoresDataDevices> GetDailyContadoresDevicesValues(int objId);
-        Task<DailyTonersDataDevices> GetDailyTonersDevicesValues(int objId);
         Task<List<DeviceApiModel>> GetChildDevices(int parentDeviceObjId);
         Task<List<DeviceApiModel>> GetAssignedDevices(int contractId);
         Task<List<DeviceApiModel>> GetUnassignedDevices();

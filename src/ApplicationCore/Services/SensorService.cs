@@ -217,54 +217,5 @@ namespace ApplicationCore.Services
             }
             return device;
         }
-
-        public async Task<DailyContadoresDataDevices> GetDailyContadoresDevicesValues(int objId)
-        {
-            var contadores = await GetContadoresData(objId);
-            //falta restarle el valor de ayer a los siguientes valores
-
-            int blackAndWhiteCopies = 0;
-
-            if(!int.TryParse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasFullColor)?.LastValue, out int colorCopies))
-            {
-                return null;
-            }
-            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintFullColor).LastValue);
-            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintSingleColor).LastValue);
-            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintTwoColor).LastValue);
-            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasSingleColor).LastValue);
-            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasTwoColor).LastValue);
-            blackAndWhiteCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasBlackAndWhite).LastValue);
-            blackAndWhiteCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintBlackAndWhite).LastValue);
-            //blackAndWhiteCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == Duplex).LastValue);
-
-            return new DailyContadoresDataDevices
-            {
-                ColorCopies = colorCopies,
-                BlackAndWhiteCopies = blackAndWhiteCopies,
-                DeviceId = objId,
-                DateToday = DateTime.Now
-            };
-        }
-        public async Task<DailyTonersDataDevices> GetDailyTonersDevicesValues(int objId)
-        {
-            var tonersUsed = await GetQuantityTonersToday(objId);
-            return new DailyTonersDataDevices
-            {
-                BlackTonersUsed = tonersUsed.BlackTonersUsed,
-                CyanTonersUsed = tonersUsed.CyanTonersUsed,
-                MagentaTonersUsed = tonersUsed.MagentaTonersUsed,
-                YellowTonersUsed = tonersUsed.YellowTonersUsed,
-                DeviceId = objId,
-                DateToday = DateTime.Now
-            };
-        }
-
-        public Task<DailyTonersDataDevices> GetQuantityTonersToday(int objId)
-        {
-            //get from database the values from toners used today
-            var tonersUsedToday = new DailyTonersDataDevices();
-            return Task.FromResult(tonersUsedToday);
-        }
     }
 }
