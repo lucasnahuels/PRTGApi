@@ -41,7 +41,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("GetTonersDataFromActualMonth/{deviceId}/{actualMonth}")]
-        public async Task<ActionResult<DailyContadoresDataDevices>> GetTonersDataFromActualMonth(int deviceId, bool actualMonth)//fromQuery??
+        public async Task<ActionResult<DailyTonersDataDevices>> GetTonersDataFromActualMonth(int deviceId, bool actualMonth)//fromQuery??
         {
             return Ok(await _dailyDeviceService.GetTonersDataFromActualOrPreviousMonth(deviceId, actualMonth));
         }

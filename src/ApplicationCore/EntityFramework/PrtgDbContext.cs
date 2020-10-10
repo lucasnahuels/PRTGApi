@@ -19,6 +19,7 @@ namespace ApplicationCore.EntityFramework
         public DbSet<ContractDevice> ContractDevices { get; set; }
         public DbSet<ContractEmployee> ContractEmployees { get; set; }
         public DbSet<ContractUser> ContractUsers { get; set; }
+        public DbSet<TonersUsed> TonersUsed { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

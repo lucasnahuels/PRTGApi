@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace ApplicationCore.Services.Interfaces.Reports
 {
-    public interface IDailyRecordsTaskService
+    public interface IRefilledTonersRecordsScheduleService
     {
-        Task CreateDailyReport();
+        Task CreateRefilledTonersRecord();
     }
 }

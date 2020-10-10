@@ -32,8 +32,10 @@ namespace ApplicationCore.Services.Extensions
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IDailyDeviceService, DailyDeviceService>();
             services.AddTransient<IDailyRecordsTaskService, DailyRecordsScheduleService>();
+            services.AddTransient<IRefilledTonersRecordsScheduleService, RefilledTonersRecordsScheduleService>();
 
             services.AddTransient<DailyRecordsScheduleService>();
+            services.AddTransient<RefilledTonersRecordsScheduleService>();
         }
     }
 }

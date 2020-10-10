@@ -2,7 +2,7 @@ import React, { createContext } from 'react';
 import axios from 'axios';
 import { Grid, makeStyles, Theme, createStyles, FormControl, InputLabel, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, TableFooter } from "@material-ui/core";
 import { myConfig } from '../../configurations';
-import { Device, DeviceData, DeviceDataViewModel } from './device';
+import { DailyContadoresDataDevices, DailyTonersDataDevices, Device, DeviceDataViewModel } from './device';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Toner } from '../toners/toner';
@@ -55,7 +55,8 @@ const SensorList = () => {
 
 
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
-    const [deviceData, setDeviceData] = React.useState<DeviceData>();
+    const [deviceContadoresData, setDeviceContadoresData] = React.useState<DailyContadoresDataDevices>();
+    const [deviceTonersData, setDeviceTonersData] = React.useState<DailyTonersDataDevices>();
     const [deviceDataViewModel, setDeviceDataViewModel] = React.useState<DeviceDataViewModel>({
         objId: 0,
         thisMonthQuantityColorSheets: "",
@@ -96,7 +97,7 @@ const SensorList = () => {
     React.useEffect(() => {
       settingDeviceDataViewModel();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [deviceData]);
+    }, [deviceContadoresData, deviceTonersData]);
 
     const GetDevices = async () => {
         await axios.get(myConfig.backUrl + `sensor/GetAllDevices`).then((response) => {
@@ -105,48 +106,37 @@ const SensorList = () => {
     };
 
     const GetDeviceData = async () => {
-        await axios.get(myConfig.backUrl + `sensor/GetDeviceData/` + selectedValue).then((response) => {
+      await axios.get(myConfig.backUrl + `dailyRecord/GetContadoresDataFromActualMonth/` + selectedValue + "/" + false).then((response) => {
             if(response.data){
-                setDeviceData( response.data );
+                setDeviceContadoresData( response.data );
             }
         });
+      await axios.get(myConfig.backUrl + `DailyRecord/GetTonersDataFromActualMonth/` + selectedValue + "/" + false).then((response) => {
+        if (response.data) {
+          setDeviceTonersData(response.data);
+        }
+      });
     };
 
     const settingDeviceDataViewModel = () => {
-        if (deviceData !== undefined) {
+        if (deviceContadoresData !== undefined) {
             let color: number = 0;
             let blackAndWhite: number = 0;
-            if (
-                deviceData.contadores.channels[1].lastValue !==
-                "No hay datos" ||
-                deviceData.contadores.channels[6].lastValue !==
-                "No hay datos"
-            ) {
-                color =
-                parseInt(deviceData.contadores.channels[1].lastValue!) +
-                parseInt(deviceData.contadores.channels[6].lastValue!);
-            }
-            if (
-                deviceData.contadores.channels[0].lastValue !==
-                "No hay datos" ||
-                deviceData.contadores.channels[5].lastValue !==
-                "No hay datos"
-            ) {
-                blackAndWhite =
-                parseInt(deviceData.contadores.channels[0].lastValue!) +
-                parseInt(deviceData.contadores.channels[5].lastValue!);
-            }
+
+            color = deviceContadoresData.ColorCopies;
+            blackAndWhite = deviceContadoresData.BlackAndWhiteCopies
+
             setDeviceDataViewModel({
-                objId: deviceData.objId!,
+                objId: deviceContadoresData.DeviceId,
                 thisMonthQuantityColorSheets: color.toString(),
                 thisMonthQuantityBandWSheets: blackAndWhite.toString(),
                 thisMonthQuantityTotalSheets: (blackAndWhite + color).toString(),
             });
             setInfoForTonners({
-              blackToner: parseInt(deviceData.toners.channels[0].lastValue.split(" ")[0]), 
-              cyanToner: parseInt(deviceData.toners.channels[1].lastValue.split(" ")[0]),
-              magentaToner: parseInt(deviceData.toners.channels[2].lastValue.split(" ")[0]),
-              yellowToner: parseInt(deviceData.toners.channels[4].lastValue.split(" ")[0]),
+              blackToner: deviceTonersData!.BlackTonersUsed, 
+              cyanToner: deviceTonersData!.CyanTonersUsed,
+              magentaToner: deviceTonersData!.MagentaTonersUsed,
+              yellowToner: deviceTonersData!.YellowTonersUsed,
             });
         }
     }

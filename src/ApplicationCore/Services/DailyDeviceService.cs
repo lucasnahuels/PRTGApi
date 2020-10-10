@@ -53,19 +53,39 @@ namespace ApplicationCore.Services
         #endregion
 
 
-        public async Task<IEnumerable<DailyContadoresDataDevices>> GetAsync()
+        public async Task<IEnumerable<DailyContadoresDataDevices>> GetDailyContadoresAsync()
         {
             return await _context.DailyContadores.ToListAsync();
         }
 
-        public async Task<DailyContadoresDataDevices> GetAsync(int id)
+        public async Task<DailyContadoresDataDevices> GetDailyContadoresByDeviceIdAsync(int id)
         {
-            return await _context.DailyContadores.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.Id == id);
+            return await _context.DailyContadores.FirstOrDefaultAsync(dailyDevice => dailyDevice.DeviceId == id);
         }
 
-        public async Task<DailyContadoresDataDevices> GetCurrentContadoresDevicesValues(int objId)
+        public async Task<IEnumerable<DailyTonersDataDevices>> GetDailyTonersAsync()
+        {
+            return await _context.DailyToners.ToListAsync();
+        }
+
+        public async Task<DailyTonersDataDevices> GetDailyTonersByDeviceIdAsync(int id)
+        {
+            return await _context.DailyToners.FirstOrDefaultAsync(dailyDevice => dailyDevice.DeviceId == id);
+        }
+
+        public async Task<DailyContadoresDataDevices> GetCurrentContadoresDevicesValues(int objId, int parentObjId)
         {
             var contadores = await _sensorService.GetContadoresData(objId);
+            if (contadores.Channels.FirstOrDefault(c => c.Name == CopiasFullColor).LastValue == "No hay datos"
+                || contadores.Channels.FirstOrDefault(c => c.Name == PrintFullColor).LastValue == "No hay datos"
+                || contadores.Channels.FirstOrDefault(c => c.Name == PrintSingleColor).LastValue == "No hay datos"
+                || contadores.Channels.FirstOrDefault(c => c.Name == PrintTwoColor).LastValue == "No hay datos"
+                || contadores.Channels.FirstOrDefault(c => c.Name == CopiasSingleColor).LastValue == "No hay datos"
+                || contadores.Channels.FirstOrDefault(c => c.Name == CopiasTwoColor).LastValue == "No hay datos"
+                || contadores.Channels.FirstOrDefault(c => c.Name == CopiasBlackAndWhite).LastValue == "No hay datos"
+                || contadores.Channels.FirstOrDefault(c => c.Name == PrintBlackAndWhite).LastValue == "No hay datos"
+                )
+                return null;
 
             int blackAndWhiteCopies = 0;
 
@@ -73,35 +93,42 @@ namespace ApplicationCore.Services
             {
                 return null;
             }
-            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintFullColor).LastValue);
-            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintSingleColor).LastValue);
-            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintTwoColor).LastValue);
-            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasSingleColor).LastValue);
-            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasTwoColor).LastValue);
-            blackAndWhiteCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasBlackAndWhite).LastValue);
-            blackAndWhiteCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintBlackAndWhite).LastValue);
+            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintFullColor).LastValue.Replace(".", string.Empty));
+            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintSingleColor).LastValue.Replace(".", string.Empty));
+            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintTwoColor).LastValue.Replace(".", string.Empty));
+            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasSingleColor).LastValue.Replace(".", string.Empty));
+            colorCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasTwoColor).LastValue.Replace(".", string.Empty));
+            blackAndWhiteCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == CopiasBlackAndWhite).LastValue.Replace(".", string.Empty));
+            blackAndWhiteCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == PrintBlackAndWhite).LastValue.Replace(".", string.Empty));
             //blackAndWhiteCopies += int.Parse(contadores.Channels.FirstOrDefault(c => c.Name == Duplex).LastValue);
 
             return new DailyContadoresDataDevices
             {
                 ColorCopies = colorCopies,
                 BlackAndWhiteCopies = blackAndWhiteCopies,
-                DeviceId = objId,
+                DeviceId = parentObjId,
                 DateToday = DateTime.Now
             };
         }
 
-        public async Task<DailyTonersDataDevices> GetCurrentTonersDevicesValues(int objId)
+        public async Task<DailyTonersDataDevices> GetCurrentTonersDevicesValues(int objId, int parentObjId)
         {
             var toners = await _sensorService.GetTonersData(objId);
-
+            
+            if (toners.Channels.Count == 0) return null;
+            if (toners.Channels.FirstOrDefault(c => c.Name == Black).LastValue == "No hay datos"
+                || toners.Channels.FirstOrDefault(c => c.Name == Cyan).LastValue == "No hay datos"
+                || toners.Channels.FirstOrDefault(c => c.Name == Magenta).LastValue == "No hay datos"
+                || toners.Channels.FirstOrDefault(c => c.Name == Yellow).LastValue == "No hay datos"
+                )
+                return null;
             return new DailyTonersDataDevices
             {
-                BlackTonersUsed = int.Parse(toners.Channels.FirstOrDefault(c => c.Name == Black).LastValue),
-                CyanTonersUsed = int.Parse(toners.Channels.FirstOrDefault(c => c.Name == Cyan).LastValue),
-                MagentaTonersUsed = int.Parse(toners.Channels.FirstOrDefault(c => c.Name == Magenta).LastValue),
-                YellowTonersUsed = int.Parse(toners.Channels.FirstOrDefault(c => c.Name == Yellow).LastValue),
-                DeviceId = objId,
+                BlackTonersUsed = int.Parse(toners.Channels.FirstOrDefault(c => c.Name == Black).LastValue.Substring(0, 3)),
+                CyanTonersUsed = int.Parse(toners.Channels.FirstOrDefault(c => c.Name == Cyan).LastValue.Substring(0, 3)),
+                MagentaTonersUsed = int.Parse(toners.Channels.FirstOrDefault(c => c.Name == Magenta).LastValue.Substring(0, 3)),
+                YellowTonersUsed = int.Parse(toners.Channels.FirstOrDefault(c => c.Name == Yellow).LastValue.Substring(0, 3)),
+                DeviceId = parentObjId,
                 DateToday = DateTime.Now
             };
         }
