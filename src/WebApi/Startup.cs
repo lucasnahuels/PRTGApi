@@ -13,6 +13,7 @@ using System.Net.Http;
 using ApplicationCore.Services.Extensions;
 using Coravel;
 using ApplicationCore.Services;
+using ApplicationCore.Models.Constants;
 
 namespace WebApi
 {
@@ -89,7 +90,7 @@ namespace WebApi
             provider.UseScheduler(scheduler =>
             {
                 scheduler.Schedule<DailyRecordsScheduleService>()
-                .DailyAt(18, 00)
+                .DailyAt(Constants.TimeRecordsAreTriggered, 00)
                 .Zoned(TimeZoneInfo.Local);
                 scheduler.Schedule<RefilledTonersRecordsScheduleService>()
                 .Cron("0 */4 * * *");

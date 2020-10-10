@@ -23,25 +23,25 @@ namespace WebApi.Controllers
 
 
         [HttpGet("GetContadoresDataFromSelectedRangeDate/{deviceId}/{date1}/{date2}")]
-        public async Task<ActionResult<DailyContadoresDataDevices>> GetContadoresDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2) //fromQuery??
+        public async Task<ActionResult<DailyContadoresDataDevices>> GetContadoresDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2) 
         {
             return Ok(await _dailyDeviceService.GetContadoresDataFromSelectedRangeDate(deviceId, date1, date2));
         }
 
-        [HttpGet("GetContadoresDataFromActualMonth/{deviceId}/{actualMonth}")]
-        public async Task<ActionResult<DailyContadoresDataDevices>> GetContadoresDataFromActualMonth(int deviceId, bool actualMonth)//fromQuery??
+        [HttpGet("GetContadoresDataFromActualOrPreviousMonth/{deviceId}/{actualMonth}")]
+        public async Task<ActionResult<DailyContadoresDataDevices>> GetContadoresDataFromActualOrPreviousMonth(int deviceId, bool actualMonth)
         {
             return Ok(await _dailyDeviceService.GetContadoresDataFromActualOrPreviousMonth(deviceId, actualMonth));
         }
 
         [HttpGet("GetTonersDataFromSelectedRangeDate/{deviceId}/{date1}/{date2}")]
-        public async Task<ActionResult<DailyTonersDataDevices>> GetTonersDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2) //fromQuery??
+        public async Task<ActionResult<DailyTonersDataDevices>> GetTonersDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2) 
         {
             return Ok(await _dailyDeviceService.GetTonersDataFromSelectedRangeDate(deviceId, date1, date2));
         }
 
-        [HttpGet("GetTonersDataFromActualMonth/{deviceId}/{actualMonth}")]
-        public async Task<ActionResult<DailyTonersDataDevices>> GetTonersDataFromActualMonth(int deviceId, bool actualMonth)//fromQuery??
+        [HttpGet("GetTonersDataFromActualOrPreviousMonth/{deviceId}/{actualMonth}")]
+        public async Task<ActionResult<DailyTonersDataDevices>> GetTonersDataFromActualOrPreviousMonth(int deviceId, bool actualMonth)
         {
             return Ok(await _dailyDeviceService.GetTonersDataFromActualOrPreviousMonth(deviceId, actualMonth));
         }

@@ -85,19 +85,21 @@ const SensorList = () => {
     });
 
     React.useEffect(() => {
-            GetDevices(); 
+        GetDevices(); 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []);
+      }, []);
     React.useEffect(() => { 
-            if (selectedValue !== '' && selectedValue !== undefined) {
-              GetDeviceData();
-            }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [selectedValue]);
-    React.useEffect(() => {
-      settingDeviceDataViewModel();
+      if (selectedValue !== '' && selectedValue !== undefined) {
+        GetDeviceData();
+      }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [deviceContadoresData, deviceTonersData]);
+    }, [selectedValue]);
+    React.useEffect(() => {
+      if (deviceContadoresData !== undefined && deviceTonersData !== undefined){
+        settingDeviceDataViewModel();
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [deviceContadoresData]);
 
     const GetDevices = async () => {
         await axios.get(myConfig.backUrl + `sensor/GetAllDevices`).then((response) => {
@@ -106,32 +108,28 @@ const SensorList = () => {
     };
 
     const GetDeviceData = async () => {
-      await axios.get(myConfig.backUrl + `dailyRecord/GetContadoresDataFromActualMonth/` + selectedValue + "/" + false).then((response) => {
-            if(response.data){
-                setDeviceContadoresData( response.data );
-            }
-        });
-      await axios.get(myConfig.backUrl + `DailyRecord/GetTonersDataFromActualMonth/` + selectedValue + "/" + false).then((response) => {
-        if (response.data) {
+      await axios.get(myConfig.backUrl + `dailyRecord/GetContadoresDataFromActualOrPreviousMonth/` + selectedValue + "/" + false).then((response) => {
+          setDeviceContadoresData( response.data );
+      });
+      await axios.get(myConfig.backUrl + `dailyRecord/GetTonersDataFromActualOrPreviousMonth/` + selectedValue + "/" + false).then((response) => {
           setDeviceTonersData(response.data);
-        }
       });
     };
 
     const settingDeviceDataViewModel = () => {
-        if (deviceContadoresData !== undefined) {
-            let color: number = 0;
-            let blackAndWhite: number = 0;
-
-            color = deviceContadoresData.ColorCopies;
-            blackAndWhite = deviceContadoresData.BlackAndWhiteCopies
-
+        if (deviceContadoresData !== undefined && deviceTonersData !== undefined) {
+            debugger
             setDeviceDataViewModel({
-                objId: deviceContadoresData.DeviceId,
-                thisMonthQuantityColorSheets: color.toString(),
-                thisMonthQuantityBandWSheets: blackAndWhite.toString(),
-                thisMonthQuantityTotalSheets: (blackAndWhite + color).toString(),
+              objId: parseInt(selectedValue),
+              thisMonthQuantityColorSheets: deviceContadoresData.ColorCopies.toString(),
+              thisMonthQuantityBandWSheets: deviceContadoresData.BlackAndWhiteCopies.toString(),
+              thisMonthQuantityTotalSheets: (deviceContadoresData.BlackAndWhiteCopies + deviceContadoresData.ColorCopies).toString(),
+              thisMonthQuantityBlackToners: deviceTonersData!.BlackTonersUsed.toString(),
+              thisMonthQuantityCyanToners: deviceTonersData!.CyanTonersUsed.toString(),
+              thisMonthQuantityMagentaToners: deviceTonersData!.MagentaTonersUsed.toString(),
+              thisMonthQuantityYellowToners: deviceTonersData!.YellowTonersUsed.toString()
             });
+
             setInfoForTonners({
               blackToner: deviceTonersData!.BlackTonersUsed, 
               cyanToner: deviceTonersData!.CyanTonersUsed,
