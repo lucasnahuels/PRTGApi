@@ -4,19 +4,21 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ApplicationCore.Models;
 using ApplicationCore.Services.Interfaces;
+using ApplicationCore.Services.Interfaces.Reports;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
     public class ContractController : ControllerBase
     {
         private readonly IContractService _contractService;
+        private readonly IDailyDeviceService _dailyDeviceService;
 
-        public ContractController(IContractService contractService)
+        public ContractController(IContractService contractService, IDailyDeviceService dailyDeviceService)
         {
             _contractService = contractService;
+            _dailyDeviceService = dailyDeviceService;
         }
 
         [HttpGet]
@@ -81,6 +83,14 @@ namespace WebApi.Controllers
         {
             await _contractService.CreateAsync(contract);
             return CreatedAtAction("GetContract", new { id = contract.Id }, contract);
+        }
+
+        [Route("CalculatePrices/{contractId}/{deviceId}")]
+        [HttpGet]
+        public async Task<ActionResult<ContractPrices>> CalculatePrices(int contractId, int deviceId)
+        {
+            var prices = await _dailyDeviceService.CalculatePrices(contractId, deviceId);
+            return Ok(prices);
         }
 
         [HttpDelete("{id}")]
