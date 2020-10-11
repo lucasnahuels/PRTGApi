@@ -15,6 +15,7 @@ using Coravel;
 using ApplicationCore.Services;
 using ApplicationCore.Models.Constants;
 using WebApi.GlobalErrorHandling.Extensions;
+using ApplicationCore.Configuration;
 
 namespace WebApi
 {
@@ -68,6 +69,8 @@ namespace WebApi
             });
             services.AddDatabaseContext(Configuration.GetConnectionString("prtg"));
             services.AddPRTGServices();
+
+            services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
 
             services.AddScheduler();            
         }

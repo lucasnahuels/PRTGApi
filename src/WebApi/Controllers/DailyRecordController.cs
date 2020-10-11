@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ApplicationCore.Models.Reports;
-using ApplicationCore.Services.Interfaces;
 using ApplicationCore.Services.Interfaces.Reports;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class DailyRecordController : ControllerBase 
     {
         private readonly IDailyDeviceService _dailyDeviceService;

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ApplicationCore.Models;
 using ApplicationCore.Services.Interfaces;
-using ApplicationCore.Services;
 using ApplicationCore.Services.Interfaces.Reports;
 using ApplicationCore.Models.Reports;
 
@@ -12,7 +11,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class SensorController : ControllerBase
     {
         private readonly ISensorService _prtgService;

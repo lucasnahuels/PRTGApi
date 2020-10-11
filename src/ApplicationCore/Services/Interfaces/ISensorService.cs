@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.Models;
-using ApplicationCore.Models.Reports;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,6 +17,5 @@ namespace ApplicationCore.Services.Interfaces
         Task<List<DeviceApiModel>> GetAssignedDevices(int contractId);
         Task<List<DeviceApiModel>> GetUnassignedDevices();
         Task<int> GetChildDeviceNamedTonersAsync(int parentDeviceObjId);
-
     }
 }

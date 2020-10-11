@@ -36,6 +36,8 @@ namespace ApplicationCore.Services.Extensions
 
             services.AddTransient<DailyRecordsScheduleService>();
             services.AddTransient<RefilledTonersRecordsScheduleService>();
+
+            services.AddSingleton<IMailerService, MailerService>();
         }
     }
 }
