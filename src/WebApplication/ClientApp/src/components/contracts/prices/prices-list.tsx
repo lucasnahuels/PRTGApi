@@ -77,6 +77,8 @@ const PricesList = (deviceObjId: number) => {
       <Grid container xs={12} item>
         <Grid item xs={3}></Grid>
         <Grid item xs={6}>
+          <h5 className={classes.titlesRow}>Calculated prices for this device in the actual month with the values of this contract</h5>
+          <br/>
           <TableContainer component={Paper}>
             <Table size="medium">
               <TableHead aria-label="simple table">
@@ -84,12 +86,12 @@ const PricesList = (deviceObjId: number) => {
                   <TableCell className={classes.titlesRow} size="medium">
                     Device
                   </TableCell>
-                  <TableCell className={classes.titlesRow} size="medium">
+                  {/* <TableCell className={classes.titlesRow} size="medium">
                     Year
                   </TableCell>
                   <TableCell className={classes.titlesRow} size="medium">
                     Month
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell className={classes.titlesRow} size="medium">
                     Spent in black and white sheets
                   </TableCell>
@@ -106,7 +108,7 @@ const PricesList = (deviceObjId: number) => {
                   {" "}
                   {/*do not forget key */}
                   <TableCell className={classes.dataRow}></TableCell>
-                  <TableCell className={classes.dataRow}>
+                  {/* <TableCell className={classes.dataRow}>
                     <Select
                       className={classes.formRoot}
                       id="inputYear"
@@ -137,7 +139,7 @@ const PricesList = (deviceObjId: number) => {
                         ) 
                         }
                     </Select>
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell className={classes.dataRow}></TableCell>
                   <TableCell className={classes.dataRow}></TableCell>
                   <TableCell className={classes.dataRow}></TableCell>
