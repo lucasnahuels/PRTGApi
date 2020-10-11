@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import { purple } from '@material-ui/core/colors';
+import { orange, purple } from '@material-ui/core/colors';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from './auth/react-auth0-spa';
 
@@ -30,6 +30,40 @@ const useStyles = makeStyles((theme: Theme) =>
             backgroundColor: purple[700],
             '&:hover': {
                 backgroundColor: purple[500],
+            },
+            boxShadow: 'none',
+            textTransform: 'none',
+            fontSize: 16,
+            padding: '6px 12px',
+            border: '1px solid',
+            lineHeight: 1.5,
+            borderColor: '#0063cc',
+            fontFamily: [
+                '-apple-system',
+                'BlinkMacSystemFont',
+                '"Segoe UI"',
+                'Roboto',
+                '"Helvetica Neue"',
+                'Arial',
+                'sans-serif',
+                '"Apple Color Emoji"',
+                '"Segoe UI Emoji"',
+                '"Segoe UI Symbol"',
+            ].join(','),
+            '&:active': {
+                boxShadow: 'none',
+                backgroundColor: '#0062cc',
+                borderColor: '#005cbf',
+            },
+            '&:focus': {
+                boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+            }
+        },
+        colorAuthButton: {
+            color: theme.palette.getContrastText(orange[500]),
+            backgroundColor: orange[700],
+            '&:hover': {
+                backgroundColor: orange[500],
             },
             boxShadow: 'none',
             textTransform: 'none',
@@ -101,14 +135,14 @@ export default function SearchAppBar() {
                         </Grid>
                         <Grid item xs={1}>
                             {!isAuthenticated && (
-                                <button onClick={() => loginWithRedirect({})} type="button">
+                                <Button className={classes.colorAuthButton} onClick={() => loginWithRedirect({})}>
                                 Log in
-                                </button>
+                                </Button>
                             )}
                             {isAuthenticated && (
-                                <button onClick={() => logoutWithRedirect({})} type="button">
+                                <Button className={classes.colorAuthButton} onClick={() => logoutWithRedirect({})}>
                                 Log out
-                                </button>
+                                </Button>
                             )}
                         </Grid>
                         <Grid item xs={1}>
