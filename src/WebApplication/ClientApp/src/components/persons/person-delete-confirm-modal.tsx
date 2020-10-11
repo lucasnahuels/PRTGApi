@@ -2,9 +2,8 @@ import React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Button } from '@material-ui/core';
-import axios from 'axios';
+import useApi from '../../helpers/axios-wrapper'
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
-import { myConfig } from '../../configurations';
 import { Employee } from '../contracts/contract';
 
 export interface PersonDeleteConfirmModalProps {
@@ -43,9 +42,9 @@ const PersonDeleteConfirmModal = ({ show, hideModal, getAllPersons, person }: Pe
 
     const classes = useStyles();
     const [modalStyle] = React.useState(getModalStyle);
-
+    const axios = useApi();
     const DeletePerson = async () => {
-        await axios.delete(myConfig.backUrl + 'employee/' + person!.id!.toString()).then( () => {
+        await axios.delete('employee/' + person!.id!.toString()).then( () => {
             ToastsStore.success('The Person was deleted');
             getAllPersons();
             handleClose();

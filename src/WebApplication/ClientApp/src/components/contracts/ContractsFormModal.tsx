@@ -1,15 +1,14 @@
-import React, { ChangeEvent, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Button, Select, InputLabel, Tooltip, MenuItem } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
-import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import { Contract } from './contract';
-import { myConfig } from '../../configurations';
 import { useForm } from "react-hook-form";
 import { Owner } from '../owners/owner';
 import { Device } from '../sensors/device';
+import useApi from '../../helpers/axios-wrapper'
 
 export interface ContractFormModalProps {
     show: boolean,
@@ -125,19 +124,21 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const axios = useApi();
+
     const GetDevices = async () => {
-        await axios.get(myConfig.backUrl + `sensor/GetAllDevices`).then((response) => {
+        await axios.get(`sensor/GetAllDevices`).then((response) => {
             setDevice({ ...stateDevice, listOfDevices: response.data });
         });
     };
     const GetOwners = async () => {
-        await axios.get(myConfig.backUrl + `Owner`).then((response) => {
+        await axios.get(`Owner`).then((response) => {
             setOwner({ ...stateOwner, listOfOwners: response.data });
         });
     };
 
     const AddContract = (contract : Contract) => {
-        axios.post(myConfig.backUrl + 'contract', contract).then(() => {
+        axios.post('contract', contract).then(() => {
             ToastsStore.success('The contract was saved');
             getAllContracts();
             handleClose();
@@ -147,8 +148,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     }
 
     const UpdateContract = async (contract: Contract) => {
-        console.log(contract);
-        await axios.put(myConfig.backUrl + 'contract/', contract).then(() => {
+        await axios.put('contract/', contract).then(() => {
             ToastsStore.success('The contract was saved');
             getAllContracts();
             handleClose();

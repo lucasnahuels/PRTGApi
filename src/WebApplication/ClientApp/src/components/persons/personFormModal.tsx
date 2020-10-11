@@ -3,9 +3,8 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Button, InputLabel, MenuItem, Select, Tooltip } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
-import axios from 'axios';
+import useApi from '../../helpers/axios-wrapper'
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
-import { myConfig } from '../../configurations';
 import { Employee } from '../contracts/contract';
 import { Owner } from '../owners/owner';
 
@@ -69,6 +68,8 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, personToEdit}
     const [stateOwner, setOwner] = React.useState<IOwnerList>();
     const [selectedOwnerValue, setSelectedOwnerValue] = React.useState("");
 
+    const axios = useApi();
+
     useEffect(() => { 
         GetOwners();
         fillList();
@@ -88,7 +89,7 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, personToEdit}
             email: email,
             ownerId : parseInt(selectedOwnerValue)
         };
-        axios.post(myConfig.backUrl + 'Employee', personData).then(() => {
+        axios.post('employee', personData).then(() => {
             ToastsStore.success('The person was saved');
             getAllPersons();
             handleClose();
@@ -105,7 +106,7 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, personToEdit}
             email: email,
             ownerId: parseInt(selectedOwnerValue)
         };
-        await axios.put(myConfig.backUrl + 'Employee/', personData).then(() => {
+        await axios.put('employee/', personData).then(() => {
             ToastsStore.success('The person was saved');
             getAllPersons();
             handleClose();
@@ -115,7 +116,7 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, personToEdit}
     }
 
     const GetOwners = async () => {
-        await axios.get(myConfig.backUrl + `Owner`).then((response) => {
+        await axios.get( `Owner`).then((response) => {
             setOwner({ ...stateOwner, listOfOwners: response.data });
         });
     };

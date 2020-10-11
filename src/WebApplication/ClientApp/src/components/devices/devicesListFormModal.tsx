@@ -2,15 +2,14 @@ import React, { useEffect } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { Button, MenuItem } from "@material-ui/core";
-import axios from "axios";
 import {
     ToastsStore,
     ToastsContainer,
     ToastsContainerPosition,
 } from "react-toasts";
-import { myConfig } from "../../configurations";
 import { Device } from "../sensors/device";
 import { Contract, ContractDevice } from "../contracts/contract";
+import useApi from '../../helpers/axios-wrapper'
 
 export interface IDeviceList {
     listOfDevices: Device[]
@@ -67,8 +66,10 @@ const DevicesListFormModal = ({show, contractId, hideModal}: DevicesListFormModa
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const axios = useApi();
+
     const GetPossibleDevices = async () => {
-        await axios.get(myConfig.backUrl + `sensor/GetUnassignedDevices`).then((response) => {
+        await axios.get(`sensor/GetUnassignedDevices`).then((response) => {
             setDevice({ ...stateDevice, listOfDevices: response.data });
         });
     };
@@ -83,7 +84,7 @@ const DevicesListFormModal = ({show, contractId, hideModal}: DevicesListFormModa
             id : contractId,
             contractDevices : devicesAssigned
         };
-        await axios.put(myConfig.backUrl + 'contract/assignDevice', contract).then(() => {
+        await axios.put('contract/assignDevice', contract).then(() => {
             ToastsStore.success('The device was assigned');
             hideModal();
         }).catch(() => {

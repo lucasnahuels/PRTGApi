@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@auth0/auth0-react": "^1.1.0",
+    "@auth0/auth0-spa-js": "^1.12.1",
     "@aws-amplify/ui-react": "^0.2.11",
     "@devexpress/dx-react-chart": "^2.6.2",
     "@devexpress/dx-react-chart-material-ui": "^2.6.2",

@@ -3,13 +3,12 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { Button} from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import axios from "axios";
+import useApi from '../../helpers/axios-wrapper'
 import {
   ToastsStore,
   ToastsContainer,
   ToastsContainerPosition,
 } from "react-toasts";
-import { myConfig } from "../../configurations";
 import { Owner } from "./owner";
 
 export interface OwnerFormModalProps {
@@ -77,11 +76,13 @@ const OwnerFormModal = ({
     }
   };
 
+  const axios = useApi();
+  
   const AddOwner = () => {
     let ownerData: Owner = {
         name: inputOwnerName!
     };
-    axios.post(myConfig.backUrl + 'owner', ownerData).then(() => {
+    axios.post('owner', ownerData).then(() => {
       ToastsStore.success('The owner was saved');
       getAllOwners();
       handleClose();
@@ -95,7 +96,7 @@ const OwnerFormModal = ({
       id : owner!.id!,
       name : inputOwnerName!
     };
-    await axios.put(myConfig.backUrl + 'owner/', ownerData).then(() => {
+    await axios.put('owner/', ownerData).then(() => {
       ToastsStore.success('The owner was saved');
       getAllOwners();
       handleClose();

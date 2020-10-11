@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { Contract } from './contract';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -17,10 +16,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import ContractFormModal from './ContractsFormModal';
 import ContractDeleteConfirmModal from './contract-delete-confirm-modal';
 import { Grid, TablePagination, TableFooter, TextField } from '@material-ui/core';
-import { myConfig } from '../../configurations.js';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Link } from 'react-router-dom';
+import useApi from '../../helpers/axios-wrapper'
 
 export interface IContractList {
     listOfContract: Contract[]
@@ -86,14 +85,16 @@ const ContractList = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
 
+    const axios = useApi();
+
     const GetContracts = async () => {
-        await axios.get(myConfig.backUrl + `contract`).then( (response) => {
+        await axios.get(`contract`).then( (response) => {
             setContract({ ...stateContract, listOfContract: response.data });
         });
     };
     
     const GetContractsConst = async () => {
-        await axios.get(myConfig.backUrl + `contract`).then((response) => {
+        await axios.get(`contract`).then((response) => {
             setContractConst({ ...stateContractConst, listOfContract: response.data });
         });
     };

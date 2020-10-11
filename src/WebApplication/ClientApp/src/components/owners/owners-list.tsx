@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import useApi from '../../helpers/axios-wrapper'
 import { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -13,7 +13,6 @@ import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { Grid, TablePagination, TableFooter} from '@material-ui/core';
-import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import OwnerFormModal from './ownersFormModal';
 import OwnerDeleteConfirmModal from './owner-delete-confirm-modal';
@@ -61,13 +60,15 @@ const OwnersList = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
     
+    const axios = useApi();
+
     useEffect(() => { 
         GetOwners() 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
+    
     const GetOwners = async () => {
-        await axios.get(myConfig.backUrl + `Owner`).then( (response) => {
+        await axios.get(`Owner`).then( (response) => {
             setOwner({ ...stateOwner, listOfOwners: response.data });
         }).catch(error => console.log(error));
     };
