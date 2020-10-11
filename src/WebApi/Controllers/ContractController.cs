@@ -5,24 +5,21 @@ using Microsoft.AspNetCore.Mvc;
 using ApplicationCore.Models;
 using ApplicationCore.Services.Interfaces;
 using ApplicationCore.Services.Interfaces.Reports;
-using System;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ContractController : ControllerBase
     {
         private readonly IContractService _contractService;
         private readonly IDailyDeviceService _dailyDeviceService;
-        private readonly IMailerService _mailerService;
 
-        public ContractController(IContractService contractService, IDailyDeviceService dailyDeviceService, IMailerService mailerService)
+        public ContractController(IContractService contractService, IDailyDeviceService dailyDeviceService)
         {
             _contractService = contractService;
             _dailyDeviceService = dailyDeviceService;
-            _mailerService = mailerService;
         }
 
         [HttpGet]
@@ -31,20 +28,6 @@ namespace WebApi.Controllers
             var result = await _contractService.GetAsync();
             //order by contract.ownerName
             return Ok(result);
-        }
-
-        [HttpGet("test")]
-        public async Task<ActionResult<IEnumerable<Contract>>> Email()
-        {
-            try
-            {
-                await _mailerService.SendEmailAsync("matias.grieben@softvision.com", "Test subject", "Body, some text");
-            }
-            catch(Exception e)
-            {
-                return Ok(e);
-            }
-            return Ok();
         }
 
         [HttpGet("{id}")]
