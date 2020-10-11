@@ -14,6 +14,7 @@ using ApplicationCore.Services.Extensions;
 using Coravel;
 using ApplicationCore.Services;
 using ApplicationCore.Models.Constants;
+using WebApi.GlobalErrorHandling.Extensions;
 
 namespace WebApi
 {
@@ -30,6 +31,14 @@ namespace WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLogging(builder =>
+                builder
+                    .AddDebug()
+                    .AddConsole()
+                    .AddConfiguration(Configuration.GetSection("Logging"))
+                    .SetMinimumLevel(LogLevel.Information)
+            );
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -60,20 +69,20 @@ namespace WebApi
             services.AddDatabaseContext(Configuration.GetConnectionString("prtg"));
             services.AddPRTGServices();
 
-            services.AddScheduler();
+            services.AddScheduler();            
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 IdentityModelEventSource.ShowPII = true;
             }
-            else
-            {
-                app.UseExceptionHandler("/error");
-            }
+            app.UseExceptionHandler("/Error");
+            //TODO: when configuring a new Logger service
+            //app.ConfigureExceptionHandler(logger);
+
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();
