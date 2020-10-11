@@ -66,6 +66,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
 
     type FormData = {
         id? : number,
+        ownerId : number,
         blackAndWhiteLimitSet:number,
         colorLimitSet:number,
         blackAndWhitePrice:number,
@@ -78,6 +79,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     const { register, setValue, handleSubmit } = useForm<FormData>({
       defaultValues: {
         id: isEdit ? contractToEdit!.id! : 0,
+        ownerId :isEdit ? contractToEdit!.ownerId : 0, 
         blackAndWhiteLimitSet: isEdit? contractToEdit!.blackAndWhiteLimitSet : 0,
         colorLimitSet: isEdit? contractToEdit!.colorLimitSet : 0,
         blackAndWhitePrice: isEdit? contractToEdit!.blackAndWhitePrice : 0,
@@ -95,6 +97,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
         surplusColorPrice,
     }) => {
         let contractData: Contract = {
+            id: isEdit ? contractToEdit!.id! : 0,
             ownerId: parseInt(selectedOwnerValue),
             blackAndWhiteLimitSet : blackAndWhiteLimitSet,
             colorLimitSet : colorLimitSet,
@@ -109,12 +112,11 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
             UpdateContract(contractData);
     }); 
 
-    useEffect(() => { fillList(); }); 
-    const fillList = () => {
-        if (isEdit) {
-            setSelectedOwnerValue(contractToEdit!.owner!.name!);
-        }
-    };
+    // useEffect(() => { fillList(); }); 
+    // const fillList = () => {
+    //     if (isEdit) {
+    //     }
+    // };
     
     React.useEffect(() => {
         GetDevices();
@@ -199,7 +201,7 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
                                     >
                                         {stateOwner !== undefined &&
                                             stateOwner.listOfOwners !== undefined
-                                            ? stateOwner.listOfOwners.map((owner) => (
+                                            ? stateOwner.listOfOwners.sort().map((owner) => (
                                                 <MenuItem
                                                     key={owner!.id!.toString()}
                                                     value={owner!.id!.toString()}

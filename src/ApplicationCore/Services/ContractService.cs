@@ -92,10 +92,10 @@ namespace ApplicationCore.Services
         {
             await CheckNewDevices(contract);
             await CheckNewUsers(contract);
+            
             _context.Entry(contract).State = EntityState.Modified;
-
             await _context.SaveChangesAsync();
-
+        
             return contract;
         }
 
@@ -104,7 +104,7 @@ namespace ApplicationCore.Services
             var contractToPut = await GetAsync(Convert.ToInt32(contract.Id));
 
             contractToPut = UpdateEmployeesContractRelations(contract, contractToPut);
-            contractToPut = UpdateUsersContractRelations(contract, contractToPut);
+            //contractToPut = UpdateUsersContractRelations(contract, contractToPut);
 
             await UpdateAsync(contractToPut);
 

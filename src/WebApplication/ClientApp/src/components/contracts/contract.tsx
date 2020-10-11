@@ -49,6 +49,7 @@ export interface CognitoUserAttributes {
 export interface Employee {
         id?: number,
         owner?: Owner,
+        ownerId?: number,
         name?: string,
         email: string,
         contractEmployees?: ContractEmployee[],

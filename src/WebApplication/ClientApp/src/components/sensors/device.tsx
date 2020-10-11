@@ -44,3 +44,28 @@ export interface DeviceDataViewModel {
     thisMonthQuantityMagentaToners?: string,
     thisMonthQuantityBlackToners?: string
 }
+
+export interface DailyContadoresDataDevices {
+    deviceId: number,
+    dateToday: Date,
+    blackAndWhiteCopies: number,
+    colorCopies: number,
+}
+
+export interface TonersUsedDataDevices {
+    deviceId: number,
+    dateToday: Date,
+    blackTonersUsed: number,
+    cyanTonersUsed: number,
+    magentaTonersUsed: number,
+    yellowTonersUsed: number
+}
+
+export interface DailyTonersDataDevices {
+    deviceId: number,
+    dateAndTime: Date,
+    blackTonersUsed: number,
+    cyanTonersUsed: number,
+    magentaTonersUsed: number,
+    yellowTonersUsed: number
+}

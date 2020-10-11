@@ -70,7 +70,7 @@ const OwnersList = () => {
     const GetOwners = async () => {
         await axios.get(`Owner`).then( (response) => {
             setOwner({ ...stateOwner, listOfOwners: response.data });
-        });
+        }).catch(error => console.log(error));
     };
    
     const ShowOwnersForm = (isEdit: boolean, ownerToEdit? : Owner) => {

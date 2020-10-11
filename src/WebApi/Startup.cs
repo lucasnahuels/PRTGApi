@@ -11,6 +11,9 @@ using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using ApplicationCore.Services.Extensions;
+using Coravel;
+using ApplicationCore.Services;
+using ApplicationCore.Models.Constants;
 
 namespace WebApi
 {
@@ -56,6 +59,8 @@ namespace WebApi
             });
             services.AddDatabaseContext(Configuration.GetConnectionString("prtg"));
             services.AddPRTGServices();
+
+            services.AddScheduler();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -80,6 +85,17 @@ namespace WebApi
                 endpoints.MapControllers();
             });
             app.UpdateDatabase();
+
+            var provider = app.ApplicationServices;
+            provider.UseScheduler(scheduler =>
+            {
+                scheduler.Schedule<DailyRecordsScheduleService>()
+                .DailyAt(Constants.TimeRecordsAreTriggered, 00)
+                .Zoned(TimeZoneInfo.Local);
+                scheduler.Schedule<RefilledTonersRecordsScheduleService>()
+                .Cron("0 */4 * * *");
+                //todos los meses a fin de mes mandar reporte??
+            });
         }
 
         private void SetupCorsPolicyAction(CorsOptions options)

@@ -3,15 +3,17 @@ using System;
 using ApplicationCore.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ApplicationCore.EntityFramework.Migrations
 {
     [DbContext(typeof(PrtgDbContext))]
-    partial class PrtgDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201008030956_AddNewTableTonnersUsed")]
+    partial class AddNewTableTonnersUsed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,10 +213,10 @@ namespace ApplicationCore.EntityFramework.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("BlackTonersUsed")
+                    b.Property<int>("Black")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CyanTonersUsed")
+                    b.Property<int>("Cyan")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DateAndTime")
@@ -223,10 +225,10 @@ namespace ApplicationCore.EntityFramework.Migrations
                     b.Property<long>("DeviceId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("MagentaTonersUsed")
+                    b.Property<int>("Magenta")
                         .HasColumnType("integer");
 
-                    b.Property<int>("YellowTonersUsed")
+                    b.Property<int>("Yellow")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
