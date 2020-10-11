@@ -1,8 +1,6 @@
 import React, { createContext } from 'react';
 import useApi from '../../helpers/axios-wrapper'
 import { Grid, makeStyles, Theme, createStyles, FormControl, InputLabel, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, TableFooter } from "@material-ui/core";
-import { Device, DeviceData, DeviceDataViewModel } from './device';
-import { myConfig } from '../../configurations';
 import { DailyContadoresDataDevices, TonersUsedDataDevices, Device, DeviceDataViewModel, DailyTonersDataDevices } from './device';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -118,16 +116,16 @@ const SensorList = () => {
     };
 
     const GetDeviceData = async () => {
-      await axios.get(myConfig.backUrl + `dailyRecord/GetContadoresDataFromActualOrPreviousMonth/` + selectedValue + "/" + true).then((response) => {
+      await axios.get( `dailyRecord/GetContadoresDataFromActualOrPreviousMonth/` + selectedValue + "/" + true).then((response) => {
           setDeviceContadoresDailyData( response.data );
       });
-      await axios.get(myConfig.backUrl + `dailyRecord/GetTonersDataFromActualOrPreviousMonth/` + selectedValue + "/" + true).then((response) => {
+      await axios.get( `dailyRecord/GetTonersDataFromActualOrPreviousMonth/` + selectedValue + "/" + true).then((response) => {
           setDeviceTonersDailyData(response.data);
       });
-      await axios.get(myConfig.backUrl + `sensor/GetCurrentTonersDevicesValues/` + selectedValue).then((response) => {
+      await axios.get( `sensor/GetCurrentTonersDevicesValues/` + selectedValue).then((response) => {
         setDeviceTonersCurrentData(response.data);
       });
-      await axios.get(myConfig.backUrl + `dailyRecord/GetContadoresDataFromActualOrPreviousMonth/` + selectedValue + "/" + false).then((response) => {
+      await axios.get( `dailyRecord/GetContadoresDataFromActualOrPreviousMonth/` + selectedValue + "/" + false).then((response) => {
         setDeviceContadoresPreviousMonthData(response.data);
       });
     };
@@ -136,11 +134,11 @@ const SensorList = () => {
     var start = inputDate.startDate.toJSON();
     var end = inputDate.endDate.toJSON();
 
-    await axios.get(myConfig.backUrl + `dailyRecord/GetContadoresDataFromSelectedRangeDate/` + selectedValue + "/" + start + "/" + end)
+    await axios.get( `dailyRecord/GetContadoresDataFromSelectedRangeDate/` + selectedValue + "/" + start + "/" + end)
     .then((response) => {
       setDeviceContadoresDailyData(response.data);
     });
-    await axios.get(myConfig.backUrl + `dailyRecord/GetTonersDataFromSelectedRangeDate/` + selectedValue + "/" + start + "/" + end)
+    await axios.get( `dailyRecord/GetTonersDataFromSelectedRangeDate/` + selectedValue + "/" + start + "/" + end)
     .then((response) => {
       setDeviceTonersDailyData(response.data);
     });

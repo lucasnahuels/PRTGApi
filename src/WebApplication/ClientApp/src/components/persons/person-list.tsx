@@ -132,9 +132,9 @@ const PersonsList = () => {
 
     // const GetUsers = async () => {
     //     let id: string = getQueryVariable("contractId"); 
-    //     await axios.get<CognitoUser[]>(myConfig.backUrl + `User`).then(async (response) => {
+    //     await axios.get<CognitoUser[]>( `User`).then(async (response) => {
     //         setUser({ ...stateUser, listOfUser: response.data });
-    //         await axios.get<ContractUser[]>(myConfig.backUrl + `contract/getContractUsersRelations/` + id).then((innerResponse) => {
+    //         await axios.get<ContractUser[]>( `contract/getContractUsersRelations/` + id).then((innerResponse) => {
     //             response.data.forEach(user => {
     //                 user.sendReport = false;
     //                 innerResponse.data.forEach(contractUser => {
