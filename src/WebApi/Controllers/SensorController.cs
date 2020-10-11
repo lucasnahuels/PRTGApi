@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ApplicationCore.Models;
 using ApplicationCore.Services.Interfaces;
+using ApplicationCore.Services;
+using ApplicationCore.Services.Interfaces.Reports;
+using ApplicationCore.Models.Reports;
 
 namespace WebApi.Controllers
 {
@@ -13,11 +16,14 @@ namespace WebApi.Controllers
     public class SensorController : ControllerBase
     {
         private readonly ISensorService _prtgService;
+        private readonly IDailyDeviceService _dailyDeviceService;
 
-        public SensorController(ISensorService prtgService)
+        public SensorController(ISensorService prtgService, IDailyDeviceService dailyDeviceService)
         {
             _prtgService = prtgService;
+            _dailyDeviceService = dailyDeviceService;
         }
+
 
         [HttpGet]
         [Route("GetAllChannels")]
@@ -65,11 +71,12 @@ namespace WebApi.Controllers
             return Ok(contadores);
         }
 
-        [HttpGet("{objId}")]
-        [Route("GetTonersData")]
-        public async Task<ActionResult<SensorsData>> GetTonersData(int objId)
+        [HttpGet]
+        [Route("GetCurrentTonersDevicesValues/{objId}")]
+        public async Task<ActionResult<DailyTonersDataDevices>> GetCurrentTonersDevicesValues(int objId)
         {
-            var tonersData = await _prtgService.GetTonersData(objId);
+            var childObjId= _prtgService.GetChildDeviceNamedTonersAsync(objId).Result;
+            var tonersData = await _dailyDeviceService.GetCurrentTonersDevicesValues(childObjId, objId);
             return Ok(tonersData);
         }
 

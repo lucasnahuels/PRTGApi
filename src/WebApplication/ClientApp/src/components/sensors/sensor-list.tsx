@@ -2,7 +2,7 @@ import React, { createContext } from 'react';
 import axios from 'axios';
 import { Grid, makeStyles, Theme, createStyles, FormControl, InputLabel, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, TableFooter } from "@material-ui/core";
 import { myConfig } from '../../configurations';
-import { DailyContadoresDataDevices, DailyTonersDataDevices, Device, DeviceDataViewModel } from './device';
+import { DailyContadoresDataDevices, TonersUsedDataDevices, Device, DeviceDataViewModel, DailyTonersDataDevices } from './device';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Toner } from '../toners/toner';
@@ -55,8 +55,10 @@ const SensorList = () => {
 
 
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
-    const [deviceContadoresData, setDeviceContadoresData] = React.useState<DailyContadoresDataDevices>();
-    const [deviceTonersData, setDeviceTonersData] = React.useState<DailyTonersDataDevices>();
+    const [deviceContadoresDailyData, setDeviceContadoresDailyData] = React.useState<DailyContadoresDataDevices>();
+    const [deviceContadoresPreviousMonthData, setDeviceContadoresPreviousMonthData] = React.useState<DailyContadoresDataDevices>();
+    const [deviceTonersDailyData, setDeviceTonersDailyData] = React.useState<TonersUsedDataDevices>();
+    const [deviceTonersCurrentData, setDeviceTonersCurrentData] = React.useState<DailyTonersDataDevices>();
     const [deviceDataViewModel, setDeviceDataViewModel] = React.useState<DeviceDataViewModel>({
         objId: 0,
         thisMonthQuantityColorSheets: "",
@@ -95,11 +97,19 @@ const SensorList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedValue]);
     React.useEffect(() => {
-      if (deviceContadoresData !== undefined && deviceTonersData !== undefined){
+      if (deviceContadoresDailyData !== undefined && deviceTonersDailyData !== undefined && deviceTonersCurrentData !== undefined && deviceContadoresPreviousMonthData !== undefined){
         settingDeviceDataViewModel();
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [deviceContadoresData]);
+    }, [deviceContadoresDailyData, deviceTonersDailyData, deviceTonersCurrentData, deviceContadoresPreviousMonthData]);
+  React.useEffect(() => {
+    if (inputDate !== undefined && selectedValue !== '') {
+      GetDeviceDataFromSelectedRangeDate()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputDate]);
+
+
 
     const GetDevices = async () => {
         await axios.get(myConfig.backUrl + `sensor/GetAllDevices`).then((response) => {
@@ -108,33 +118,61 @@ const SensorList = () => {
     };
 
     const GetDeviceData = async () => {
-      await axios.get(myConfig.backUrl + `dailyRecord/GetContadoresDataFromActualOrPreviousMonth/` + selectedValue + "/" + false).then((response) => {
-          setDeviceContadoresData( response.data );
+      await axios.get(myConfig.backUrl + `dailyRecord/GetContadoresDataFromActualOrPreviousMonth/` + selectedValue + "/" + true).then((response) => {
+          setDeviceContadoresDailyData( response.data );
       });
-      await axios.get(myConfig.backUrl + `dailyRecord/GetTonersDataFromActualOrPreviousMonth/` + selectedValue + "/" + false).then((response) => {
-          setDeviceTonersData(response.data);
+      await axios.get(myConfig.backUrl + `dailyRecord/GetTonersDataFromActualOrPreviousMonth/` + selectedValue + "/" + true).then((response) => {
+          setDeviceTonersDailyData(response.data);
+      });
+      await axios.get(myConfig.backUrl + `sensor/GetCurrentTonersDevicesValues/` + selectedValue).then((response) => {
+        setDeviceTonersCurrentData(response.data);
+      });
+      await axios.get(myConfig.backUrl + `dailyRecord/GetContadoresDataFromActualOrPreviousMonth/` + selectedValue + "/" + false).then((response) => {
+        setDeviceContadoresPreviousMonthData(response.data);
       });
     };
 
+  const GetDeviceDataFromSelectedRangeDate = async () => {
+    var start = inputDate.startDate.toJSON();
+    var end = inputDate.endDate.toJSON();
+
+    await axios.get(myConfig.backUrl + `dailyRecord/GetContadoresDataFromSelectedRangeDate/` + selectedValue + "/" + start + "/" + end)
+    .then((response) => {
+      setDeviceContadoresDailyData(response.data);
+    });
+    await axios.get(myConfig.backUrl + `dailyRecord/GetTonersDataFromSelectedRangeDate/` + selectedValue + "/" + start + "/" + end)
+    .then((response) => {
+      setDeviceTonersDailyData(response.data);
+    });
+  }
+
     const settingDeviceDataViewModel = () => {
-        if (deviceContadoresData !== undefined && deviceTonersData !== undefined) {
-            debugger
+      if (deviceContadoresDailyData !== undefined && 
+        deviceTonersDailyData !== undefined && 
+        deviceTonersCurrentData !== undefined && 
+        deviceContadoresPreviousMonthData !== undefined) {
             setDeviceDataViewModel({
               objId: parseInt(selectedValue),
-              thisMonthQuantityColorSheets: deviceContadoresData.ColorCopies.toString(),
-              thisMonthQuantityBandWSheets: deviceContadoresData.BlackAndWhiteCopies.toString(),
-              thisMonthQuantityTotalSheets: (deviceContadoresData.BlackAndWhiteCopies + deviceContadoresData.ColorCopies).toString(),
-              thisMonthQuantityBlackToners: deviceTonersData!.BlackTonersUsed.toString(),
-              thisMonthQuantityCyanToners: deviceTonersData!.CyanTonersUsed.toString(),
-              thisMonthQuantityMagentaToners: deviceTonersData!.MagentaTonersUsed.toString(),
-              thisMonthQuantityYellowToners: deviceTonersData!.YellowTonersUsed.toString()
+              thisMonthQuantityColorSheets: deviceContadoresDailyData.colorCopies!.toString(),
+              thisMonthQuantityBandWSheets: deviceContadoresDailyData.blackAndWhiteCopies!.toString(),
+              thisMonthQuantityTotalSheets: (deviceContadoresDailyData.blackAndWhiteCopies! + deviceContadoresDailyData.colorCopies!).toString(),
+              thisMonthQuantityBlackToners: deviceTonersDailyData!.blackTonersUsed!.toString(),
+              thisMonthQuantityCyanToners: deviceTonersDailyData!.cyanTonersUsed!.toString(),
+              thisMonthQuantityMagentaToners: deviceTonersDailyData!.magentaTonersUsed!.toString(),
+              thisMonthQuantityYellowToners: deviceTonersDailyData!.yellowTonersUsed!.toString()
             });
 
             setInfoForTonners({
-              blackToner: deviceTonersData!.BlackTonersUsed, 
-              cyanToner: deviceTonersData!.CyanTonersUsed,
-              magentaToner: deviceTonersData!.MagentaTonersUsed,
-              yellowToner: deviceTonersData!.YellowTonersUsed,
+              blackToner: deviceTonersCurrentData!.blackTonersUsed, 
+              cyanToner: deviceTonersCurrentData!.cyanTonersUsed,
+              magentaToner: deviceTonersCurrentData!.magentaTonersUsed,
+              yellowToner: deviceTonersCurrentData!.yellowTonersUsed,
+            });
+            setInfoForPreviousMonth({
+              objId: parseInt(selectedValue),
+              thisMonthQuantityBandWSheets: deviceContadoresPreviousMonthData!.blackAndWhiteCopies!.toString(),
+              thisMonthQuantityColorSheets: deviceContadoresPreviousMonthData!.colorCopies!.toString(),
+              thisMonthQuantityTotalSheets: (deviceContadoresPreviousMonthData!.blackAndWhiteCopies + deviceContadoresPreviousMonthData!.colorCopies!).toString()
             });
         }
     }
@@ -204,13 +242,13 @@ const SensorList = () => {
                   </TableHead>
                   <TableBody>
                     <TableRow key={`${deviceDataViewModel.objId}`}>
-                      <TableCell className={classes.dataRow} style={{paddingLeft:'30%'}}>
+                      <TableCell className={classes.dataRow} style={{paddingLeft:'0px'}}>
                         <DatePicker
                           selected={inputDate.startDate}
                           onChange={handleInputStartDate}
                         />
                       </TableCell>
-                        <TableCell className={classes.dataRow} style={{ paddingRight: '30%' }}>
+                        <TableCell className={classes.dataRow} style={{ paddingRight: '0px' }}>
                         <DatePicker
                           selected={inputDate.endDate}
                           onChange={handleInputEndDate}
@@ -287,16 +325,16 @@ const SensorList = () => {
                   <TableBody>
                     <TableRow key={`${deviceDataViewModel.objId}`}>
                       <TableCell className={classes.dataRow}>
-                        {deviceDataViewModel.thisMonthQuantityColorSheets}
+                        {deviceDataViewModel.thisMonthQuantityBlackToners}
                       </TableCell>
                       <TableCell className={classes.dataRow}>
-                        {deviceDataViewModel.thisMonthQuantityBandWSheets}
+                        {deviceDataViewModel.thisMonthQuantityCyanToners}
                       </TableCell>
                       <TableCell className={classes.dataRow}>
-                        {deviceDataViewModel.thisMonthQuantityTotalSheets}
+                        {deviceDataViewModel.thisMonthQuantityMagentaToners}
                       </TableCell>
                       <TableCell className={classes.dataRow}>
-                        {deviceDataViewModel.thisMonthQuantityTotalSheets}
+                        {deviceDataViewModel.thisMonthQuantityYellowToners}
                       </TableCell>
                       <TableCell className={classes.dataRow}>
                         <Button
@@ -305,7 +343,7 @@ const SensorList = () => {
                           size="small"
                           onClick={() => OpenTonersModal()}
                         >
-                          Tonners info
+                          Current toners info
                         </Button>
                       </TableCell>
                     </TableRow>

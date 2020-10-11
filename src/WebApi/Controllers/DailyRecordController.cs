@@ -35,13 +35,13 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("GetTonersDataFromSelectedRangeDate/{deviceId}/{date1}/{date2}")]
-        public async Task<ActionResult<DailyTonersDataDevices>> GetTonersDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2) 
+        public async Task<ActionResult<TonersUsed>> GetTonersDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2) 
         {
             return Ok(await _dailyDeviceService.GetTonersDataFromSelectedRangeDate(deviceId, date1, date2));
         }
 
         [HttpGet("GetTonersDataFromActualOrPreviousMonth/{deviceId}/{actualMonth}")]
-        public async Task<ActionResult<DailyTonersDataDevices>> GetTonersDataFromActualOrPreviousMonth(int deviceId, bool actualMonth)
+        public async Task<ActionResult<TonersUsed>> GetTonersDataFromActualOrPreviousMonth(int deviceId, bool actualMonth)
         {
             return Ok(await _dailyDeviceService.GetTonersDataFromActualOrPreviousMonth(deviceId, actualMonth));
         }

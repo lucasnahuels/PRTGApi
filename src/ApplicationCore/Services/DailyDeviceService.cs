@@ -142,7 +142,7 @@ namespace ApplicationCore.Services
             var deviceDate2ContadoresValues = _context.DailyContadores.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.DateToday.Date == date2.Date &&
                                                                         dailyPrinter.DeviceId == deviceId).Result;
 
-            #region InitializeOnlyForFirstTime
+            #region Initialize
             if (deviceDate1ContadoresValues == null)
             {
                 deviceDate1ContadoresValues = new DailyContadoresDataDevices
@@ -185,7 +185,7 @@ namespace ApplicationCore.Services
             var deviceFirstOfMonthContadoresValues = _context.DailyContadores.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.DateToday.Date == firstDayOfMonth.Date &&
                                                                         dailyPrinter.DeviceId == deviceId).Result;
 
-            #region InitializeOnlyForFirstTime
+            #region Initialize
             if(DateTime.Now.Year == 2020 && DateTime.Now.Month == 10)
             deviceFirstOfMonthContadoresValues = new DailyContadoresDataDevices
             {
@@ -194,7 +194,17 @@ namespace ApplicationCore.Services
                 ColorCopies= 0,
                 DateToday = new DateTime(2020, 10, 1)
             };
-            if(deviceLastContadoresValues == null)
+            if (deviceFirstOfMonthContadoresValues == null)
+            {
+                deviceFirstOfMonthContadoresValues = new DailyContadoresDataDevices
+                {
+                    DeviceId = deviceId,
+                    BlackAndWhiteCopies = 0,
+                    ColorCopies = 0,
+                    DateToday = new DateTime(2020, 10, 1)
+                };
+            }
+            if (deviceLastContadoresValues == null)
             {
                 deviceLastContadoresValues = new DailyContadoresDataDevices
                 {
@@ -229,104 +239,76 @@ namespace ApplicationCore.Services
         }
 
 
-        public Task<DailyTonersDataDevices> GetTonersDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2)
+        public Task<TonersUsed> GetTonersDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2)
         {
-            var deviceDate1TonersValues = _context.DailyToners.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.DateToday.Date == date1.Date &&
-                                                                        dailyPrinter.DeviceId == deviceId).Result;
-
-            var deviceDate2TonersValues = _context.DailyToners.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.DateToday.Date == date2.Date &&
-                                                                        dailyPrinter.DeviceId == deviceId).Result;
-
-
-            #region InitializeOnlyForFirstTime
-            if (deviceDate1TonersValues == null)
+            var deviceDateTonersValues = _context.TonersUsed.Where(x => x.DateAndTime.Date >= date1.Date && x.DateAndTime.Date <= date2.Date &&
+                                                                        x.DeviceId == deviceId).ToList();
+      
+            #region Initialize
+            if (deviceDateTonersValues == null)
             {
-                deviceDate1TonersValues = new DailyTonersDataDevices
-                {
-                    DeviceId = deviceId,
-                    BlackTonersUsed = 0,
-                    CyanTonersUsed = 0,
-                    MagentaTonersUsed = 0,
-                    YellowTonersUsed = 0,
-                    DateToday = new DateTime(2020, 10, 1)
-                };
-            }
-            if (deviceDate2TonersValues == null)
-            {
-                deviceDate2TonersValues = new DailyTonersDataDevices
-                {
-                    DeviceId = deviceId,
-                    BlackTonersUsed = 0,
-                    CyanTonersUsed = 0,
-                    MagentaTonersUsed = 0,
-                    YellowTonersUsed = 0,
-                    DateToday = new DateTime(2020, 10, 1)
-                };
+                deviceDateTonersValues = new List<TonersUsed>();
             }
             #endregion
 
-            var tonersValuesToReturn = new DailyTonersDataDevices
+            int black = 0; int cyan = 0; int yellow = 0; int magenta = 0;
+            foreach(var device in deviceDateTonersValues)
             {
-                BlackTonersUsed = deviceDate2TonersValues.BlackTonersUsed - deviceDate1TonersValues.BlackTonersUsed,
-                CyanTonersUsed = deviceDate2TonersValues.CyanTonersUsed - deviceDate1TonersValues.BlackTonersUsed,
-                MagentaTonersUsed = deviceDate2TonersValues.MagentaTonersUsed - deviceDate1TonersValues.MagentaTonersUsed,
-                YellowTonersUsed = deviceDate2TonersValues.YellowTonersUsed - deviceDate1TonersValues.YellowTonersUsed,
+                black = device.BlackTonersUsed == 1 ? +1 : +0;
+                cyan = device.CyanTonersUsed == 1 ? +1 : +0;
+                yellow = device.YellowTonersUsed == 1 ? +1 : +0;
+                magenta = device.MagentaTonersUsed == 1 ? +1 : +0;
+            }
+
+            var tonersValuesToReturn = new TonersUsed
+            {
+                BlackTonersUsed =black,
+                CyanTonersUsed = cyan,
+                MagentaTonersUsed = magenta,
+                YellowTonersUsed = yellow,
                 DeviceId = deviceId
             };
             return Task.FromResult(tonersValuesToReturn);
         }
 
-        public Task<DailyTonersDataDevices> GetTonersDataFromActualOrPreviousMonth(int deviceId, bool actualMonth)
+        public Task<TonersUsed> GetTonersDataFromActualOrPreviousMonth(int deviceId, bool actualMonth)
         {
             bool afterSix = DateTime.Now.Hour < Constants.TimeRecordsAreTriggered ? false : true;
             var dateToday = afterSix ? DateTime.Now : DateTime.Now.AddDays(-1);
             var firstDayOfMonth = actualMonth ? new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1) : new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1);
 
-            var deviceLastTonersValues = _context.DailyToners.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.DateToday.Date == dateToday.Date &&
-                                                                        dailyPrinter.DeviceId == deviceId).Result;
-
-            var deviceFirstOfMonthTonersValues = _context.DailyToners.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.DateToday.Date == firstDayOfMonth.Date &&
-                                                                        dailyPrinter.DeviceId == deviceId).Result;
-
-
-            #region InitializeOnlyForFirstTime
-            if (DateTime.Now.Year == 2020 && DateTime.Now.Month == 10)
-                deviceFirstOfMonthTonersValues = new DailyTonersDataDevices
-                {
-                    DeviceId = deviceId,
-                    BlackTonersUsed = 0,
-                    CyanTonersUsed = 0,
-                    MagentaTonersUsed = 0,
-                    YellowTonersUsed = 0,
-                    DateToday = new DateTime(2020, 10, 1)
-                };
-            if (deviceLastTonersValues == null)
+            var deviceDateTonersValues = _context.TonersUsed.Where(x => x.DateAndTime.Date >= firstDayOfMonth.Date && x.DateAndTime.Date <= dateToday.Date &&
+                                                                        x.DeviceId == deviceId).ToList();
+       
+            #region Initialize
+            if (deviceDateTonersValues == null)
             {
-                deviceLastTonersValues = new DailyTonersDataDevices
-                {
-                    DeviceId = deviceId,
-                    BlackTonersUsed = 0,
-                    CyanTonersUsed = 0,
-                    MagentaTonersUsed = 0,
-                    YellowTonersUsed = 0,
-                    DateToday = new DateTime(2020, 10, 1)
-                };
+                deviceDateTonersValues = new List<TonersUsed>();
             }
             #endregion
 
-            var tonersValuesToReturn = new DailyTonersDataDevices
+            int black = 0; int cyan = 0; int yellow = 0; int magenta = 0;
+            foreach (var device in deviceDateTonersValues)
             {
-                BlackTonersUsed = deviceLastTonersValues.BlackTonersUsed - deviceFirstOfMonthTonersValues.BlackTonersUsed,
-                CyanTonersUsed = deviceLastTonersValues.CyanTonersUsed - deviceFirstOfMonthTonersValues.BlackTonersUsed,
-                MagentaTonersUsed = deviceLastTonersValues.MagentaTonersUsed - deviceFirstOfMonthTonersValues.MagentaTonersUsed,
-                YellowTonersUsed = deviceLastTonersValues.YellowTonersUsed - deviceFirstOfMonthTonersValues.YellowTonersUsed,
+                black = device.BlackTonersUsed == 1 ? black + 1 : black + 0;
+                cyan = device.CyanTonersUsed == 1 ? cyan + 1 : cyan + 0;
+                yellow = device.YellowTonersUsed == 1 ? yellow + 1 : yellow + 0;
+                magenta = device.MagentaTonersUsed == 1 ? magenta + 1 : magenta + 0;
+            }
+
+            var tonersValuesToReturn = new TonersUsed
+            {
+                BlackTonersUsed = black,
+                CyanTonersUsed = cyan,
+                MagentaTonersUsed = magenta,
+                YellowTonersUsed = yellow,
                 DeviceId = deviceId
             };
 
             #region NoDataInTheMonthYet
             if (!afterSix && DateTime.Now.Date == new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1) && actualMonth)
             {
-                tonersValuesToReturn = new DailyTonersDataDevices
+                tonersValuesToReturn = new TonersUsed
                 {
                     BlackTonersUsed = 0,
                     CyanTonersUsed = 0,
@@ -341,3 +323,4 @@ namespace ApplicationCore.Services
         }
     }
 }
+ 

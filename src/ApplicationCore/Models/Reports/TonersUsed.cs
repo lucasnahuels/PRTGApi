@@ -8,9 +8,9 @@ namespace ApplicationCore.Models.Reports
     {
         public long DeviceId { get; set; }
         public DateTime DateAndTime { get; set; }
-        public int Black { get; set; }
-        public int Cyan { get; set; }
-        public int Yellow { get; set; }
-        public int Magenta { get; set; }
+        public int BlackTonersUsed { get; set; }
+        public int CyanTonersUsed { get; set; }
+        public int YellowTonersUsed { get; set; }
+        public int MagentaTonersUsed { get; set; }
     }
 }

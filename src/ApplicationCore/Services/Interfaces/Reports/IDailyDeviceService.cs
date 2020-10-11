@@ -15,7 +15,7 @@ namespace ApplicationCore.Services.Interfaces.Reports
         Task<DailyTonersDataDevices> GetCurrentTonersDevicesValues(int objId, int parentObjId);
         Task<DailyContadoresDataDevices> GetContadoresDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2);
         Task<DailyContadoresDataDevices> GetContadoresDataFromActualOrPreviousMonth(int deviceId, bool actualMonth);
-        Task<DailyTonersDataDevices> GetTonersDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2);
-        Task<DailyTonersDataDevices> GetTonersDataFromActualOrPreviousMonth(int deviceId, bool actualMonth);
+        Task<TonersUsed> GetTonersDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2);
+        Task<TonersUsed> GetTonersDataFromActualOrPreviousMonth(int deviceId, bool actualMonth);
     }
 }

@@ -62,10 +62,10 @@ namespace ApplicationCore.Services
                             {
                                 DeviceId = device.ObjId,
                                 DateAndTime = DateTime.Now,
-                                Black = blackRefilled ? 1 : 0,
-                                Cyan = cyanRefilled ? 1 : 0,
-                                Yellow = yellowRefilled ? 1 : 0,
-                                Magenta = magentaRefilled ? 1 : 0
+                                BlackTonersUsed = blackRefilled ? 1 : 0,
+                                CyanTonersUsed = cyanRefilled ? 1 : 0,
+                                YellowTonersUsed = yellowRefilled ? 1 : 0,
+                                MagentaTonersUsed = magentaRefilled ? 1 : 0
                             };
                             _context.TonersUsed.Add(tonersUsed);
                             await _context.SaveChangesAsync();

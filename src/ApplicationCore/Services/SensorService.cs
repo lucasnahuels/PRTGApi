@@ -134,6 +134,19 @@ namespace ApplicationCore.Services
             return devicesList;
         }
 
+        public async Task<int> GetChildDeviceNamedTonersAsync(int parentDeviceObjId)
+        {
+            var childDevices = await GetChildDevices(parentDeviceObjId);
+
+            foreach (var childDevice in childDevices)
+            {
+                var sensorDetails = await GetSensorDetails(childDevice.ObjId);
+                if (sensorDetails.SensorData.Name == Toners)
+                    return childDevice.ObjId;
+            }
+            return 0;
+        }
+
         public async Task<SensorDetails> GetSensorDetails(int objId)
         {
             var client = _clientFactory.CreateClient("prtg");

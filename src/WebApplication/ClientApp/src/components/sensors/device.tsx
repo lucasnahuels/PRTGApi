@@ -46,17 +46,26 @@ export interface DeviceDataViewModel {
 }
 
 export interface DailyContadoresDataDevices {
-    DeviceId: number,
-    DateToday: Date,
-    BlackAndWhiteCopies: number,
-    ColorCopies: number,
+    deviceId: number,
+    dateToday: Date,
+    blackAndWhiteCopies: number,
+    colorCopies: number,
+}
+
+export interface TonersUsedDataDevices {
+    deviceId: number,
+    dateToday: Date,
+    blackTonersUsed: number,
+    cyanTonersUsed: number,
+    magentaTonersUsed: number,
+    yellowTonersUsed: number
 }
 
 export interface DailyTonersDataDevices {
-    DeviceId: number,
-    DateToday: Date,
-    BlackTonersUsed: number,
-    CyanTonersUsed: number,
-    MagentaTonersUsed: number,
-    YellowTonersUsed: number
+    deviceId: number,
+    dateAndTime: Date,
+    blackTonersUsed: number,
+    cyanTonersUsed: number,
+    magentaTonersUsed: number,
+    yellowTonersUsed: number
 }
