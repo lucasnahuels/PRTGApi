@@ -1,7 +1,6 @@
 import React, { createContext } from 'react';
-import axios from 'axios';
+import useApi from '../../helpers/axios-wrapper'
 import { Grid, makeStyles, Theme, createStyles, FormControl, InputLabel, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, TableFooter } from "@material-ui/core";
-import { myConfig } from '../../configurations';
 import { Device, DeviceData, DeviceDataViewModel } from './device';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -10,7 +9,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TonersModal from '../toners/toners-modal';
 import PreviousMonthModal from './previous-month-modal';
-
 
 export interface IDeviceList {
   listOfDevices: Device[]
@@ -53,7 +51,7 @@ const SensorList = () => {
     );
     const classes = useStyles();
 
-
+    const axios = useApi();
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
     const [deviceData, setDeviceData] = React.useState<DeviceData>();
     const [deviceDataViewModel, setDeviceDataViewModel] = React.useState<DeviceDataViewModel>({
@@ -99,13 +97,13 @@ const SensorList = () => {
     }, [deviceData]);
 
     const GetDevices = async () => {
-        await axios.get(myConfig.backUrl + `sensor/GetAllDevices`).then((response) => {
+        await axios.get(`sensor/GetAllDevices`).then((response) => {
             setDevice({ ...stateDevice, listOfDevices: response.data });
         });
     };
 
     const GetDeviceData = async () => {
-        await axios.get(myConfig.backUrl + `sensor/GetDeviceData/` + selectedValue).then((response) => {
+        await axios.get(`sensor/GetDeviceData/` + selectedValue).then((response) => {
             if(response.data){
                 setDeviceData( response.data );
             }

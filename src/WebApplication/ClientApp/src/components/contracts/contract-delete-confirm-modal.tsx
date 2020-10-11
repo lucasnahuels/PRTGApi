@@ -2,9 +2,8 @@ import React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Button } from '@material-ui/core';
-import axios from 'axios';
+import useApi from '../../helpers/axios-wrapper'
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
-import { myConfig } from '../../configurations';
 
 export interface ContractDeleteConfirmModalProps {
     show: boolean,
@@ -43,9 +42,10 @@ const ContractDeleteConfirmModal = ({ show, hideModal, getAllContracts, contract
 
     const classes = useStyles();
     const [modalStyle] = React.useState(getModalStyle);
+    const axios = useApi();
 
     const DeleteContract = async () => {
-        await axios.delete(myConfig.backUrl + 'contract/' + contractId!.toString()).then(() => {
+        await axios.delete('contract/' + contractId!.toString()).then(() => {
             ToastsStore.success('The contract was deleted');
             getAllContracts();
             handleClose();

@@ -3,9 +3,8 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Button } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
-import axios from 'axios';
+import useApi from '../../helpers/axios-wrapper'
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
-import { myConfig } from '../../configurations';
 import { Employee } from '../contracts/contract';
 
 export interface PersonFormModalProps {
@@ -59,6 +58,8 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
     const [email, setEmail] = React.useState("");
     const [name, setName] = React.useState("");
 
+    const axios = useApi();
+
     useEffect(() => { 
         fillList();
      // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,7 +76,7 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
         let personData: Employee = {
             email: email
         };
-        axios.post(myConfig.backUrl + 'employee', personData).then(() => {
+        axios.post('employee', personData).then(() => {
             ToastsStore.success('The person was saved');
             getAllPersons();
             handleClose();
@@ -89,7 +90,7 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, person}: Pers
             id : person!.id!,
             email: email
         };
-        await axios.put(myConfig.backUrl + 'employee/', personData).then(() => {
+        await axios.put('employee/', personData).then(() => {
             ToastsStore.success('The person was saved');
             getAllPersons();
             handleClose();

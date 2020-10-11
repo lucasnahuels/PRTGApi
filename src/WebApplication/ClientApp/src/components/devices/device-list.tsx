@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -11,7 +10,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import { Grid, TablePagination, TableFooter } from '@material-ui/core';
-import { myConfig } from '../../configurations';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import { Device } from '../sensors/device';
 import { Link } from 'react-router-dom';
@@ -19,6 +17,7 @@ import DevicesListFormModal from './devicesListFormModal';
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import DeviceUnassignConfirmModal from './device-unassign-confirm-modal';
+import useApi from '../../helpers/axios-wrapper'
 
 export interface IDeviceList {
     listOfDevices: Device[]
@@ -91,10 +90,12 @@ const DevicesList = () => {
         GetDevicesByContract()
      // eslint-disable-next-line react-hooks/exhaustive-deps
      }, []);
+     
+    const axios = useApi();
 
     const GetDevicesByContract = async () => {
         let id : string = getQueryVariable("contractId");
-        await axios.get(myConfig.backUrl + `sensor/GetAssignedDevices/` + id).then((response) => {
+        await axios.get(`sensor/GetAssignedDevices/` + id).then((response) => {
             setDevice({ ...stateDevice, listOfDevices: response.data });
         });
     };

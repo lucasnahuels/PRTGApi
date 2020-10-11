@@ -2,13 +2,12 @@ import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { Button } from "@material-ui/core";
-import axios from "axios";
+import useApi from '../../helpers/axios-wrapper'
 import {
   ToastsStore,
   ToastsContainer,
   ToastsContainerPosition,
 } from "react-toasts";
-import { myConfig } from "../../configurations";
 import { Owner } from "./owner";
 
 export interface OwnerDeleteConfirmModalProps {
@@ -52,10 +51,11 @@ const OwnerDeleteConfirmModal = ({
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
-
+  const axios = useApi();
+  
   const DeleteOwner = async () => {
     await axios
-      .delete(myConfig.backUrl + "owner/" + owner!.id!.toString())
+      .delete("owner/" + owner!.id!.toString())
       .then(() => {
         ToastsStore.success("The owner was deleted");
         getAllOwners();

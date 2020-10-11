@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { myConfig } from '../../configurations.js';
 import { 
     FETCH_DEVICES_REQUEST, 
     FETCH_DEVICES_SUCCESS, 
@@ -27,7 +26,7 @@ export const fetchDevicesFailure = error => {
 export const fetchDevices = () => {
     return (dispatch) => {
         dispatch(fetchDevicesRequest)
-        axios.get(myConfig.backUrl + `device`)
+        axios.get(`device`)
         .then(response => {
             const devices = response.data
             dispatch(fetchDevicesSuccess(devices))

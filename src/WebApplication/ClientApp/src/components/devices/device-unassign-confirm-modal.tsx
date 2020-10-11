@@ -2,10 +2,9 @@ import React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Button } from '@material-ui/core';
-import axios from 'axios';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
-import { myConfig } from '../../configurations';
 import { Contract, ContractDevice } from '../contracts/contract';
+import useApi from '../../helpers/axios-wrapper'
 
 export interface DeviceUnassignConfirmModalProps {
     show: boolean,
@@ -45,6 +44,8 @@ const DeviceUnassignConfirmModal = ({ show, hideModal, contractId, deviceObjId, 
     const classes = useStyles();
     const [modalStyle] = React.useState(getModalStyle);
 
+    const axios = useApi();
+
     const UnassignDevice = async () => {
         let devicesAssigned: ContractDevice[] = [];
         let deviceAssigned: ContractDevice = {
@@ -55,7 +56,8 @@ const DeviceUnassignConfirmModal = ({ show, hideModal, contractId, deviceObjId, 
             id: contractId!,
             contractDevices: devicesAssigned
         };
-        await axios.put(myConfig.backUrl + 'contract/unassignDevice', contract).then(() => {
+        
+        await axios.put('contract/unassignDevice', contract).then(() => {
             ToastsStore.success('The device was unassigned');
             hideModal();
         }).catch(() => {

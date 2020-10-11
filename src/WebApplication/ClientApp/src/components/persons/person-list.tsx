@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import useApi from '../../helpers/axios-wrapper'
 import { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -15,7 +15,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import PersonFormModal from './personFormModal';
 import PersonDeleteConfirmModal from './person-delete-confirm-modal';
 import { Grid, TableFooter, Tooltip, Checkbox } from '@material-ui/core';
-import { myConfig } from '../../configurations';
 import { Employee, CognitoUser, Contract, ContractEmployee, ContractUser } from '../contracts/contract';
 import { Link } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
@@ -102,6 +101,8 @@ const PersonsList = () => {
         return "";
     }
 
+    const axios = useApi();
+
     useEffect(() => {
         setContractId(getQueryVariable("contractId"));
     }, [contractId]);
@@ -114,9 +115,9 @@ const PersonsList = () => {
 
     const GetEmployees = async () => {
         let id: string = getQueryVariable("contractId"); 
-        await axios.get<Employee[]>(myConfig.backUrl + `Employee`).then(async (response) => {
+        await axios.get<Employee[]>(`Employee`).then(async (response) => {
             setEmployee({ ...stateEmployee, listOfEmployee: response.data });
-            await axios.get<ContractEmployee[]>(myConfig.backUrl + `contract/getContractEmployeesRelations/` + id).then((innerResponse) => {
+            await axios.get<ContractEmployee[]>(`contract/getContractEmployeesRelations/` + id).then((innerResponse) => {
                 response.data.forEach(employee => {
                     employee.sendReport = false;
                     innerResponse.data.forEach(contractEmployee => {
@@ -131,9 +132,9 @@ const PersonsList = () => {
 
     const GetUsers = async () => {
         let id: string = getQueryVariable("contractId"); 
-        await axios.get<CognitoUser[]>(myConfig.backUrl + `User`).then(async (response) => {
+        await axios.get<CognitoUser[]>(`User`).then(async (response) => {
             setUser({ ...stateUser, listOfUser: response.data });
-            await axios.get<ContractUser[]>(myConfig.backUrl + `contract/getContractUsersRelations/` + id).then((innerResponse) => {
+            await axios.get<ContractUser[]>(`contract/getContractUsersRelations/` + id).then((innerResponse) => {
                 response.data.forEach(user => {
                     user.sendReport = false;
                     innerResponse.data.forEach(contractUser => {
@@ -226,7 +227,7 @@ const PersonsList = () => {
         };
 
         //put
-        await axios.put(myConfig.backUrl + 'contract/updateEmployeesAndUsers', contract).then(() => {
+        await axios.put('contract/updateEmployeesAndUsers', contract).then(() => {
             ToastsStore.success('The update was successfully');
             window.location.href =  "contracts";
         }).catch(() => {

@@ -7,6 +7,7 @@ import { Button } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { purple } from '@material-ui/core/colors';
 import { Link } from 'react-router-dom';
+import { useAuth0 } from './auth/react-auth0-spa';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -63,7 +64,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function SearchAppBar() {
     const classes = useStyles();
-    
+    const { isAuthenticated, loginWithRedirect, logoutWithRedirect } = useAuth0();
+
     return (
         <div className={classes.root}>
             <AppBar position='static'>
@@ -98,6 +100,16 @@ export default function SearchAppBar() {
                             </Link>
                         </Grid>
                         <Grid item xs={1}>
+                            {!isAuthenticated && (
+                                <button onClick={() => loginWithRedirect({})} type="button">
+                                Log in
+                                </button>
+                            )}
+                            {isAuthenticated && (
+                                <button onClick={() => logoutWithRedirect({})} type="button">
+                                Log out
+                                </button>
+                            )}
                         </Grid>
                         <Grid item xs={1}>
                         </Grid>
