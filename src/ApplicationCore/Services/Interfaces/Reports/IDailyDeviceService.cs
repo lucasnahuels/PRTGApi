@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ApplicationCore.Models;
 using ApplicationCore.Models.Reports;
 
 namespace ApplicationCore.Services.Interfaces.Reports
@@ -17,5 +18,6 @@ namespace ApplicationCore.Services.Interfaces.Reports
         Task<DailyContadoresDataDevices> GetContadoresDataFromActualOrPreviousMonth(int deviceId, bool actualMonth);
         Task<TonersUsed> GetTonersDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2);
         Task<TonersUsed> GetTonersDataFromActualOrPreviousMonth(int deviceId, bool actualMonth);
+        Task<ContractPrices> CalculatePrices(int contractId, int deviceId);
     }
 }

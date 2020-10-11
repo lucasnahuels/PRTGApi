@@ -20,6 +20,5 @@ namespace ApplicationCore.Services.Interfaces
         Task<IEnumerable<ContractUser>> GetContractUsersRelations();
         Task<IEnumerable<ContractUser>> GetContractUsersRelationsByContractId(int contractiD);
         Task<Contract> UpdateEmployeesAndUsersRelations(Contract contract);
-
     }
 }

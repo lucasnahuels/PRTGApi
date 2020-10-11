@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import axios from 'axios';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -11,6 +12,8 @@ import { Grid, Paper, TableFooter, Select } from '@material-ui/core';
 import register from '../../../registerServiceWorker';
 import { Link } from 'react-router-dom';
 import MenuItem from '@material-ui/core/MenuItem';
+import { myConfig } from '../../../configurations';
+import { PricesData } from './price-view-model';
 
 const PricesList = (deviceObjId: number) => {
     const useStyles = makeStyles((theme: Theme) =>
@@ -46,31 +49,58 @@ const PricesList = (deviceObjId: number) => {
       })
     );
     const classes = useStyles();
-    const [selectedMonthValue, setSelectedMonthValue] = React.useState((new Date().getMonth() + 1).toString());
-    const [selectedYearValue, setSelectedYearValue] = React.useState((new Date().getFullYear()).toString());
-    const MonthList = () : string[] => {
-      let monthList: string[] = [];
-      let i: number;
-      for (i = 1; i <= 12; i++) {
-        monthList.push(i.toString());
-      }
-      return monthList;
-    }; 
-    const YearList = () : string[] => {
-      let yearList: string[] = [];
-      let i: number;
-      for (i = 2020; i <= 2050; i++) {
-        yearList.push(i.toString());
-      }
-      return yearList;
-    }; 
+    // const [selectedMonthValue, setSelectedMonthValue] = React.useState((new Date().getMonth() + 1).toString());
+    // const [selectedYearValue, setSelectedYearValue] = React.useState((new Date().getFullYear()).toString());
+    // const MonthList = () : string[] => {
+    //   let monthList: string[] = [];
+    //   let i: number;
+    //   for (i = 1; i <= 12; i++) {
+    //     monthList.push(i.toString());
+    //   }
+    //   return monthList;
+    // }; 
+    // const YearList = () : string[] => {
+    //   let yearList: string[] = [];
+    //   let i: number;
+    //   for (i = 2020; i <= 2050; i++) {
+    //     yearList.push(i.toString());
+    //   }
+    //   return yearList;
+    // }; 
 
-    const HandleChangeMonth = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setSelectedMonthValue(event.target.value as string);
-    };
-    const HandleChangeYear = (event: React.ChangeEvent<{ value: unknown }>) => {
-      setSelectedYearValue(event.target.value as string);
-    };
+    // const HandleChangeMonth = (event: React.ChangeEvent<{ value: unknown }>) => {
+    //     setSelectedMonthValue(event.target.value as string);
+    // };
+    // const HandleChangeYear = (event: React.ChangeEvent<{ value: unknown }>) => {
+    //   setSelectedYearValue(event.target.value as string);
+    // };
+  const [deviceId, setDeviceId] = React.useState("");
+  const [contractId, setContractId] = React.useState("");
+  const [pricesData, setPricesData] = React.useState<PricesData>();
+
+
+  function getQueryVariable(variable: string) {
+    var query = window.location.search.substring(1);//"app=article&act=news_content&aid=160990"
+    var vars = query.split("&");//[ 'app=article', 'act=news_content', 'aid=160990' ]
+    for (var i = 0; i < vars.length; i++) {
+      var pair = vars[i].split("=");//[ 'app', 'article' ][ 'act', 'news_content' ][ 'aid', '160990' ] 
+      if (pair[0] === variable) { return pair[1]; }
+    }
+    return "";
+  }
+
+  useEffect(() => {
+    setContractId(getQueryVariable("contractId"));
+    setDeviceId(getQueryVariable("deviceObjId"));
+    CalculatePrices()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contractId, deviceId]);
+
+  const CalculatePrices = async () => {
+    await axios.get(`contract/CalculatePrices/` + contractId + "/" + deviceId).then((response) => {
+      setPricesData( response.data );
+    });
+  };
 
   return (
     <div className={classes.margins}>
@@ -104,9 +134,7 @@ const PricesList = (deviceObjId: number) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  {" "}
-                  {/*do not forget key */}
+                <TableRow key={pricesData!.deviceId}>
                   <TableCell className={classes.dataRow}></TableCell>
                   {/* <TableCell className={classes.dataRow}>
                     <Select
@@ -140,9 +168,9 @@ const PricesList = (deviceObjId: number) => {
                         }
                     </Select>
                   </TableCell> */}
-                  <TableCell className={classes.dataRow}></TableCell>
-                  <TableCell className={classes.dataRow}></TableCell>
-                  <TableCell className={classes.dataRow}></TableCell>
+                  <TableCell className={classes.dataRow}>{pricesData!.blackAndWhiteCopiesPrices}</TableCell>
+                  <TableCell className={classes.dataRow}>{pricesData!.colorCopiesPrices}</TableCell>
+                  <TableCell className={classes.dataRow}>{pricesData!.totalCopiesPrices}</TableCell>
                 </TableRow>
               </TableBody>
               <TableFooter>

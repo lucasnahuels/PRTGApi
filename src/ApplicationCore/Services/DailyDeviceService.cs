@@ -8,6 +8,7 @@ using ApplicationCore.Services.Interfaces;
 using System;
 using System.Linq;
 using ApplicationCore.Models.Constants;
+using ApplicationCore.Models;
 
 namespace ApplicationCore.Services
 {
@@ -15,11 +16,13 @@ namespace ApplicationCore.Services
     {
         private readonly PrtgDbContext _context;
         private readonly ISensorService _sensorService;
+        private readonly IContractService _contractService;
 
-        public DailyDeviceService(PrtgDbContext context, ISensorService sensorService)
+        public DailyDeviceService(PrtgDbContext context, ISensorService sensorService, IContractService contractService)
         {
             _context = context;
             _sensorService = sensorService;
+            _contractService = contractService;
         }
 
 
@@ -320,6 +323,35 @@ namespace ApplicationCore.Services
             #endregion
 
             return Task.FromResult(tonersValuesToReturn);
+        }
+
+
+        public Task<ContractPrices> CalculatePrices(int contractId, int deviceId)
+        {
+            var actualMonthData = GetContadoresDataFromActualOrPreviousMonth(deviceId, true).Result;
+            var contractValues = _contractService.GetAsync(contractId).Result;
+
+            int bAWCopiesExceeded = actualMonthData.BlackAndWhiteCopies > contractValues.BlackAndWhiteLimitSet ? actualMonthData.BlackAndWhiteCopies - contractValues.BlackAndWhiteLimitSet : 0;
+            int colorCopiesExceeded = actualMonthData.ColorCopies > contractValues.ColorLimitSet ? actualMonthData.ColorCopies - contractValues.ColorLimitSet : 0;
+
+            float priceForBAW = 0; float priceForColor = 0;
+            if (bAWCopiesExceeded > 0)
+                priceForBAW = contractValues.BlackAndWhiteLimitSet * contractValues.BlackAndWhitePrice + bAWCopiesExceeded * contractValues.SurplusBlackAndWhitePrice;
+            else
+                priceForBAW = actualMonthData.BlackAndWhiteCopies * contractValues.BlackAndWhitePrice;
+            if (colorCopiesExceeded > 0)
+                priceForColor = contractValues.ColorLimitSet * contractValues.ColorPrice + bAWCopiesExceeded * contractValues.SurplusColorPrice;
+            else
+                priceForColor = actualMonthData.ColorCopies * contractValues.ColorPrice;
+
+            var contractPricesToReturn = new ContractPrices
+            {
+                BlackAndWhiteCopiesPrices = priceForBAW,
+                ColorCopiesPrices = priceForColor,
+                TotalCopiesPrices = priceForBAW + priceForColor,
+                DeviceId = deviceId
+            };
+            return Task.FromResult(contractPricesToReturn);
         }
     }
 }

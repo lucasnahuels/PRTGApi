@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Linq;
 using System;
+using ApplicationCore.Services.Interfaces.Reports;
 
 namespace ApplicationCore.Services
 {

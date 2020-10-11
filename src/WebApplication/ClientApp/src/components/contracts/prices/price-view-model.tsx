@@ -1,7 +1,6 @@
-export interface PriceViweModel {
-  deviceObjId: number;
-  month: number;
-  spentInBlackAndWhite: number;
-  spentInColor: number;
-  totalSpent: number;
+export interface PricesData {
+  deviceId: number;
+  blackAndWhiteCopiesPrices: number;
+  colorCopiesPrices: number;
+  totalCopiesPrices: number;
 }
