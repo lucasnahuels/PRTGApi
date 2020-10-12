@@ -1,0 +1,52 @@
+version: "3.4"
+
+networks:
+  network_prtg:
+    driver: bridge
+
+services:
+  postgres_prtg:
+    image: postgres:10.0-alpine
+    container_name: postgres_prtg
+    ports:
+        - "5432:5432"
+    restart: always
+    volumes:
+        - db_volume:/var/lib/postgresql/data
+    environment:
+        POSTGRES_USER: "prtg"
+        POSTGRES_PASSWORD: "prtg"
+        POSTGRES_DB: "prtg"
+    networks:
+        - network_prtg
+
+  webapi_prtg:
+    image: webapi_prtg
+    container_name: webapi_prtg
+    build:
+      context: .
+      dockerfile: src/WebApi/Dockerfile
+    environment:
+        ConnectionStrings__prtgHost: postgres_prtg
+    ports:
+      - "44333:443"
+      - "44380:80"
+    restart: always
+    networks:
+      - network_prtg
+
+  webapp_prtg:
+    image: webapp_prtg
+    container_name: webapp_prtg
+    build:
+      context: .
+      dockerfile: src/WebApplication/Dockerfile
+    ports:
+      - "45333:443"
+      - "45380:80"
+    restart: always
+    networks:
+      - network_prtg
+
+volumes:
+    db_volume:

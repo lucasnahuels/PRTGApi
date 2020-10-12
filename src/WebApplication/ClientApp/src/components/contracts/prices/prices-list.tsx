@@ -8,11 +8,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
-import { Grid, Paper, TableFooter, Select } from '@material-ui/core';
-import register from '../../../registerServiceWorker';
+import { Grid, Paper, TableFooter } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import MenuItem from '@material-ui/core/MenuItem';
-import { myConfig } from '../../../configurations';
 import { PricesData } from './price-view-model';
 
 const PricesList = (deviceObjId: number) => {

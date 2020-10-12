@@ -23,9 +23,14 @@ namespace WebApi
     {
         private const string PrtgCorsPolicy = "_prtgCorsPolicy";
 
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            var configurationBuilder = new ConfigurationBuilder()
+                  .AddJsonFile("appsettings.json")
+                  .AddJsonFile($"appsettings.{env.EnvironmentName}.json")
+                  .AddEnvironmentVariables()
+                  .Build();
+            Configuration = configurationBuilder;
         }
 
         public static IConfiguration Configuration { get; private set; }
@@ -67,7 +72,7 @@ namespace WebApi
             {
                 c.BaseAddress = new Uri(Configuration["Auth0Url"]);
             });
-            services.AddDatabaseContext(Configuration.GetConnectionString("prtg"));
+            services.AddDatabaseContext(string.Format(Configuration.GetConnectionString("prtg"), Configuration.GetConnectionString("prtgHost")));
             services.AddPRTGServices();
 
             services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));

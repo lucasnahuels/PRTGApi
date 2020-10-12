@@ -5,6 +5,9 @@
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <AWSProjectType>Lambda</AWSProjectType>
     <Configurations>Debug;Release;Prod</Configurations>
+    <UserSecretsId>6510a78d-4b2b-412f-b96d-e9a2318edb61</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Amazon\**" />
@@ -24,6 +27,7 @@
 	  <PrivateAssets>all</PrivateAssets>
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
+	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ApplicationCore\ApplicationCore.csproj" />

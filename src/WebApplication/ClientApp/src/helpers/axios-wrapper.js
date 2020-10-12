@@ -1,13 +1,13 @@
 import { useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth0 } from '../auth/react-auth0-spa';
-import { myConfig } from '../configurations';
+import { config } from '../config/constants'
 
 export default () => {
   const { getTokenSilently, loginWithRedirect } = useAuth0();
   const api = useRef(
     axios.create({
-      baseURL: myConfig.backUrl
+      baseURL: config.url
     })
   );
   useEffect(() => {

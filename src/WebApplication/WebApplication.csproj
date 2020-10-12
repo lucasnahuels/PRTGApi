@@ -7,10 +7,14 @@
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <UserSecretsId>e72124cf-cb71-4dd6-9db5-5a92fad6bc00</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
   </ItemGroup>
 
   <ItemGroup>
