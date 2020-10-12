@@ -102,7 +102,7 @@ namespace WebApi
             provider.UseScheduler(scheduler =>
             {
                 scheduler.Schedule<DailyRecordsScheduleService>()
-                .DailyAt(Constants.TimeRecordsAreTriggered, 00)
+                .DailyAt(00, 33)
                 .Zoned(TimeZoneInfo.Local);
 
                 scheduler.Schedule<RefilledTonersRecordsScheduleService>()

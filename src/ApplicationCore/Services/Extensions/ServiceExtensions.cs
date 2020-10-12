@@ -30,6 +30,7 @@ namespace ApplicationCore.Services.Extensions
             services.AddTransient<IOwnerService, OwnerService>();
             services.AddTransient<IContractService, ContractService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IMailingMonthReportService, MailingMonthReportService>();
             services.AddTransient<IDailyDeviceService, DailyDeviceService>();
             services.AddTransient<IDailyRecordsTaskService, DailyRecordsScheduleService>();
             services.AddTransient<IRefilledTonersRecordsScheduleService, RefilledTonersRecordsScheduleService>();

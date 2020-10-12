@@ -23,12 +23,25 @@ namespace ApplicationCore.Services
         private readonly IDailyDeviceService _dailyDeviceService;
         private readonly ISensorService _sensorService;
         private readonly PrtgDbContext _context;
+        private readonly IContractService _contractService;
+        private readonly IMailingMonthReportService _mailingMonthReportService;
+        private readonly IMailerService _mailerService;
 
-        public DailyRecordsScheduleService(IDailyDeviceService dailyDeviceService, ISensorService sensorService, PrtgDbContext prtgDbContext)
+        public DailyRecordsScheduleService(
+            IDailyDeviceService dailyDeviceService, 
+            ISensorService sensorService,
+            PrtgDbContext prtgDbContext, 
+            IContractService contractService,
+            IMailingMonthReportService mailingMonthReportService,
+            IMailerService mailerService
+            )
         {
             _dailyDeviceService = dailyDeviceService;
             _sensorService = sensorService;
             _context = prtgDbContext;
+            _contractService = contractService;
+            _mailingMonthReportService = mailingMonthReportService;
+            _mailerService = mailerService;
         }
 
 
@@ -39,10 +52,72 @@ namespace ApplicationCore.Services
 
         public async Task Invoke()
         {
-            //check if limits are exceeded
-            //manda e-mails en caso de que ya haya habido un exceso
+            await ManageReportsIfExceeded();
             await CreateDailyReport();
         }
+
+        public async Task ManageReportsIfExceeded()
+        {
+            var contracts = _contractService.GetAsync().Result;
+            foreach(var contract in contracts)
+            {
+                DailyContadoresDataDevices actualMonthData;
+                foreach (var contractDevice in contract.ContractDevices)
+                {
+                    actualMonthData = _dailyDeviceService.GetContadoresDataFromActualOrPreviousMonth(int.Parse(contractDevice.ObjId), true).Result;
+                    
+                    int bAWCopiesExceeded = actualMonthData.BlackAndWhiteCopies > contract.BlackAndWhiteLimitSet ? actualMonthData.BlackAndWhiteCopies - contract.BlackAndWhiteLimitSet : 0;
+                    int colorCopiesExceeded = actualMonthData.ColorCopies > contract.ColorLimitSet ? actualMonthData.ColorCopies - contract.ColorLimitSet : 0;
+
+                    if (bAWCopiesExceeded > 0)
+                    {
+                        var newMailingMonthReport = new MailingMonthReport
+                        {
+                            ContractId = contractDevice.ContractId,
+                            DeviceId = contractDevice.ObjId,
+                            Year = DateTime.Now.Year,
+                            Month = DateTime.Now.Month,
+                            IsColor = false
+                        };
+                        var mailingMonthReport = await _mailingMonthReportService.GetByReportAsync(newMailingMonthReport);
+                        if(mailingMonthReport == null)
+                        {
+                            await _mailingMonthReportService.CreateAsync(newMailingMonthReport);
+                            foreach (var contractEmployee in contract.ContractEmployees)
+                            {
+                                await _mailerService.SendEmailAsync(contractEmployee.Employee.Email,
+                                    $"Exceeded from {DateTime.Now.Year} and {DateTime.Now.Month}",
+                                    $"The device {contractDevice.ObjId} exceeded its limits for black and white sheet copies as respect the contracr establised");
+                            }
+                        }
+                    }
+                    if (colorCopiesExceeded > 0)
+                    {
+                        var newMailingMonthReport = new MailingMonthReport
+                        {
+                            ContractId = contractDevice.ContractId,
+                            DeviceId = contractDevice.ObjId,
+                            Year = DateTime.Now.Year,
+                            Month = DateTime.Now.Month,
+                            IsColor = true
+                        };
+                        var mailingMonthReport = await _mailingMonthReportService.GetByReportAsync(newMailingMonthReport);
+                        if (mailingMonthReport == null)
+                        {
+                            await _mailingMonthReportService.CreateAsync(newMailingMonthReport);
+                            foreach (var contractEmployee in contract.ContractEmployees)
+                            {
+                                await _mailerService.SendEmailAsync(contractEmployee.Employee.Email,
+                                    $"Exceeded from {DateTime.Now.Year} and {DateTime.Now.Month}",
+                                    $"The device {contractDevice.ObjId} exceeded its limits for color sheet copies as respect the contracr establised");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
 
         public async Task CreateDailyReport()
         {
