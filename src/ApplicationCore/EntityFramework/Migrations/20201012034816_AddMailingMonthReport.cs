@@ -3,7 +3,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ApplicationCore.EntityFramework.Migrations
 {
-    public partial class CreateNewTableMailingMonthReport : Migration
+    public partial class AddMailingMonthReport : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,7 @@ namespace ApplicationCore.EntityFramework.Migrations
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DeviceId = table.Column<string>(nullable: true),
-                    ContractId = table.Column<string>(nullable: true),
+                    ContractId = table.Column<long>(nullable: false),
                     IsColor = table.Column<bool>(nullable: false),
                     Month = table.Column<int>(nullable: false),
                     Year = table.Column<int>(nullable: false)

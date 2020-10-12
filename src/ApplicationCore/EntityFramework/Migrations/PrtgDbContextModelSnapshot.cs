@@ -211,8 +211,8 @@ namespace ApplicationCore.EntityFramework.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("ContractId")
-                        .HasColumnType("text");
+                    b.Property<long>("ContractId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("DeviceId")
                         .HasColumnType("text");

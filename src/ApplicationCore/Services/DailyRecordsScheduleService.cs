@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading;
@@ -61,63 +62,48 @@ namespace ApplicationCore.Services
             var contracts = _contractService.GetAsync().Result;
             foreach(var contract in contracts)
             {
-                DailyContadoresDataDevices actualMonthData;
                 foreach (var contractDevice in contract.ContractDevices)
                 {
-                    actualMonthData = _dailyDeviceService.GetContadoresDataFromActualOrPreviousMonth(int.Parse(contractDevice.ObjId), true).Result;
+                    var actualMonthData = _dailyDeviceService.GetContadoresDataFromActualOrPreviousMonth(int.Parse(contractDevice.ObjId), true).Result;
                     
                     int bAWCopiesExceeded = actualMonthData.BlackAndWhiteCopies > contract.BlackAndWhiteLimitSet ? actualMonthData.BlackAndWhiteCopies - contract.BlackAndWhiteLimitSet : 0;
                     int colorCopiesExceeded = actualMonthData.ColorCopies > contract.ColorLimitSet ? actualMonthData.ColorCopies - contract.ColorLimitSet : 0;
 
                     if (bAWCopiesExceeded > 0)
-                    {
-                        var newMailingMonthReport = new MailingMonthReport
-                        {
-                            ContractId = contractDevice.ContractId,
-                            DeviceId = contractDevice.ObjId,
-                            Year = DateTime.Now.Year,
-                            Month = DateTime.Now.Month,
-                            IsColor = false
-                        };
-                        var mailingMonthReport = await _mailingMonthReportService.GetByReportAsync(newMailingMonthReport);
-                        if(mailingMonthReport == null)
-                        {
-                            await _mailingMonthReportService.CreateAsync(newMailingMonthReport);
-                            foreach (var contractEmployee in contract.ContractEmployees)
-                            {
-                                await _mailerService.SendEmailAsync(contractEmployee.Employee.Email,
-                                    $"Exceeded from {DateTime.Now.Year} and {DateTime.Now.Month}",
-                                    $"The device {contractDevice.ObjId} exceeded its limits for black and white sheet copies as respect the contracr establised");
-                            }
-                        }
-                    }
+                        await ManageMail(contract, contractDevice, false, bAWCopiesExceeded);
                     if (colorCopiesExceeded > 0)
-                    {
-                        var newMailingMonthReport = new MailingMonthReport
-                        {
-                            ContractId = contractDevice.ContractId,
-                            DeviceId = contractDevice.ObjId,
-                            Year = DateTime.Now.Year,
-                            Month = DateTime.Now.Month,
-                            IsColor = true
-                        };
-                        var mailingMonthReport = await _mailingMonthReportService.GetByReportAsync(newMailingMonthReport);
-                        if (mailingMonthReport == null)
-                        {
-                            await _mailingMonthReportService.CreateAsync(newMailingMonthReport);
-                            foreach (var contractEmployee in contract.ContractEmployees)
-                            {
-                                await _mailerService.SendEmailAsync(contractEmployee.Employee.Email,
-                                    $"Exceeded from {DateTime.Now.Year} and {DateTime.Now.Month}",
-                                    $"The device {contractDevice.ObjId} exceeded its limits for color sheet copies as respect the contracr establised");
-                            }
-                        }
-                    }
+                        await ManageMail(contract, contractDevice, true, colorCopiesExceeded);
                 }
             }
         }
 
-
+        private async Task ManageMail(Contract contract, ContractDevice contractDevice, bool isColor, int exceededCopies)
+        {
+            string copyType = isColor ? "color" : "black and white";
+            float priceForCopyExceeded = isColor ? contract.SurplusColorPrice : contract.SurplusBlackAndWhitePrice;
+            var newMailingMonthReport = new MailingMonthReport
+            {
+                ContractId = contractDevice.ContractId,
+                DeviceId = contractDevice.ObjId,
+                Year = DateTime.Now.Year,
+                Month = DateTime.Now.Month,
+                IsColor = isColor
+            };
+            var mailingMonthReport = await _mailingMonthReportService.GetByReportAsync(newMailingMonthReport);
+            if (mailingMonthReport == null)
+            {
+                await _mailingMonthReportService.CreateAsync(newMailingMonthReport);
+                var deviceName = _sensorService.GetSensorDetails(int.Parse(contractDevice.ObjId)).Result.SensorData.Name;
+                foreach (var contractEmployee in contract.ContractEmployees)
+                {
+                    await _mailerService.SendEmailAsync(contractEmployee.Employee.Email,
+                        $"PRTG - Exceeded limit reports for {deviceName}",
+                        $@"The device {deviceName} has just exceeded the limits in the year {DateTime.Now.Year} and month {CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(DateTime.Now.Month)}.<br/>
+                        It exceeded the limits for {copyType} sheet copies as respect the contract established. The quantity of copies exceeded until today is: {exceededCopies}.<br/>
+                        Remember that the price established in the contract for each copy exceeded is higher. In this case: ${priceForCopyExceeded} each");
+                }
+            }
+        }
 
         public async Task CreateDailyReport()
         {
@@ -148,7 +134,6 @@ namespace ApplicationCore.Services
                     _context.DailyToners.Add(newDailyToners);
                     await _context.SaveChangesAsync();
                 }
-
             }
         }
     }

@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApplicationCore.EntityFramework.Migrations
 {
     [DbContext(typeof(PrtgDbContext))]
-    [Migration("20201012030557_CreateNewTableMailingMonthReport")]
-    partial class CreateNewTableMailingMonthReport
+    [Migration("20201012034816_AddMailingMonthReport")]
+    partial class AddMailingMonthReport
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -213,8 +213,8 @@ namespace ApplicationCore.EntityFramework.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("ContractId")
-                        .HasColumnType("text");
+                    b.Property<long>("ContractId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("DeviceId")
                         .HasColumnType("text");
