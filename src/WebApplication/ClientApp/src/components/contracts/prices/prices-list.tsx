@@ -8,11 +8,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
-import { Grid, Paper, TableFooter, Select } from '@material-ui/core';
-import register from '../../../registerServiceWorker';
+import { Grid, Paper, TableFooter} from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import MenuItem from '@material-ui/core/MenuItem';
-import { myConfig } from '../../../configurations';
 import { PricesData } from './price-view-model';
 
 const PricesList = (deviceObjId: number) => {
@@ -126,9 +123,9 @@ const PricesList = (deviceObjId: number) => {
             <Table size="medium">
               <TableHead aria-label="simple table">
                 <TableRow>
-                  <TableCell className={classes.titlesRow} size="medium">
+                  {/* <TableCell className={classes.titlesRow} size="medium">
                     Device
-                  </TableCell>
+                  </TableCell> */}
                   {/* <TableCell className={classes.titlesRow} size="medium">
                     Year
                   </TableCell>
@@ -148,7 +145,7 @@ const PricesList = (deviceObjId: number) => {
               </TableHead>
               <TableBody>
                 <TableRow key={pricesData!.deviceId}>
-                  <TableCell className={classes.dataRow}></TableCell>
+                  {/* <TableCell className={classes.dataRow}></TableCell> */}
                   {/* <TableCell className={classes.dataRow}>
                     <Select
                       className={classes.formRoot}

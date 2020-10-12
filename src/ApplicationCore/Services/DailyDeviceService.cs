@@ -178,8 +178,8 @@ namespace ApplicationCore.Services
 
         public Task<DailyContadoresDataDevices> GetContadoresDataFromActualOrPreviousMonth(int deviceId, bool actualMonth)
         {
-            bool afterSix = DateTime.Now.Hour >= Constants.TimeRecordsAreTriggered;
-            var dateToday = afterSix ? DateTime.Now : DateTime.Now.AddDays(-1);
+            bool afterTwo = DateTime.Now.Hour >= Constants.TimeRecordsAreTriggered;
+            var dateToday = afterTwo ? DateTime.Now : DateTime.Now.AddDays(-1);
             var firstDayOfMonth = actualMonth? new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1) : new DateTime(DateTime.Now.Year, DateTime.Now.Month -1, 1);
 
             var deviceLastContadoresValues = _context.DailyContadores.FirstOrDefaultAsync(dailyPrinter => dailyPrinter.DateToday.Date == dateToday.Date &&
@@ -227,7 +227,7 @@ namespace ApplicationCore.Services
             };
 
             #region NoDataInTheMonthYet
-            if (!afterSix && DateTime.Now.Date == new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1) && actualMonth)
+            if (!afterTwo && DateTime.Now.Date == new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1) && actualMonth)
             {
                 contadoresValuesToReturn = new DailyContadoresDataDevices
                 {
@@ -276,8 +276,8 @@ namespace ApplicationCore.Services
 
         public Task<TonersUsed> GetTonersDataFromActualOrPreviousMonth(int deviceId, bool actualMonth)
         {
-            bool afterSix = DateTime.Now.Hour >= Constants.TimeRecordsAreTriggered;
-            var dateToday = afterSix ? DateTime.Now : DateTime.Now.AddDays(-1);
+            bool afterTwo = DateTime.Now.Hour >= Constants.TimeRecordsAreTriggered;
+            var dateToday = afterTwo ? DateTime.Now : DateTime.Now.AddDays(-1);
             var firstDayOfMonth = actualMonth ? new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1) : new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1);
 
             var deviceDateTonersValues = _context.TonersUsed.Where(x => x.DateAndTime.Date >= firstDayOfMonth.Date && x.DateAndTime.Date <= dateToday.Date &&
@@ -309,7 +309,7 @@ namespace ApplicationCore.Services
             };
 
             #region NoDataInTheMonthYet
-            if (!afterSix && DateTime.Now.Date == new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1) && actualMonth)
+            if (!afterTwo && DateTime.Now.Date == new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1) && actualMonth)
             {
                 tonersValuesToReturn = new TonersUsed
                 {
@@ -341,7 +341,7 @@ namespace ApplicationCore.Services
                 priceForBAW = actualMonthData.BlackAndWhiteCopies * contractValues.BlackAndWhitePrice;
             float priceForColor;
             if (colorCopiesExceeded > 0)
-                priceForColor = contractValues.ColorLimitSet * contractValues.ColorPrice + bAWCopiesExceeded * contractValues.SurplusColorPrice;
+                priceForColor = contractValues.ColorLimitSet * contractValues.ColorPrice + colorCopiesExceeded * contractValues.SurplusColorPrice;
             else
                 priceForColor = actualMonthData.ColorCopies * contractValues.ColorPrice;
 
