@@ -40,6 +40,7 @@ namespace ApplicationCore.Services
         public async Task Invoke()
         {
             //check if limits are exceeded
+            //manda e-mails en caso de que ya haya habido un exceso
             await CreateDailyReport();
         }
 

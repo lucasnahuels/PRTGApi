@@ -12,7 +12,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class SensorController : ControllerBase
     {
         private readonly ISensorService _prtgService;

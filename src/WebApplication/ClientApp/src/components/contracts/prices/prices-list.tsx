@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import axios from 'axios';
+import useApi from '../../../helpers/axios-wrapper'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -76,8 +76,14 @@ const PricesList = (deviceObjId: number) => {
     // };
   const [deviceId, setDeviceId] = React.useState("");
   const [contractId, setContractId] = React.useState("");
-  const [pricesData, setPricesData] = React.useState<PricesData>();
+  const [pricesData, setPricesData] = React.useState<PricesData>({
+    deviceId: 0,
+    blackAndWhiteCopiesPrices: 0,
+    colorCopiesPrices: 0,
+    totalCopiesPrices: 0
+  })
 
+  const axios = useApi();
 
   function getQueryVariable(variable: string) {
     var query = window.location.search.substring(1);//"app=article&act=news_content&aid=160990"
@@ -92,11 +98,18 @@ const PricesList = (deviceObjId: number) => {
   useEffect(() => {
     setContractId(getQueryVariable("contractId"));
     setDeviceId(getQueryVariable("deviceObjId"));
-    CalculatePrices()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contractId, deviceId]);
 
+  useEffect(() => {
+    CalculatePrices()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  
   const CalculatePrices = async () => {
+    let contractId: string = getQueryVariable("contractId");
+    let deviceId: string = getQueryVariable("deviceObjId"); 
     await axios.get(`contract/CalculatePrices/` + contractId + "/" + deviceId).then((response) => {
       setPricesData( response.data );
     });

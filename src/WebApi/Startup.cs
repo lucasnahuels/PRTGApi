@@ -92,6 +92,7 @@ namespace WebApi
                 scheduler.Schedule<DailyRecordsScheduleService>()
                 .DailyAt(Constants.TimeRecordsAreTriggered, 00)
                 .Zoned(TimeZoneInfo.Local);
+
                 scheduler.Schedule<RefilledTonersRecordsScheduleService>()
                 .Cron("0 */4 * * *");
                 //todos los meses a fin de mes mandar reporte??

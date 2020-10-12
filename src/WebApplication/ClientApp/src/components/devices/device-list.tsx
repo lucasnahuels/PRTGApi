@@ -86,13 +86,14 @@ const DevicesList = () => {
         return "";
     }
 
+    const axios = useApi();
+
     useEffect(() => { 
         GetDevicesByContract()
      // eslint-disable-next-line react-hooks/exhaustive-deps
      }, []);
-     
-    const axios = useApi();
 
+     
     const GetDevicesByContract = async () => {
         let id : string = getQueryVariable("contractId");
         await axios.get(`sensor/GetAssignedDevices/` + id).then((response) => {

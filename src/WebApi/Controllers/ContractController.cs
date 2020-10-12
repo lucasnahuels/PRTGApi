@@ -85,8 +85,7 @@ namespace WebApi.Controllers
             return CreatedAtAction("GetContract", new { id = contract.Id }, contract);
         }
 
-        [Route("CalculatePrices/{contractId}/{deviceId}")]
-        [HttpGet]
+        [HttpGet("CalculatePrices/{contractId}/{deviceId}")]
         public async Task<ActionResult<ContractPrices>> CalculatePrices(int contractId, int deviceId)
         {
             var prices = await _dailyDeviceService.CalculatePrices(contractId, deviceId);
