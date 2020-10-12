@@ -10,6 +10,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ContractController : ControllerBase
     {
         private readonly IContractService _contractService;

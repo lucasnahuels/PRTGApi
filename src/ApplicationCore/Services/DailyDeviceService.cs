@@ -178,7 +178,7 @@ namespace ApplicationCore.Services
 
         public Task<DailyContadoresDataDevices> GetContadoresDataFromActualOrPreviousMonth(int deviceId, bool actualMonth)
         {
-            bool afterSix = DateTime.Now.Hour < Constants.TimeRecordsAreTriggered ? false : true;
+            bool afterSix = DateTime.Now.Hour >= Constants.TimeRecordsAreTriggered;
             var dateToday = afterSix ? DateTime.Now : DateTime.Now.AddDays(-1);
             var firstDayOfMonth = actualMonth? new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1) : new DateTime(DateTime.Now.Year, DateTime.Now.Month -1, 1);
 
@@ -276,7 +276,7 @@ namespace ApplicationCore.Services
 
         public Task<TonersUsed> GetTonersDataFromActualOrPreviousMonth(int deviceId, bool actualMonth)
         {
-            bool afterSix = DateTime.Now.Hour < Constants.TimeRecordsAreTriggered ? false : true;
+            bool afterSix = DateTime.Now.Hour >= Constants.TimeRecordsAreTriggered;
             var dateToday = afterSix ? DateTime.Now : DateTime.Now.AddDays(-1);
             var firstDayOfMonth = actualMonth ? new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1) : new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 1);
 
@@ -334,11 +334,12 @@ namespace ApplicationCore.Services
             int bAWCopiesExceeded = actualMonthData.BlackAndWhiteCopies > contractValues.BlackAndWhiteLimitSet ? actualMonthData.BlackAndWhiteCopies - contractValues.BlackAndWhiteLimitSet : 0;
             int colorCopiesExceeded = actualMonthData.ColorCopies > contractValues.ColorLimitSet ? actualMonthData.ColorCopies - contractValues.ColorLimitSet : 0;
 
-            float priceForBAW = 0; float priceForColor = 0;
+            float priceForBAW;
             if (bAWCopiesExceeded > 0)
                 priceForBAW = contractValues.BlackAndWhiteLimitSet * contractValues.BlackAndWhitePrice + bAWCopiesExceeded * contractValues.SurplusBlackAndWhitePrice;
             else
                 priceForBAW = actualMonthData.BlackAndWhiteCopies * contractValues.BlackAndWhitePrice;
+            float priceForColor;
             if (colorCopiesExceeded > 0)
                 priceForColor = contractValues.ColorLimitSet * contractValues.ColorPrice + bAWCopiesExceeded * contractValues.SurplusColorPrice;
             else

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ApplicationCore.Models;
 using ApplicationCore.Services.Interfaces;
-using ApplicationCore.Services;
 using ApplicationCore.Services.Interfaces.Reports;
 using ApplicationCore.Models.Reports;
 
