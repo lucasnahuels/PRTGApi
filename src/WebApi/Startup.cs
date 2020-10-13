@@ -16,6 +16,7 @@ using ApplicationCore.Services;
 using ApplicationCore.Models.Constants;
 using WebApi.GlobalErrorHandling.Extensions;
 using ApplicationCore.Configuration;
+using ApplicationCore.Models.Auth0;
 
 namespace WebApi
 {
@@ -71,8 +72,10 @@ namespace WebApi
             services.AddPRTGServices();
 
             services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
+            services.Configure<TokenRequest>(Configuration.GetSection("Auth0Management"));
 
-            services.AddScheduler();            
+            services.AddScheduler();
+            services.AddCache();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
