@@ -156,7 +156,7 @@ namespace ApplicationCore.Services
                 var found = false;
                 foreach (var previouscontractUser in contractToPut.ContractUsers)
                 {
-                    if (contractUser.UserId == previouscontractUser.UserId)
+                    if (contractUser.User_Id == previouscontractUser.User_Id)
                         found = true;
                 }
                 if(!found)
@@ -170,7 +170,7 @@ namespace ApplicationCore.Services
                 var found = false;
                 foreach (var contractUser in contract.ContractUsers)
                 {
-                    if (previouscontractUser.UserId == contractUser.UserId)
+                    if (previouscontractUser.User_Id == contractUser.User_Id)
                         found = true;
                 }
                 if (!found)
@@ -243,15 +243,15 @@ namespace ApplicationCore.Services
 
         private async Task CheckNewUsers(Contract contract)
         {
-            var userIds = await _context.Users.Select(d => d.UserId).ToListAsync();
+            var userIds = await _context.Users.Select(d => d.User_Id).ToListAsync();
             if (contract.ContractUsers != null)
             {
                 contract.ContractUsers.ToList().ForEach(cu =>
                 {
-                    if (!userIds.Any(userId => userId == cu.UserId))
+                    if (!userIds.Any(userId => userId == cu.User_Id))
                     {
-                        cu.User = new User() { UserId = cu.UserId };
-                        cu.UserId = null;
+                        cu.User = new User() { User_Id = cu.User_Id };
+                        cu.User_Id = null;
                     }
                 });
             }

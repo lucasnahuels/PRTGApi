@@ -37,7 +37,7 @@ namespace ApplicationCore.EntityFramework
 
                 modelBuilder.Entity<User>(d =>
                 {
-                    d.HasKey(u => u.UserId);
+                    d.HasKey(u => u.User_Id);
                     d.ToTable("Users");
                 });
 
@@ -75,7 +75,7 @@ namespace ApplicationCore.EntityFramework
                 modelBuilder.Entity<ContractUser>()
                     .HasOne(u => u.User)
                     .WithMany(cu => cu.ContractUsers)
-                    .HasForeignKey(u => u.UserId);
+                    .HasForeignKey(u => u.User_Id);
 
                 //Keys for many to many relations
                 modelBuilder.Entity<ContractEmployee>().HasKey
@@ -85,7 +85,7 @@ namespace ApplicationCore.EntityFramework
                     (cd => new { cd.ContractId, cd.ObjId });
 
                 modelBuilder.Entity<ContractUser>().HasKey
-                    (cu => new { cu.ContractId, cu.UserId });
+                    (cu => new { cu.ContractId, cu.User_Id });
 
                 #endregion
             }

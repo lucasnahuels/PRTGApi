@@ -4,7 +4,7 @@ namespace ApplicationCore.Models
 {
     public class User
     {
-        public string UserId { get; set; }
+        public string User_Id { get; set; }
         public ICollection<ContractUser> ContractUsers { get; set; }
     }
 }
