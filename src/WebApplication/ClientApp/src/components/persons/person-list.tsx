@@ -15,7 +15,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import PersonFormModal from './personFormModal';
 import PersonDeleteConfirmModal from './person-delete-confirm-modal';
 import { Grid, TableFooter, Tooltip, Checkbox } from '@material-ui/core';
-import { Employee, CognitoUser, Contract, ContractEmployee, ContractUser } from '../contracts/contract';
+import { Employee, Auth0User, Contract, ContractEmployee, ContractUser } from '../contracts/contract';
 import { Link } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
 import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
@@ -24,7 +24,7 @@ export interface IEmployeeList {
     listOfEmployee: Employee[]
 }
 export interface IUserList {
-    listOfUser: CognitoUser[]
+    listOfUser: Auth0User[]
 }
 
 const PersonsList = () => {
@@ -109,7 +109,7 @@ const PersonsList = () => {
 
     useEffect(() => {
         GetEmployees();
-        // GetUsers();
+        GetUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -130,22 +130,22 @@ const PersonsList = () => {
         });
     };
 
-    // const GetUsers = async () => {
-    //     let id: string = getQueryVariable("contractId"); 
-    //     await axios.get<CognitoUser[]>( `User`).then(async (response) => {
-    //         setUser({ ...stateUser, listOfUser: response.data });
-    //         await axios.get<ContractUser[]>( `contract/getContractUsersRelations/` + id).then((innerResponse) => {
-    //             response.data.forEach(user => {
-    //                 user.sendReport = false;
-    //                 innerResponse.data.forEach(contractUser => {
-    //                     if (user.userID! === contractUser.userId!) {
-    //                         user.sendReport! = true
-    //                     }
-    //                 });
-    //             });
-    //         });
-    //     });
-    // };
+    const GetUsers = async () => {
+        let id: string = getQueryVariable("contractId"); 
+        await axios.get<Auth0User[]>( `User`).then(async (response) => {
+            setUser({ ...stateUser, listOfUser: response.data });
+            await axios.get<ContractUser[]>( `contract/getContractUsersRelations/` + id).then((innerResponse) => {
+                response.data.forEach(user => {
+                    user.sendReport = false;
+                    innerResponse.data.forEach(contractUser => {
+                        if (user.user_Id! === contractUser.user_Id!) {
+                            user.sendReport! = true
+                        }
+                    });
+                });
+            });
+        });
+    };
 
     const ShowPersonForm = (isEdit: boolean, personToEdit?: Employee) => {
         setShowModal(true);
@@ -185,9 +185,9 @@ const PersonsList = () => {
         setEmployee({ ...stateEmployee, listOfEmployee: employeeList });
     };
     const handleChangeCheckboxForUsers = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let userList: CognitoUser[] = stateUser!.listOfUser!;
+        let userList: Auth0User[] = stateUser!.listOfUser!;
         userList.forEach(user => {
-            if (user.userID! === event.target.name) {
+            if (user.user_Id! === event.target.name) {
                 user.sendReport = event.target.checked;
             }
         });
@@ -197,7 +197,6 @@ const PersonsList = () => {
     const SaveChanges = async () => {
         //employees
         let employeesAssigned: ContractEmployee[] = [];
-
         stateEmployee!.listOfEmployee!.forEach(employee => {
             if (employee.sendReport){
                 let employeeAssigned: ContractEmployee = {
@@ -208,22 +207,21 @@ const PersonsList = () => {
         });;
 
         // //users
-        // let usersAssigned: ContractUser[] = [];
-
-        // stateUser!.listOfUser!.forEach(user => {
-        //     if (user.sendReport) {
-        //         let userAssigned: ContractUser = {
-        //             userId : user.userID!
-        //         };
-        //         usersAssigned.push(userAssigned);
-        //     }
-        // });;
+        let usersAssigned: ContractUser[] = [];
+        stateUser!.listOfUser!.forEach(user => {
+            if (user.sendReport) {
+                let userAssigned: ContractUser = {
+                    user_Id : user.user_Id!
+                };
+                usersAssigned.push(userAssigned);
+            }
+        });;
 
         //contract
         let contract: Contract = {
             id: parseInt(contractId!),
             contractEmployees: employeesAssigned,
-            // contractUsers: usersAssigned
+            contractUsers: usersAssigned
         };
 
         //put
@@ -268,12 +266,12 @@ const PersonsList = () => {
                                 {stateUser !== undefined && stateUser.listOfUser !== undefined ? stateUser.listOfUser.map((user) =>
                                     (
                                         showItOne ? (
-                                            <TableRow key={user.userID!}>
-                                                <TableCell className={classes.dataRow}>{user.userName}</TableCell>
+                                            <TableRow key={user.user_Id!}>
+                                                <TableCell className={classes.dataRow}>{user.nickName}</TableCell>
                                                 <TableCell className={classes.dataRow}></TableCell>
-                                                <TableCell className={classes.dataRow}>{user.attributes.email}</TableCell>
+                                                <TableCell className={classes.dataRow}>{user.email}</TableCell>
                                                 <TableCell className={classes.dataRow}>
-                                                    <Checkbox checked={user.sendReport!} onChange={handleChangeCheckboxForUsers} name={user.userID!} />
+                                                    <Checkbox checked={user.sendReport!} onChange={handleChangeCheckboxForUsers} name={user.user_Id!} />
                                                 </TableCell>
                                                 <TableCell></TableCell>
                                                 <TableCell></TableCell>

@@ -105,7 +105,7 @@ namespace ApplicationCore.Services
             var contractToPut = await GetAsync(Convert.ToInt32(contract.Id));
 
             contractToPut = UpdateEmployeesContractRelations(contract, contractToPut);
-            //contractToPut = UpdateUsersContractRelations(contract, contractToPut);
+            contractToPut = UpdateUsersContractRelations(contract, contractToPut);
 
             await UpdateAsync(contractToPut);
 
