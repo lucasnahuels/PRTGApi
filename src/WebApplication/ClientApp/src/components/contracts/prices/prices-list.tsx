@@ -117,7 +117,7 @@ const PricesList = (deviceObjId: number) => {
       <Grid container xs={12} item>
         <Grid item xs={3}></Grid>
         <Grid item xs={6}>
-          <h5 className={classes.titlesRow}>Calculated prices for this device in the actual month with the values of this contract</h5>
+          <h5 className={classes.titlesRow}>Calculated prices for this device in the actual month until the date with the values of this contract</h5>
           <br/>
           <TableContainer component={Paper}>
             <Table size="medium">
@@ -190,7 +190,7 @@ const PricesList = (deviceObjId: number) => {
           </TableContainer>
           <br />
           <br />
-          <Link to="/devices">
+          <Link to={`/devices?contractId=${contractId}`}>
             <Button className={classes.buttonBack}>Back</Button>
           </Link>
         </Grid>

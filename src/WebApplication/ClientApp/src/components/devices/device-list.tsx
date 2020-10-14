@@ -62,8 +62,10 @@ const DevicesList = () => {
                 }
             },
         })
-    );
+        );
     const classes = useStyles();
+        
+    const axios = useApi();
 
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
     const [devicesListForm, setDevicesListForm] = React.useState(false);
@@ -86,7 +88,6 @@ const DevicesList = () => {
         return "";
     }
 
-    const axios = useApi();
 
     useEffect(() => { 
         GetDevicesByContract()

@@ -51,6 +51,8 @@ const OwnersList = () => {
     );
     const classes = useStyles();
 
+    const axios = useApi();
+    
     const [stateOwner, setOwner] = React.useState<IOwnerList>();
     const [showModal, setShowModal] = React.useState(false);
     const [showDeleteConfirmModal, setShowDeleteConfirmModal] = React.useState(false);
@@ -59,8 +61,6 @@ const OwnersList = () => {
     const [ownerToDelete, setOwnerToDelete] = React.useState<Owner>();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(3);
-    
-    const axios = useApi();
 
     useEffect(() => { 
         GetOwners() 
