@@ -112,7 +112,7 @@ namespace WebApi
                 .Zoned(TimeZoneInfo.Local); 
 
                 scheduler.Schedule<RefilledTonersRecordsScheduleService>()
-                .DailyAt(9, 30)
+                .DailyAt(10, 00)
                 .Zoned(TimeZoneInfo.Local);
                 scheduler.Schedule<RefilledTonersRecordsScheduleService>()
                 .DailyAt(12, 00)
