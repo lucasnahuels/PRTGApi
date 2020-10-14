@@ -131,7 +131,6 @@ namespace ApplicationCore.Services
                         _context.DailyContadores.Add(newDailyContadores);
                         await _context.SaveChangesAsync();
                     }
-
                     //if (newDailyToners != null)
                     //{
                     //    _context.DailyToners.Add(newDailyToners);
