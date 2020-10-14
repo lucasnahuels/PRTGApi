@@ -60,11 +60,20 @@ const PreviousMonthModal = ({show, hideModal, info }: PreviousMonthModalProps) =
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [infoForPreviousMonth, setInfoForPreviousMonth] = React.useState<DeviceDataViewModel>({
+    objId: info.objId,
+    thisMonthQuantityColorSheets: info.thisMonthQuantityColorSheets,
+    thisMonthQuantityBandWSheets: info.thisMonthQuantityBandWSheets,
+    thisMonthQuantityTotalSheets: info.thisMonthQuantityTotalSheets,
+  });
+
   useEffect(() => {
     fillList();
   }, []);
 
   const fillList = () => {
+
   };
 
   const handleClose = () => {
@@ -103,11 +112,11 @@ const PreviousMonthModal = ({show, hideModal, info }: PreviousMonthModalProps) =
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                            <TableRow >
-                                <TableCell className={classes.dataRow}></TableCell>
-                                <TableCell className={classes.dataRow}></TableCell>
-                                <TableCell className={classes.dataRow}></TableCell>
-                            </TableRow>
+                          <TableRow >
+                            <TableCell className={classes.dataRow}>{infoForPreviousMonth.thisMonthQuantityColorSheets}</TableCell>
+                            <TableCell className={classes.dataRow}>{infoForPreviousMonth.thisMonthQuantityBandWSheets}</TableCell>
+                            <TableCell className={classes.dataRow}>{infoForPreviousMonth.thisMonthQuantityTotalSheets}</TableCell>
+                          </TableRow>
                         </TableBody>
                     </Table>
                 </TableContainer>

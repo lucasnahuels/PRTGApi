@@ -11,7 +11,7 @@ namespace ApplicationCore.Services.Interfaces.Reports
         Task<IEnumerable<DailyContadoresDataDevices>> GetDailyContadoresAsync();
         Task<DailyContadoresDataDevices> GetDailyContadoresByDeviceIdAsync(int id);
         Task<IEnumerable<DailyTonersDataDevices>> GetDailyTonersAsync();
-        Task<DailyTonersDataDevices> GetDailyTonersByDeviceIdAsync(int id);
+        Task<DailyTonersDataDevices> GetLastRecordOfDailyTonersByDeviceIdAsync(int id);
         Task<DailyContadoresDataDevices> GetCurrentContadoresDevicesValues(int objId, int parentObjId);
         Task<DailyTonersDataDevices> GetCurrentTonersDevicesValues(int objId, int parentObjId);
         Task<DailyContadoresDataDevices> GetContadoresDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2);

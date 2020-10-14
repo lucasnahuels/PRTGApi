@@ -178,9 +178,9 @@ const PricesList = (deviceObjId: number) => {
                         }
                     </Select>
                   </TableCell> */}
-                  <TableCell className={classes.dataRow}>{pricesData!.blackAndWhiteCopiesPrices}</TableCell>
-                  <TableCell className={classes.dataRow}>{pricesData!.colorCopiesPrices}</TableCell>
-                  <TableCell className={classes.dataRow}>{pricesData!.totalCopiesPrices}</TableCell>
+                  <TableCell className={classes.dataRow}>${pricesData!.blackAndWhiteCopiesPrices}</TableCell>
+                  <TableCell className={classes.dataRow}>${pricesData!.colorCopiesPrices}</TableCell>
+                  <TableCell className={classes.dataRow}>${pricesData!.totalCopiesPrices}</TableCell>
                 </TableRow>
               </TableBody>
               <TableFooter>

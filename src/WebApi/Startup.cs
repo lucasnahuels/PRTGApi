@@ -105,11 +105,24 @@ namespace WebApi
             provider.UseScheduler(scheduler =>
             {
                 scheduler.Schedule<DailyRecordsScheduleService>()
-                .DailyAt(Constants.TimeRecordsAreTriggered, 00)
+                .DailyAt(Constants.TimeRecordsAreTriggered, 30)
                 .Zoned(TimeZoneInfo.Local);
+                scheduler.Schedule<DailyRecordsScheduleService>()
+                .DailyAt(10, 30)
+                .Zoned(TimeZoneInfo.Local); 
 
                 scheduler.Schedule<RefilledTonersRecordsScheduleService>()
-                .Cron("0 */4 * * *");
+                .DailyAt(9, 30)
+                .Zoned(TimeZoneInfo.Local);
+                scheduler.Schedule<RefilledTonersRecordsScheduleService>()
+                .DailyAt(12, 00)
+                .Zoned(TimeZoneInfo.Local);
+                scheduler.Schedule<RefilledTonersRecordsScheduleService>()
+                .DailyAt(15, 00)
+                .Zoned(TimeZoneInfo.Local);
+                scheduler.Schedule<RefilledTonersRecordsScheduleService>()
+                .DailyAt(17, 00)
+                .Zoned(TimeZoneInfo.Local);
             });
         }
 

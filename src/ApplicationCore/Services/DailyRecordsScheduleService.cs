@@ -109,30 +109,34 @@ namespace ApplicationCore.Services
         {
             var devices = _sensorService.GetAllDevices().Result;
             DailyContadoresDataDevices newDailyContadores = null;
-            DailyTonersDataDevices newDailyToners = null;
+            //DailyTonersDataDevices newDailyToners = null;
 
             foreach (var device in devices)
             {
-                var childDevices = await _sensorService.GetChildDevices(device.ObjId);
-                foreach (var childDevice in childDevices)
+                var recordFromToday = _context.DailyContadores.Where(x => x.DeviceId == device.ObjId && x.DateToday.Date == DateTime.Now.Date).FirstOrDefault();
+                if (recordFromToday == null)
                 {
-                    var sensorDetails = await _sensorService.GetSensorDetails(childDevice.ObjId);
-                    if (sensorDetails.SensorData.Name == Contadores)
-                        newDailyContadores = _dailyDeviceService.GetCurrentContadoresDevicesValues(childDevice.ObjId, device.ObjId).Result;
-                    if (sensorDetails.SensorData.Name == Toners)
-                        newDailyToners = _dailyDeviceService.GetCurrentTonersDevicesValues(childDevice.ObjId, device.ObjId).Result;
-                }
+                    var childDevices = await _sensorService.GetChildDevices(device.ObjId);
+                    foreach (var childDevice in childDevices)
+                    {
+                        var sensorDetails = await _sensorService.GetSensorDetails(childDevice.ObjId);
+                        if (sensorDetails.SensorData.Name == Contadores)
+                            newDailyContadores = _dailyDeviceService.GetCurrentContadoresDevicesValues(childDevice.ObjId, device.ObjId).Result;
+                        //if (sensorDetails.SensorData.Name == Toners)
+                        //    newDailyToners = _dailyDeviceService.GetCurrentTonersDevicesValues(childDevice.ObjId, device.ObjId).Result;
+                    }
 
-                if (newDailyContadores != null)
-                {
-                    _context.DailyContadores.Add(newDailyContadores);
-                    await _context.SaveChangesAsync();
-                }
+                    if (newDailyContadores != null)
+                    {
+                        _context.DailyContadores.Add(newDailyContadores);
+                        await _context.SaveChangesAsync();
+                    }
 
-                if (newDailyToners != null)
-                {
-                    _context.DailyToners.Add(newDailyToners);
-                    await _context.SaveChangesAsync();
+                    //if (newDailyToners != null)
+                    //{
+                    //    _context.DailyToners.Add(newDailyToners);
+                    //    await _context.SaveChangesAsync();
+                    //}
                 }
             }
         }
