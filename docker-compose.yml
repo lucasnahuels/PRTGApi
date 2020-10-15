@@ -20,15 +20,6 @@ services:
     networks:
         - network_prtg
 
-  nginx-proxy:
-    image: jwilder/nginx-proxy
-    ports:
-        - "80:80"
-    volumes:
-        - /var/run/docker.sock:/tmp/docker.sock:ro
-    networks:
-        - network_prtg
-
   webapi_prtg:
     image: webapi_prtg
     container_name: webapi_prtg
@@ -38,12 +29,16 @@ services:
     environment:
         ConnectionStrings__prtgHost: postgres_prtg
         VIRTUAL_HOST: prtg-api.it-one.com.ar
+        VIRTUAL_PORT: 80
+        LETSENCRYPT_HOST: prtg-api.it-one.com.ar
+        LETSENCRYPT_EMAIL: reporteobras@it-one.com.ar
 
     ports:
       - "80"
     restart: always
     networks:
       - network_prtg
+      - nginx-proxy
 
   webapp_prtg:
     image: webapp_prtg
@@ -53,11 +48,20 @@ services:
       dockerfile: src/WebApplication/Dockerfile
     environment:
         VIRTUAL_HOST: prtg.it-one.com.ar
+        VIRTUAL_PORT: 80
+        LETSENCRYPT_HOST: prtg.it-one.com.ar
+        LETSENCRYPT_EMAIL: reporteobras@it-one.com.ar
     ports:
       - "80"
     restart: always
     networks:
-      - network_prtg
+      - nginx-proxy
 
 volumes:
     db_volume:
+
+networks:
+  proxy:
+    external:
+      name: nginx-proxy
+  network_prtg:
