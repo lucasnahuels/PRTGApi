@@ -139,7 +139,17 @@ namespace ApplicationCore.Services
 
         public Task<DailyContadoresDataDevices> GetContadoresDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2)
         {
-
+            #region date2>thanDate1
+            if (date1.Date > date2.Date)
+            {
+                var contadoresIn0 = new DailyContadoresDataDevices
+                {
+                    BlackAndWhiteCopies = 0,
+                    ColorCopies = 0
+                };
+                return Task.FromResult(contadoresIn0);
+            }
+            #endregion
             var deviceDate1ContadoresValues = _context.DailyContadores.OrderBy(dailyPrinter => dailyPrinter.DateToday.Date)
                                                                        .Where(dailyPrinter => dailyPrinter.DateToday.Date >= date1.Date
                                                                         && dailyPrinter.DateToday.Date <= date2.Date
@@ -230,6 +240,21 @@ namespace ApplicationCore.Services
 
         public Task<TonersUsed> GetTonersDataFromSelectedRangeDate(int deviceId, DateTime date1, DateTime date2)
         {
+            #region date2>thanDate1
+            if (date1.Date > date2.Date)
+            {
+                var tonersIn0 = new TonersUsed
+                {
+                    BlackTonersUsed = 0,
+                    CyanTonersUsed = 0,
+                    MagentaTonersUsed = 0,
+                    YellowTonersUsed = 0,
+                    DeviceId = deviceId
+                };
+                return Task.FromResult(tonersIn0);
+            }
+            #endregion
+
             var deviceDateTonersValues = _context.TonersUsed.Where(x => x.DateAndTime.Date >= date1.Date && x.DateAndTime.Date <= date2.Date &&
                                                                         x.DeviceId == deviceId).ToList();
       
