@@ -62,8 +62,10 @@ const DevicesList = () => {
                 }
             },
         })
-    );
+        );
     const classes = useStyles();
+        
+    const axios = useApi();
 
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
     const [devicesListForm, setDevicesListForm] = React.useState(false);
@@ -86,13 +88,13 @@ const DevicesList = () => {
         return "";
     }
 
+
     useEffect(() => { 
         GetDevicesByContract()
      // eslint-disable-next-line react-hooks/exhaustive-deps
      }, []);
-     
-    const axios = useApi();
 
+     
     const GetDevicesByContract = async () => {
         let id : string = getQueryVariable("contractId");
         await axios.get(`sensor/GetAssignedDevices/` + id).then((response) => {

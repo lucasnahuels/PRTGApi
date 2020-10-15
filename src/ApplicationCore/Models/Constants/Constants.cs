@@ -6,6 +6,6 @@ namespace ApplicationCore.Models.Constants
 {
     public static class Constants
     {
-        public static int TimeRecordsAreTriggered = 18;
+        public static int TimeRecordsAreTriggered = 14;
     }
 }

@@ -16,6 +16,7 @@ using ApplicationCore.Services;
 using ApplicationCore.Models.Constants;
 using WebApi.GlobalErrorHandling.Extensions;
 using ApplicationCore.Configuration;
+using ApplicationCore.Models.Auth0;
 
 namespace WebApi
 {
@@ -76,8 +77,10 @@ namespace WebApi
             services.AddPRTGServices();
 
             services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
+            services.Configure<TokenRequest>(Configuration.GetSection("Auth0Management"));
 
-            services.AddScheduler();            
+            services.AddScheduler();
+            services.AddCache();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -107,11 +110,24 @@ namespace WebApi
             provider.UseScheduler(scheduler =>
             {
                 scheduler.Schedule<DailyRecordsScheduleService>()
-                .DailyAt(Constants.TimeRecordsAreTriggered, 00)
+                .DailyAt(Constants.TimeRecordsAreTriggered, 30)
+                .Zoned(TimeZoneInfo.Local);
+                scheduler.Schedule<DailyRecordsScheduleService>()
+                .DailyAt(10, 30)
+                .Zoned(TimeZoneInfo.Local); 
+
+                scheduler.Schedule<RefilledTonersRecordsScheduleService>()
+                .DailyAt(10, 00)
                 .Zoned(TimeZoneInfo.Local);
                 scheduler.Schedule<RefilledTonersRecordsScheduleService>()
-                .Cron("0 */4 * * *");
-                //todos los meses a fin de mes mandar reporte??
+                .DailyAt(12, 00)
+                .Zoned(TimeZoneInfo.Local);
+                scheduler.Schedule<RefilledTonersRecordsScheduleService>()
+                .DailyAt(15, 00)
+                .Zoned(TimeZoneInfo.Local);
+                scheduler.Schedule<RefilledTonersRecordsScheduleService>()
+                .DailyAt(17, 00)
+                .Zoned(TimeZoneInfo.Local);
             });
         }
 

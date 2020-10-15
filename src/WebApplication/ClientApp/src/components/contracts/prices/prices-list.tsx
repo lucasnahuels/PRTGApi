@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import axios from 'axios';
+import useApi from '../../../helpers/axios-wrapper'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -8,7 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
-import { Grid, Paper, TableFooter } from '@material-ui/core';
+import { Grid, Paper, TableFooter} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { PricesData } from './price-view-model';
 
@@ -73,8 +73,14 @@ const PricesList = (deviceObjId: number) => {
     // };
   const [deviceId, setDeviceId] = React.useState("");
   const [contractId, setContractId] = React.useState("");
-  const [pricesData, setPricesData] = React.useState<PricesData>();
+  const [pricesData, setPricesData] = React.useState<PricesData>({
+    deviceId: 0,
+    blackAndWhiteCopiesPrices: 0,
+    colorCopiesPrices: 0,
+    totalCopiesPrices: 0
+  })
 
+  const axios = useApi();
 
   function getQueryVariable(variable: string) {
     var query = window.location.search.substring(1);//"app=article&act=news_content&aid=160990"
@@ -89,11 +95,18 @@ const PricesList = (deviceObjId: number) => {
   useEffect(() => {
     setContractId(getQueryVariable("contractId"));
     setDeviceId(getQueryVariable("deviceObjId"));
-    CalculatePrices()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contractId, deviceId]);
 
+  useEffect(() => {
+    CalculatePrices()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  
   const CalculatePrices = async () => {
+    let contractId: string = getQueryVariable("contractId");
+    let deviceId: string = getQueryVariable("deviceObjId"); 
     await axios.get(`contract/CalculatePrices/` + contractId + "/" + deviceId).then((response) => {
       setPricesData( response.data );
     });
@@ -104,15 +117,15 @@ const PricesList = (deviceObjId: number) => {
       <Grid container xs={12} item>
         <Grid item xs={3}></Grid>
         <Grid item xs={6}>
-          <h5 className={classes.titlesRow}>Calculated prices for this device in the actual month with the values of this contract</h5>
+          <h5 className={classes.titlesRow}>Calculated prices for this device in the actual month until the date with the values of this contract</h5>
           <br/>
           <TableContainer component={Paper}>
             <Table size="medium">
               <TableHead aria-label="simple table">
                 <TableRow>
-                  <TableCell className={classes.titlesRow} size="medium">
+                  {/* <TableCell className={classes.titlesRow} size="medium">
                     Device
-                  </TableCell>
+                  </TableCell> */}
                   {/* <TableCell className={classes.titlesRow} size="medium">
                     Year
                   </TableCell>
@@ -132,7 +145,7 @@ const PricesList = (deviceObjId: number) => {
               </TableHead>
               <TableBody>
                 <TableRow key={pricesData!.deviceId}>
-                  <TableCell className={classes.dataRow}></TableCell>
+                  {/* <TableCell className={classes.dataRow}></TableCell> */}
                   {/* <TableCell className={classes.dataRow}>
                     <Select
                       className={classes.formRoot}
@@ -165,9 +178,9 @@ const PricesList = (deviceObjId: number) => {
                         }
                     </Select>
                   </TableCell> */}
-                  <TableCell className={classes.dataRow}>{pricesData!.blackAndWhiteCopiesPrices}</TableCell>
-                  <TableCell className={classes.dataRow}>{pricesData!.colorCopiesPrices}</TableCell>
-                  <TableCell className={classes.dataRow}>{pricesData!.totalCopiesPrices}</TableCell>
+                  <TableCell className={classes.dataRow}>${pricesData!.blackAndWhiteCopiesPrices}</TableCell>
+                  <TableCell className={classes.dataRow}>${pricesData!.colorCopiesPrices}</TableCell>
+                  <TableCell className={classes.dataRow}>${pricesData!.totalCopiesPrices}</TableCell>
                 </TableRow>
               </TableBody>
               <TableFooter>
@@ -177,7 +190,7 @@ const PricesList = (deviceObjId: number) => {
           </TableContainer>
           <br />
           <br />
-          <Link to="/devices">
+          <Link to={`/devices?contractId=${contractId}`}>
             <Button className={classes.buttonBack}>Back</Button>
           </Link>
         </Grid>

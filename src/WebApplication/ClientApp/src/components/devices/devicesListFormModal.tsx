@@ -59,6 +59,8 @@ const DevicesListFormModal = ({show, contractId, hideModal}: DevicesListFormModa
     const classes = useStyles();
     const [modalStyle] = React.useState(getModalStyle);
     
+    const axios = useApi();
+    
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
 
     useEffect(() => {
@@ -66,7 +68,6 @@ const DevicesListFormModal = ({show, contractId, hideModal}: DevicesListFormModa
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const axios = useApi();
 
     const GetPossibleDevices = async () => {
         await axios.get(`sensor/GetUnassignedDevices`).then((response) => {

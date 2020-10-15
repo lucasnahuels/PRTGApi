@@ -3,15 +3,17 @@ using System;
 using ApplicationCore.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ApplicationCore.EntityFramework.Migrations
 {
     [DbContext(typeof(PrtgDbContext))]
-    partial class PrtgDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201012034816_AddMailingMonthReport")]
+    partial class AddMailingMonthReport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,12 +94,12 @@ namespace ApplicationCore.EntityFramework.Migrations
                     b.Property<long>("ContractId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("User_Id")
+                    b.Property<string>("UserId")
                         .HasColumnType("text");
 
-                    b.HasKey("ContractId", "User_Id");
+                    b.HasKey("ContractId", "UserId");
 
-                    b.HasIndex("User_Id");
+                    b.HasIndex("UserId");
 
                     b.ToTable("ContractUsers");
                 });
@@ -263,10 +265,10 @@ namespace ApplicationCore.EntityFramework.Migrations
 
             modelBuilder.Entity("ApplicationCore.Models.User", b =>
                 {
-                    b.Property<string>("User_Id")
+                    b.Property<string>("UserId")
                         .HasColumnType("text");
 
-                    b.HasKey("User_Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("Users");
                 });
@@ -320,7 +322,7 @@ namespace ApplicationCore.EntityFramework.Migrations
 
                     b.HasOne("ApplicationCore.Models.User", "User")
                         .WithMany("ContractUsers")
-                        .HasForeignKey("User_Id")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

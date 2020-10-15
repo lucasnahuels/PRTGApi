@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import { orange, purple } from '@material-ui/core/colors';
+import { purple, red } from '@material-ui/core/colors';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from './auth/react-auth0-spa';
 
@@ -60,11 +60,12 @@ const useStyles = makeStyles((theme: Theme) =>
             }
         },
         colorAuthButton: {
-            color: theme.palette.getContrastText(orange[500]),
-            backgroundColor: orange[700],
+            color: theme.palette.getContrastText(red[500]),
+            backgroundColor: red[900],
             '&:hover': {
-                backgroundColor: orange[500],
+                backgroundColor: red[500],
             },
+            float: 'left',
             boxShadow: 'none',
             textTransform: 'none',
             fontSize: 16,
@@ -134,6 +135,8 @@ export default function SearchAppBar() {
                             </Link>
                         </Grid>
                         <Grid item xs={1}>
+                        </Grid>
+                        <Grid item xs={2}>
                             {!isAuthenticated && (
                                 <Button className={classes.colorAuthButton} onClick={() => loginWithRedirect({})}>
                                 Log in
@@ -144,8 +147,6 @@ export default function SearchAppBar() {
                                 Log out
                                 </Button>
                             )}
-                        </Grid>
-                        <Grid item xs={1}>
                         </Grid>
                     </Grid>
                 </Toolbar>

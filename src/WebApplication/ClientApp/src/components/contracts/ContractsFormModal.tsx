@@ -53,12 +53,14 @@ const useStyles = makeStyles((theme: Theme) =>
             justifyContent: 'center',
         },
     })
-);
-
-const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractToEdit }: ContractFormModalProps) => {
-
+    );
+    
+    const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractToEdit }: ContractFormModalProps) => {
+        
     const classes = useStyles();
     const [modalStyle] = React.useState(getModalStyle);
+    
+    const axios = useApi();
 
     const [selectedOwnerValue, setSelectedOwnerValue] = React.useState("");
     const [stateDevice, setDevice] = React.useState<IDeviceList>();
@@ -118,13 +120,12 @@ const ContractFormModal = ({ show, hideModal, getAllContracts, isEdit, contractT
     //     }
     // };
     
-    React.useEffect(() => {
+    useEffect(() => {
         GetDevices();
         GetOwners();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const axios = useApi();
 
     const GetDevices = async () => {
         await axios.get(`sensor/GetAllDevices`).then((response) => {
