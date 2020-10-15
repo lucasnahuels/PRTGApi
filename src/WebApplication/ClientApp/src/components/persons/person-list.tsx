@@ -115,12 +115,12 @@ const PersonsList = () => {
 
     const GetEmployees = async () => {
         let id: string = getQueryVariable("contractId"); 
-        await axios.get<Employee[]>(`Employee`).then(async (response) => {
+        await axios.get<Employee[]>(`Employee`).then(async (response: any) => {
             setEmployee({ ...stateEmployee, listOfEmployee: response.data });
-            await axios.get<ContractEmployee[]>(`contract/getContractEmployeesRelations/` + id).then((innerResponse) => {
-                response.data.forEach(employee => {
+            await axios.get<ContractEmployee[]>(`contract/getContractEmployeesRelations/` + id).then((innerResponse: any) => {
+                response.data.forEach((employee: { sendReport: boolean; id: any; }) => {
                     employee.sendReport = false;
-                    innerResponse.data.forEach(contractEmployee => {
+                    innerResponse.data.forEach((contractEmployee: { employeeId: any; }) => {
                         if(employee.id! === contractEmployee.employeeId!){
                             employee.sendReport! = true
                         }
@@ -132,12 +132,12 @@ const PersonsList = () => {
 
     const GetUsers = async () => {
         let id: string = getQueryVariable("contractId"); 
-        await axios.get<Auth0User[]>( `User`).then(async (response) => {
+        await axios.get<Auth0User[]>(`User`).then(async (response: any) => {
             setUser({ ...stateUser, listOfUser: response.data });
-            await axios.get<ContractUser[]>( `contract/getContractUsersRelations/` + id).then((innerResponse) => {
-                response.data.forEach(user => {
+            await axios.get<ContractUser[]>(`contract/getContractUsersRelations/` + id).then((innerResponse: any) => {
+                response.data.forEach((user: { sendReport: boolean; user_Id: any; }) => {
                     user.sendReport = false;
-                    innerResponse.data.forEach(contractUser => {
+                    innerResponse.data.forEach((contractUser: { user_Id: any; }) => {
                         if (user.user_Id! === contractUser.user_Id!) {
                             user.sendReport! = true
                         }

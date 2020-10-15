@@ -88,13 +88,13 @@ const ContractList = () => {
     const axios = useApi();
 
     const GetContracts = async () => {
-        await axios.get(`contract`).then( (response) => {
+        await axios.get(`contract`).then( (response : any) => {
             setContract({ ...stateContract, listOfContract: response.data });
         });
     };
     
     const GetContractsConst = async () => {
-        await axios.get(`contract`).then((response) => {
+        await axios.get(`contract`).then((response : any) => {
             setContractConst({ ...stateContractConst, listOfContract: response.data });
         });
     };

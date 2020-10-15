@@ -110,22 +110,22 @@ const SensorList = () => {
 
 
     const GetDevices = async () => {
-        await axios.get(`sensor/GetAllDevices`).then((response) => {
+        await axios.get(`sensor/GetAllDevices`).then((response : any) => {
             setDevice({ ...stateDevice, listOfDevices: response.data });
         });
     };
 
     const GetDeviceData = async () => {
-      await axios.get( `dailyRecord/GetContadoresDataFromActualOrPreviousMonth/` + selectedValue + "/" + true).then((response) => {
+      await axios.get(`dailyRecord/GetContadoresDataFromActualOrPreviousMonth/` + selectedValue + "/" + true).then((response: any) => {
           setDeviceContadoresDailyData( response.data );
       });
-      await axios.get( `dailyRecord/GetTonersDataFromActualOrPreviousMonth/` + selectedValue + "/" + true).then((response) => {
+      await axios.get(`dailyRecord/GetTonersDataFromActualOrPreviousMonth/` + selectedValue + "/" + true).then((response: any) => {
           setDeviceTonersDailyData(response.data);
       });
-      await axios.get( `sensor/GetCurrentTonersDevicesValues/` + selectedValue).then((response) => {
+      await axios.get(`sensor/GetCurrentTonersDevicesValues/` + selectedValue).then((response: any) => {
         setDeviceTonersCurrentData(response.data);
       });
-      await axios.get( `dailyRecord/GetContadoresDataFromActualOrPreviousMonth/` + selectedValue + "/" + false).then((response) => {
+      await axios.get(`dailyRecord/GetContadoresDataFromActualOrPreviousMonth/` + selectedValue + "/" + false).then((response: any) => {
         setDeviceContadoresPreviousMonthData(response.data);
       });
     };
@@ -135,11 +135,11 @@ const SensorList = () => {
     var end = inputDate.endDate.toJSON();
 
     await axios.get( `dailyRecord/GetContadoresDataFromSelectedRangeDate/` + selectedValue + "/" + start + "/" + end)
-    .then((response) => {
+      .then((response: any) => {
       setDeviceContadoresDailyData(response.data);
     });
     await axios.get( `dailyRecord/GetTonersDataFromSelectedRangeDate/` + selectedValue + "/" + start + "/" + end)
-    .then((response) => {
+      .then((response: any) => {
       setDeviceTonersDailyData(response.data);
     });
   }

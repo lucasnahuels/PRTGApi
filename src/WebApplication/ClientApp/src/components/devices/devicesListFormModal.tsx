@@ -70,7 +70,7 @@ const DevicesListFormModal = ({show, contractId, hideModal}: DevicesListFormModa
 
 
     const GetPossibleDevices = async () => {
-        await axios.get(`sensor/GetUnassignedDevices`).then((response) => {
+        await axios.get(`sensor/GetUnassignedDevices`).then((response: any) => {
             setDevice({ ...stateDevice, listOfDevices: response.data });
         });
     };

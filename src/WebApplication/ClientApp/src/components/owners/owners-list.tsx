@@ -68,7 +68,7 @@ const OwnersList = () => {
     }, []);
     
     const GetOwners = async () => {
-        await axios.get(`Owner`).then( (response) => {
+        await axios.get(`Owner`).then((response: any) => {
             setOwner({ ...stateOwner, listOfOwners: response.data });
         });
     };

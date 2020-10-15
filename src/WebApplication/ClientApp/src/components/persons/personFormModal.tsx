@@ -116,7 +116,7 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, personToEdit}
     }
 
     const GetOwners = async () => {
-        await axios.get( `Owner`).then((response) => {
+        await axios.get(`Owner`).then((response: any) => {
             setOwner({ ...stateOwner, listOfOwners: response.data });
         });
     };

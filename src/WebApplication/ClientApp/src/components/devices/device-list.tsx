@@ -97,7 +97,7 @@ const DevicesList = () => {
      
     const GetDevicesByContract = async () => {
         let id : string = getQueryVariable("contractId");
-        await axios.get(`sensor/GetAssignedDevices/` + id).then((response) => {
+        await axios.get(`sensor/GetAssignedDevices/` + id).then((response: any) => {
             setDevice({ ...stateDevice, listOfDevices: response.data });
         });
     };
