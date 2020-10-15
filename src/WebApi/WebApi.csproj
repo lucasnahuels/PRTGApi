@@ -3,7 +3,6 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>8.0</LangVersion>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <AWSProjectType>Lambda</AWSProjectType>
     <Configurations>Debug;Release;Prod</Configurations>
     <UserSecretsId>6510a78d-4b2b-412f-b96d-e9a2318edb61</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
