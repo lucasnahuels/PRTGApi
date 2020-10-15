@@ -38,7 +38,7 @@ services:
     restart: always
     networks:
       - network_prtg
-      - nginx-proxy
+      - proxy
 
   webapp_prtg:
     image: webapp_prtg
@@ -55,7 +55,7 @@ services:
       - "80"
     restart: always
     networks:
-      - nginx-proxy
+      - proxy
 
 volumes:
     db_volume:
