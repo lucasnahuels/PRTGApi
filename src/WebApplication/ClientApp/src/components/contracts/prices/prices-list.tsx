@@ -107,7 +107,7 @@ const PricesList = (deviceObjId: number) => {
   const CalculatePrices = async () => {
     let contractId: string = getQueryVariable("contractId");
     let deviceId: string = getQueryVariable("deviceObjId"); 
-    await axios.get(`contract/CalculatePrices/` + contractId + "/" + deviceId).then((response) => {
+    await axios.get(`contract/CalculatePrices/` + contractId + "/" + deviceId).then((response : any) => {
       setPricesData( response.data );
     });
   };

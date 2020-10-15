@@ -128,12 +128,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
     const GetDevices = async () => {
-        await axios.get(`sensor/GetAllDevices`).then((response) => {
+        await axios.get(`sensor/GetAllDevices`).then((response : any) => {
             setDevice({ ...stateDevice, listOfDevices: response.data });
         });
     };
     const GetOwners = async () => {
-        await axios.get(`Owner`).then((response) => {
+        await axios.get(`Owner`).then((response : any) => {
             setOwner({ ...stateOwner, listOfOwners: response.data });
         });
     };
