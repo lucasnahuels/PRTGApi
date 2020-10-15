@@ -1,6 +1,6 @@
 const prod = {
     url: {
-        API_URL: "https://prtg-api.it-one.com.ar:23443/api/"
+        API_URL: "https://prtg-api.it-one.com.ar/api/"
     }
 };
 const dev = {
