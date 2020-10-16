@@ -7,7 +7,7 @@ export default () => {
   const { getTokenSilently, loginWithRedirect } = useAuth0();
   const api = useRef(
     axios.create({
-      baseURL: config.url
+      baseURL: config.url.API_URL
     })
   );
   useEffect(() => {
