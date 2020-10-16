@@ -45,33 +45,31 @@ namespace ApplicationCore.Services
                     if (sensorDetails.SensorData.Name == Toners)
                     {
                         lastTonerValues = _dailyDeviceService.GetLastRecordOfDailyTonersByDeviceIdAsync(device.ObjId).Result; //check if it gets last value
-                        if (lastTonerValues != null)
-                        {
-                            #region CreateCurrentTonerValuesRecord 
-                            var currentTonerValues = _dailyDeviceService.GetCurrentTonersDevicesValues(childDevice.ObjId, device.ObjId).Result;
-                            if (currentTonerValues != null)
+                        
+                        #region CreateCurrentTonerValuesRecord 
+                        var currentTonerValues = _dailyDeviceService.GetCurrentTonersDevicesValues(childDevice.ObjId, device.ObjId).Result;
+                        _context.DailyToners.Add(currentTonerValues);
+                        await _context.SaveChangesAsync();
+                        #endregion
+
+                        if (lastTonerValues != null && currentTonerValues != null)
+                        { 
+                            bool blackRefilled = currentTonerValues.BlackTonersUsed > lastTonerValues.BlackTonersUsed && currentTonerValues.BlackTonersUsed > 85 ? true : false;
+                            bool cyanRefilled = currentTonerValues.CyanTonersUsed > lastTonerValues.CyanTonersUsed && currentTonerValues.CyanTonersUsed > 85 ? true : false;
+                            bool yellowRefilled = currentTonerValues.YellowTonersUsed > lastTonerValues.YellowTonersUsed && currentTonerValues.YellowTonersUsed > 85 ? true : false;
+                            bool magentaRefilled = currentTonerValues.MagentaTonersUsed > lastTonerValues.MagentaTonersUsed && currentTonerValues.MagentaTonersUsed > 85 ? true : false;
+
+                            var tonersUsed = new TonersUsed
                             {
-                                _context.DailyToners.Add(currentTonerValues);
-                                await _context.SaveChangesAsync();
-                                #endregion
-
-                                bool blackRefilled = currentTonerValues.BlackTonersUsed > lastTonerValues.BlackTonersUsed && currentTonerValues.BlackTonersUsed > 85 ? true : false;
-                                bool cyanRefilled = currentTonerValues.CyanTonersUsed > lastTonerValues.CyanTonersUsed && currentTonerValues.CyanTonersUsed > 85 ? true : false;
-                                bool yellowRefilled = currentTonerValues.YellowTonersUsed > lastTonerValues.YellowTonersUsed && currentTonerValues.YellowTonersUsed > 85 ? true : false;
-                                bool magentaRefilled = currentTonerValues.MagentaTonersUsed > lastTonerValues.MagentaTonersUsed && currentTonerValues.MagentaTonersUsed > 85 ? true : false;
-
-                                var tonersUsed = new TonersUsed
-                                {
-                                    DeviceId = device.ObjId,
-                                    DateAndTime = DateTime.Now,
-                                    BlackTonersUsed = blackRefilled ? 1 : 0,
-                                    CyanTonersUsed = cyanRefilled ? 1 : 0,
-                                    YellowTonersUsed = yellowRefilled ? 1 : 0,
-                                    MagentaTonersUsed = magentaRefilled ? 1 : 0
-                                };
-                                _context.TonersUsed.Add(tonersUsed);
-                                await _context.SaveChangesAsync();
-                            }
+                                DeviceId = device.ObjId,
+                                DateAndTime = DateTime.Now,
+                                BlackTonersUsed = blackRefilled ? 1 : 0,
+                                CyanTonersUsed = cyanRefilled ? 1 : 0,
+                                YellowTonersUsed = yellowRefilled ? 1 : 0,
+                                MagentaTonersUsed = magentaRefilled ? 1 : 0
+                            };
+                            _context.TonersUsed.Add(tonersUsed);
+                            await _context.SaveChangesAsync();
                         }
                     }
                 }
