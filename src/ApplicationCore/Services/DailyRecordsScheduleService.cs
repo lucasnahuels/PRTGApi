@@ -4,17 +4,9 @@ using ApplicationCore.Models.Reports;
 using ApplicationCore.Services.Interfaces;
 using ApplicationCore.Services.Interfaces.Reports;
 using Coravel.Invocable;
-using Coravel.Scheduling.Schedule.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Net.Mail;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ApplicationCore.Services

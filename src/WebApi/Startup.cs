@@ -111,23 +111,23 @@ namespace WebApi
             {
                 scheduler.Schedule<DailyRecordsScheduleService>()
                 .DailyAt(Constants.TimeRecordsAreTriggered, 30)
-                .Zoned(TimeZoneInfo.Local);
+                .Zoned(GetBuenosAiresTimeZoneInfo());
                 scheduler.Schedule<DailyRecordsScheduleService>()
                 .DailyAt(10, 30)
-                .Zoned(TimeZoneInfo.Local); 
+                .Zoned(GetBuenosAiresTimeZoneInfo()); 
 
                 scheduler.Schedule<RefilledTonersRecordsScheduleService>()
                 .DailyAt(10, 00)
-                .Zoned(TimeZoneInfo.Local);
+                .Zoned(GetBuenosAiresTimeZoneInfo());
                 scheduler.Schedule<RefilledTonersRecordsScheduleService>()
                 .DailyAt(12, 00)
-                .Zoned(TimeZoneInfo.Local);
+                .Zoned(GetBuenosAiresTimeZoneInfo());
                 scheduler.Schedule<RefilledTonersRecordsScheduleService>()
                 .DailyAt(15, 00)
-                .Zoned(TimeZoneInfo.Local);
+                .Zoned(GetBuenosAiresTimeZoneInfo());
                 scheduler.Schedule<RefilledTonersRecordsScheduleService>()
                 .DailyAt(17, 00)
-                .Zoned(TimeZoneInfo.Local);
+                .Zoned(GetBuenosAiresTimeZoneInfo());
             });
         }
 
@@ -146,6 +146,11 @@ namespace WebApi
                             .AllowAnyMethod();
                     });
             }
+        }
+
+        private TimeZoneInfo GetBuenosAiresTimeZoneInfo()
+        {
+            return TimeZoneInfo.FindSystemTimeZoneById("Argentina Standard Time");
         }
     }
 }
