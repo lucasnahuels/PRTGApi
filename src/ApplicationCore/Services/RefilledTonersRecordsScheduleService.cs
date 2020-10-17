@@ -48,8 +48,11 @@ namespace ApplicationCore.Services
                         
                         #region CreateCurrentTonerValuesRecord 
                         var currentTonerValues = _dailyDeviceService.GetCurrentTonersDevicesValues(childDevice.ObjId, device.ObjId).Result;
-                        _context.DailyToners.Add(currentTonerValues);
-                        await _context.SaveChangesAsync();
+                        if (currentTonerValues != null)
+                        {
+                            _context.DailyToners.Add(currentTonerValues);
+                            await _context.SaveChangesAsync();
+                        }
                         #endregion
 
                         if (lastTonerValues != null && currentTonerValues != null)

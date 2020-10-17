@@ -112,10 +112,10 @@ namespace ApplicationCore.Services
         public async Task CreateDailyReport()
         {
             var devices = _sensorService.GetAllDevices().Result;
-            DailyContadoresDataDevices newDailyContadores = null;
-
             foreach (var device in devices)
             {
+                DailyContadoresDataDevices newDailyContadores = null;
+
                 var recordFromToday = _context.DailyContadores.Where(x => x.DeviceId == device.ObjId && x.DateToday.Date == DateTime.Now.Date).FirstOrDefault();
                 if (recordFromToday == null)
                 {
@@ -125,7 +125,6 @@ namespace ApplicationCore.Services
                         var sensorDetails = await _sensorService.GetSensorDetails(childDevice.ObjId);
                         if (sensorDetails.SensorData.Name == Contadores)
                             newDailyContadores = _dailyDeviceService.GetCurrentContadoresDevicesValues(childDevice.ObjId, device.ObjId).Result;
-                      
                     }
                     if (newDailyContadores != null)
                     {
