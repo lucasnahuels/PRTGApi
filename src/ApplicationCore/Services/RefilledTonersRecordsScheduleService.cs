@@ -44,7 +44,7 @@ namespace ApplicationCore.Services
                     var sensorDetails = await _sensorService.GetSensorDetails(childDevice.ObjId);
                     if (sensorDetails.SensorData.Name == Toners)
                     {
-                        lastTonerValues = _dailyDeviceService.GetLastRecordOfDailyTonersByDeviceIdAsync(device.ObjId).Result; //check if it gets last value
+                        lastTonerValues = _dailyDeviceService.GetLastRecordOfDailyTonersByDeviceIdAsync(device.ObjId).Result;
                         
                         #region CreateCurrentTonerValuesRecord 
                         var currentTonerValues = _dailyDeviceService.GetCurrentTonersDevicesValues(childDevice.ObjId, device.ObjId).Result;

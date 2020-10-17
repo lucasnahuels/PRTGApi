@@ -25,8 +25,10 @@ namespace ApplicationCore.Services
             client.DefaultRequestHeaders.Add("authorization", $"{tokenResponse.Token_Type} {tokenResponse.Access_Token}");
             var response = await client.GetAsync("api/v2/users");
             var jsonResponse = await response.Content.ReadAsStringAsync();
+            var objectResponse = JsonConvert.DeserializeObject<List<Auth0User>>(jsonResponse);
 
-            return JsonConvert.DeserializeObject<List<Auth0User>>(jsonResponse);
+            objectResponse.RemoveAll(x => x.Email == "lucasnahuelstp@gmail.com" || x.Email == "matigrieben@gmail.com");   
+            return objectResponse;
         }
         public async Task<Auth0User> GetAsync(string id)
         {
