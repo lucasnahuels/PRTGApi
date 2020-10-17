@@ -15,6 +15,7 @@ using Coravel;
 using ApplicationCore.Services;
 using ApplicationCore.Configuration;
 using ApplicationCore.Models.Auth0;
+using System.Linq;
 
 namespace WebApi
 {
@@ -148,7 +149,8 @@ namespace WebApi
 
         private TimeZoneInfo GetBuenosAiresTimeZoneInfo()
         {
-            return TimeZoneInfo.FindSystemTimeZoneById("Argentina Standard Time");
+            var zones = TimeZoneInfo.GetSystemTimeZones();
+            return zones.FirstOrDefault(tzi => tzi.Id.Contains("Argentina"));
         }
     }
 }
