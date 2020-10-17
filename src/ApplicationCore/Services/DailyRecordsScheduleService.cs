@@ -19,6 +19,7 @@ namespace ApplicationCore.Services
         private readonly IContractService _contractService;
         private readonly IMailingMonthReportService _mailingMonthReportService;
         private readonly IMailerService _mailerService;
+        private readonly IUserService _userService;
 
         public DailyRecordsScheduleService(
             IDailyDeviceService dailyDeviceService, 
@@ -26,7 +27,8 @@ namespace ApplicationCore.Services
             PrtgDbContext prtgDbContext, 
             IContractService contractService,
             IMailingMonthReportService mailingMonthReportService,
-            IMailerService mailerService
+            IMailerService mailerService,
+            IUserService userService
             )
         {
             _dailyDeviceService = dailyDeviceService;
@@ -35,6 +37,7 @@ namespace ApplicationCore.Services
             _contractService = contractService;
             _mailingMonthReportService = mailingMonthReportService;
             _mailerService = mailerService;
+            _userService = userService;
         }
 
 
@@ -94,6 +97,15 @@ namespace ApplicationCore.Services
                         It exceeded the limits for {copyType} sheet copies as respect the contract established. The quantity of copies exceeded until today is: {exceededCopies}.<br/>
                         Remember that the price established in the contract for each copy exceeded is higher. In this case: ${priceForCopyExceeded} each");
                 }
+                foreach (var contractUser in contract.ContractUsers)
+                {
+                    var user = await _userService.GetAsync(contractUser.User_Id);
+                    await _mailerService.SendEmailAsync(user.Email,
+                        $"PRTG - Exceeded limit reports for {deviceName}",
+                        $@"The device {deviceName} has just exceeded the limits in the year {DateTime.Now.Year} and month {CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(DateTime.Now.Month)}.<br/>
+                        It exceeded the limits for {copyType} sheet copies as respect the contract established. The quantity of copies exceeded until today is: {exceededCopies}.<br/>
+                        Remember that the price established in the contract for each copy exceeded is higher. In this case: ${priceForCopyExceeded} each");
+                }
             }
         }
 
@@ -101,7 +113,6 @@ namespace ApplicationCore.Services
         {
             var devices = _sensorService.GetAllDevices().Result;
             DailyContadoresDataDevices newDailyContadores = null;
-            //DailyTonersDataDevices newDailyToners = null;
 
             foreach (var device in devices)
             {
@@ -114,20 +125,13 @@ namespace ApplicationCore.Services
                         var sensorDetails = await _sensorService.GetSensorDetails(childDevice.ObjId);
                         if (sensorDetails.SensorData.Name == Contadores)
                             newDailyContadores = _dailyDeviceService.GetCurrentContadoresDevicesValues(childDevice.ObjId, device.ObjId).Result;
-                        //if (sensorDetails.SensorData.Name == Toners)
-                        //    newDailyToners = _dailyDeviceService.GetCurrentTonersDevicesValues(childDevice.ObjId, device.ObjId).Result;
+                      
                     }
-
                     if (newDailyContadores != null)
                     {
                         _context.DailyContadores.Add(newDailyContadores);
                         await _context.SaveChangesAsync();
                     }
-                    //if (newDailyToners != null)
-                    //{
-                    //    _context.DailyToners.Add(newDailyToners);
-                    //    await _context.SaveChangesAsync();
-                    //}
                 }
             }
         }

@@ -218,7 +218,7 @@ const ContractList = () => {
                                         </Link>
                                     </TableCell>
                                     <TableCell className={classes.dataRow}>
-                                        <Link to={`/persons?contractId=${contract.id}`}>
+                                        <Link to={`/persons?contractId=${contract.id}&ownerId=${contract.ownerId!}`}>
                                             <Button variant='contained' color='default'> <MailIcon /> </Button>
                                         </Link>
                                     </TableCell>

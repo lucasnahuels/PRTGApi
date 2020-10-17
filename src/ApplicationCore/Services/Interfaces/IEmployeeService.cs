@@ -7,6 +7,7 @@ namespace ApplicationCore.Services.Interfaces
     public interface IEmployeeService
     {
         Task<IEnumerable<Employee>> GetAsync();
+        Task<IEnumerable<Employee>> GetEmployeesByOwnerId(long ownerId);
         Task<Employee> GetAsync(int id);
         Task<Employee> CreateAsync(Employee employee);
         Task<Employee> UpdateAsync(Employee employee);

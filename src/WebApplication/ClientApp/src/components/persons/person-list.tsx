@@ -114,10 +114,11 @@ const PersonsList = () => {
     }, []);
 
     const GetEmployees = async () => {
-        let id: string = getQueryVariable("contractId"); 
-        await axios.get<Employee[]>(`Employee`).then(async (response: any) => {
+        let contractId: string = getQueryVariable("contractId");
+        let ownerId: string = getQueryVariable("ownerId"); 
+        await axios.get<Employee[]>(`Employee/GetEmployeesByOwner/` + ownerId).then(async (response: any) => {
             setEmployee({ ...stateEmployee, listOfEmployee: response.data });
-            await axios.get<ContractEmployee[]>(`contract/getContractEmployeesRelations/` + id).then((innerResponse: any) => {
+            await axios.get<ContractEmployee[]>(`contract/getContractEmployeesRelations/` + contractId).then((innerResponse: any) => {
                 response.data.forEach((employee: { sendReport: boolean; id: any; }) => {
                     employee.sendReport = false;
                     innerResponse.data.forEach((contractEmployee: { employeeId: any; }) => {
@@ -245,9 +246,9 @@ const PersonsList = () => {
                         <Table size='medium'>
                             <TableHead aria-label="simple table">
                                 <TableRow>
-                                    <TableCell className={classes.titlesRow} size='medium'>Name</TableCell>
+                                    <TableCell className={classes.titlesRow} size='medium'>Full name</TableCell>
                                     <TableCell className={classes.titlesRow} size='medium'>Owner name</TableCell>
-                                    <TableCell className={classes.titlesRow} size='medium'>E-person adress</TableCell>
+                                    <TableCell className={classes.titlesRow} size='medium'>E-mail address</TableCell>
                                     <TableCell className={classes.titlesRow} size='medium'>Send report?</TableCell>
                                     <TableCell className={classes.titlesRow} size='medium' colSpan={2}>Person actions</TableCell>
                                 </TableRow>

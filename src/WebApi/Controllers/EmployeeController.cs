@@ -26,6 +26,13 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetEmployeesByOwner/{ownerId}")]
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployeesByOwnerId(long ownerId)
+        {
+            var result = await _employeeService.GetEmployeesByOwnerId(ownerId);
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Employee>> GetEmployee(int id)
         {

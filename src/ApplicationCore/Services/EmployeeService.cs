@@ -4,6 +4,7 @@ using ApplicationCore.Models;
 using ApplicationCore.Services.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace ApplicationCore.Services
 {
@@ -40,6 +41,11 @@ namespace ApplicationCore.Services
         public async Task<IEnumerable<Employee>> GetAsync()
         {
             return await _context.Employees.Include(employee => employee.Owner).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Employee>> GetEmployeesByOwnerId(long ownerId)
+        {
+            return await _context.Employees.Include(employee => employee.Owner).Where(x => x.OwnerId == ownerId).ToListAsync();
         }
 
         public async Task<Employee> GetAsync(int id)

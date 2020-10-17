@@ -125,7 +125,7 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, personToEdit}
         setSelectedOwnerValue(event.target.value as string);
     };
 
-    const handleInputPersonAdressChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleInputPersonAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
     }
     const handleInputPersonNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -182,9 +182,9 @@ const PersonFormModal = ({ show, hideModal, getAllPersons, isEdit, personToEdit}
                                 </div>
                             </Tooltip>
                             <br /><br />
-                            <TextField label='person name' id='inputPersonName' name='inputPersonName' placeholder='input the person name' value={name} onChange={handleInputPersonNameChange} />
+                            <TextField label='full name' id='inputPersonName' name='inputPersonName' placeholder='input the person full name' value={name} onChange={handleInputPersonNameChange} />
                             <br />
-                            <TextField label='person adress' id='inputPersonAdress' name='inputPersonAdress' placeholder='input the person adress' value={email} onChange={handleInputPersonAdressChange} />
+                            <TextField label='e-mail address' id='inputPersonAddress' name='inputPersonAddress' placeholder='input the person e-mail address' value={email} onChange={handleInputPersonAddressChange} />
                             <br/><br/><br/>
                             {!isEdit ? (
                                 <Button variant='contained' color='default' onClick={() => AddPerson()} >Save new</Button>
