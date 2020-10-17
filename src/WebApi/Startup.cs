@@ -13,8 +13,6 @@ using System.Net.Http;
 using ApplicationCore.Services.Extensions;
 using Coravel;
 using ApplicationCore.Services;
-using ApplicationCore.Models.Constants;
-using WebApi.GlobalErrorHandling.Extensions;
 using ApplicationCore.Configuration;
 using ApplicationCore.Models.Auth0;
 
@@ -110,7 +108,7 @@ namespace WebApi
             provider.UseScheduler(scheduler =>
             {
                 scheduler.Schedule<DailyRecordsScheduleService>()
-                .DailyAt(Constants.TimeRecordsAreTriggered, 30)
+                .DailyAt(14, 30)
                 .Zoned(GetBuenosAiresTimeZoneInfo());
                 scheduler.Schedule<DailyRecordsScheduleService>()
                 .DailyAt(10, 30)
