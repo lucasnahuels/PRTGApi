@@ -108,11 +108,11 @@ namespace WebApi
             provider.UseScheduler(scheduler =>
             {
                 scheduler.Schedule<DailyRecordsScheduleService>()
-                .DailyAt(14, 30)
-                .Zoned(GetBuenosAiresTimeZoneInfo());
-                scheduler.Schedule<DailyRecordsScheduleService>()
                 .DailyAt(10, 30)
                 .Zoned(GetBuenosAiresTimeZoneInfo()); 
+                scheduler.Schedule<DailyRecordsScheduleService>()
+                .DailyAt(14, 30)
+                .Zoned(GetBuenosAiresTimeZoneInfo());
 
                 scheduler.Schedule<RefilledTonersRecordsScheduleService>()
                 .DailyAt(10, 00)
